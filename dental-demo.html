@@ -1,0 +1,1742 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClinicAI</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f8f9fb;--bg2:#fff;--border:#e5e7eb;--text:#111827;
+  --muted:#6b7280;--muted2:#9ca3af;--accent:#2563eb;--accent-light:#eff6ff;
+  --green:#16a34a;--green-light:#f0fdf4;--amber:#d97706;--amber-light:#fffbeb;
+  --red:#dc2626;--red-light:#fef2f2;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;min-height:100vh}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;gap:1.5rem;height:56px}
+.brand{font-size:15px;font-weight:700;color:var(--accent);letter-spacing:-.01em;white-space:nowrap;font-family:"Syne",sans-serif}
+.brand span{color:var(--text);font-weight:400}
+.tabs{display:flex;flex:1}
+.tab{padding:0 1.1rem;height:56px;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-num{background:var(--bg);color:var(--muted2);font-size:11px;font-weight:600;padding:1px 6px;border-radius:10px;border:1px solid var(--border)}
+.tab.active .tab-num{background:var(--accent-light);color:var(--accent);border-color:#c7d2fe}
+.lang-switcher{display:flex;gap:2px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:2px;margin-left:auto;flex-shrink:0}
+.lang-btn{padding:4px 12px;border-radius:6px;font-size:12px;font-weight:500;border:none;background:transparent;color:var(--muted);cursor:pointer;transition:all .15s}
+.lang-btn.active{background:var(--accent);color:#fff;border:1px solid var(--accent)}
+.panel{display:none;padding:1.5rem 2rem}
+.panel.active{display:block;width:100%}
+.panel-title{font-size:18px;font-weight:600;letter-spacing:-.02em;margin-bottom:4px;font-family:"Syne",sans-serif}
+.panel-sub{font-size:13px;color:var(--muted);margin-bottom:1.25rem}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.5rem}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;transition:box-shadow .2s}.stat-card:hover{box-shadow:0 2px 8px rgba(79,70,229,.08)}
+.stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.stat-val{font-size:22px;font-weight:600;letter-spacing:-.03em;line-height:1}
+.stat-delta{font-size:12px;margin-top:4px}
+.up{color:var(--green)}
+.chat-layout{display:grid;grid-template-columns:260px 1fr;gap:16px}
+.chat-sidebar{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.sidebar-header{padding:10px 14px;border-bottom:1px solid var(--border);font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;justify-content:space-between}
+.new-badge{font-size:11px;font-weight:500;background:var(--accent);color:#fff;padding:1px 7px;border-radius:10px}
+.chat-item{padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
+.chat-item:hover{background:var(--bg)}
+.chat-item.active{background:var(--accent-light);border-left:2px solid var(--accent)}
+.ci-top{display:flex;align-items:center;margin-bottom:2px}
+.ci-name{font-size:13px;font-weight:500;flex:1}
+.ci-time{font-size:11px;color:var(--muted2)}
+.ci-preview{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-right:6px;flex-shrink:0}
+.chat-main{background:var(--bg2);border:1px solid var(--border);border-radius:10px;display:flex;flex-direction:column;height:calc(100vh - 340px);min-height:400px}
+.chat-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--accent-light);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
+.avatar.bot{background:#f0fdf4;color:var(--green)}
+.chat-name{font-size:13px;font-weight:500}
+.chat-status{font-size:11px;color:var(--green)}
+.online-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#22c55e;margin-right:4px}
+.chat-messages{flex:1;padding:16px;display:flex;flex-direction:column;gap:10px;overflow-y:auto}
+.msg{display:flex;gap:8px;align-items:flex-end}
+.msg.user{flex-direction:row-reverse}
+.bubble{max-width:72%;padding:9px 13px;border-radius:14px;font-size:13px;line-height:1.55;word-break:break-word;display:inline-block}
+.bubble.bot{background:var(--bg);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:4px}
+.bubble.user{background:var(--accent);color:#fff;border-bottom-right-radius:4px}
+.bubble.lang-pick{background:var(--accent-light);border:1px solid #bfdbfe;color:var(--text)}
+.lang-pick-btns{display:flex;gap:8px;margin-top:8px}
+.lang-pick-btn{padding:6px 16px;border-radius:20px;border:1.5px solid var(--accent);background:#fff;color:var(--accent);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
+.lang-pick-btn:hover{background:var(--accent);color:#fff}
+.typing{display:flex;gap:3px;align-items:center;padding:10px 13px}
+.typing span{width:6px;height:6px;border-radius:50%;background:var(--muted2);animation:bounce 1.2s infinite}
+.typing span:nth-child(2){animation-delay:.15s}
+.typing span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+.chat-input-row{padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px}
+.chat-input-row input{flex:1;font-size:13px;padding:8px 12px;border:1px solid var(--border);border-radius:8px;outline:none;font-family:inherit}
+.chat-input-row input:focus{border-color:var(--accent)}
+.send-btn{font-size:13px;padding:0 16px;background:var(--accent);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:500;height:36px}
+.send-btn:hover{opacity:.9}
+textarea:focus{border-color:var(--accent)!important;background:var(--bg2)!important}
+/* Status toggle */
+
+/* Quick reply buttons */
+.quick-btns{display:flex;gap:6px;padding:6px 16px;border-top:1px solid var(--border);flex-wrap:wrap;background:var(--bg)}
+.qbtn{font-size:12px;padding:4px 12px;border-radius:16px;border:1px solid var(--border);background:var(--bg2);color:var(--accent);cursor:pointer;transition:all .15s;font-weight:500;white-space:nowrap}
+.qbtn:hover{background:var(--accent-light);border-color:#bfdbfe}
+
+/* Busy banner */
+.busy-banner{display:none;background:#fef2f2;border-top:2px solid #fca5a5;padding:8px 16px;font-size:12px;color:#dc2626;font-weight:500}
+
+/* Chart */
+.chart-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:16px}
+.chart-title{font-size:13px;font-weight:600;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.chart-subtitle{font-size:11px;color:var(--muted);font-weight:400}
+.chart-bars{display:flex;align-items:flex-end;gap:6px;height:100px;padding-bottom:20px;position:relative}
+.chart-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;position:relative}
+.chart-bar{width:100%;border-radius:4px 4px 0 0;transition:height .4s ease;cursor:pointer;position:relative}
+.chart-bar:hover::after{content:attr(data-val);position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:600;color:var(--text);white-space:nowrap;background:var(--bg2);padding:2px 5px;border-radius:4px;border:1px solid var(--border)}
+.chart-bar-lbl{font-size:10px;color:var(--muted);position:absolute;bottom:-18px;white-space:nowrap}
+.chart-axis{position:absolute;bottom:20px;left:0;right:0;border-top:1px solid var(--border)}
+
+.table-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.table-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.table-title{font-size:13px;font-weight:600}
+.btn-small{font-size:12px;padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer;font-weight:500}
+.btn-small:hover{background:#f3f4f6}
+.btn-small.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+table{width:100%;border-collapse:collapse}
+th{padding:9px 16px;text-align:left;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;background:var(--bg);border-bottom:1px solid var(--border)}
+td{padding:11px 16px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+.pill{display:inline-flex;align-items:center;font-size:11px;font-weight:500;padding:2px 8px;border-radius:20px}
+.pill-red{background:var(--red-light);color:var(--red)}
+.pill-amber{background:var(--amber-light);color:var(--amber)}
+.pill-green{background:var(--green-light);color:var(--green)}
+.pill-blue{background:var(--accent-light);color:var(--accent)}
+.preview-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.preview-header{padding:12px 16px;border-bottom:1px solid var(--border);font-size:13px;font-weight:600}
+.preview-body{padding:16px}
+.msg-preview{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.6;min-height:80px;color:var(--muted2)}
+.prog-wrap{display:none;padding:12px 16px;background:var(--accent-light);border-top:1px solid var(--border)}
+.prog-track{background:var(--border);border-radius:4px;height:6px;overflow:hidden;margin-top:6px}
+.prog-fill{height:100%;background:var(--accent);width:0%;transition:width .4s;border-radius:4px}
+.sent-log{margin-top:16px;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.sent-log-hdr{padding:10px 16px;background:var(--green-light);border-bottom:1px solid #bbf7d0;font-size:12px;font-weight:600;color:var(--green)}
+.sent-log-item{padding:10px 16px;border-bottom:1px solid var(--border);font-size:12px;animation:fadeIn .3s ease}
+.sent-log-item:last-child{border-bottom:none}
+.slm{display:flex;justify-content:space-between;margin-bottom:3px}
+.sln{font-weight:500;color:var(--text)}
+.slt{font-size:11px;color:var(--muted2)}
+.slp{color:var(--muted);font-size:11px;line-height:1.5}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+/* Analytics */
+.analytics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
+.analytics-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.analytics-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px}
+.analytics-card-title{font-size:13px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.analytics-card-sub{font-size:11px;color:var(--muted);font-weight:400}
+.hour-bars{display:flex;align-items:flex-end;gap:3px;height:70px;padding-bottom:16px;position:relative;margin-top:4px}
+.hour-bar{flex:1;border-radius:2px 2px 0 0;background:var(--accent);opacity:.7;transition:opacity .2s;position:relative;cursor:default}
+.hour-bar:hover{opacity:1}
+.hour-bar::after{content:attr(data-tip);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg2);font-size:10px;padding:2px 5px;border-radius:4px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s}
+.hour-bar:hover::after{opacity:1}
+.hour-axis{display:flex;justify-content:space-between;margin-top:2px}
+.hour-axis span{font-size:10px;color:var(--muted2)}
+.top-question{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.top-question:last-child{border-bottom:none}
+.tq-rank{font-size:11px;font-weight:600;color:var(--muted2);width:16px;flex-shrink:0}
+.tq-text{font-size:13px;flex:1}
+.tq-bar-wrap{width:80px;flex-shrink:0}
+.tq-bar{height:6px;background:var(--accent);border-radius:3px;opacity:.6}
+.tq-count{font-size:11px;color:var(--muted);text-align:right;margin-top:2px}
+.conv-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.conv-label{font-size:12px;color:var(--muted);width:80px;flex-shrink:0}
+.conv-track{flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden;border:1px solid var(--border)}
+.conv-fill{height:100%;border-radius:4px}
+.conv-pct{font-size:12px;font-weight:600;width:36px;text-align:right}
+/* ROI Calc */
+.roi-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.roi-input-group{margin-bottom:12px}
+.roi-input-group label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+.roi-input-group input{width:100%;font-size:14px;font-weight:500}
+.roi-result{background:var(--accent-light);border:1px solid #bfdbfe;border-radius:10px;padding:16px;text-align:center}
+.roi-result-num{font-size:32px;font-weight:600;color:var(--accent);letter-spacing:-.03em}
+.roi-result-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+.roi-breakdown{margin-top:12px;text-align:left}
+.roi-breakdown-row{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid #e0effe}
+.roi-breakdown-row:last-child{border:none;font-weight:600;font-size:13px;color:var(--accent)}
+/* Export btn */
+.export-btn{font-size:11px;padding:3px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:4px}
+.export-btn:hover{background:#f3f4f6;color:var(--text)}
+/* Proc filter */
+.proc-filter{display:flex;gap:6px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--bg)}
+.proc-chip{font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid var(--border);background:var(--bg2);color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap}
+.proc-chip:hover{border-color:var(--accent);color:var(--accent)}
+.proc-chip.active{background:var(--accent-light);border-color:#bfdbfe;color:var(--accent);font-weight:500}
+
+.review-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px}
+.rev-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
+.rev-author{font-size:13px;font-weight:500}
+.rev-platform{font-size:11px;color:var(--muted);margin-top:2px}
+.stars{color:#f59e0b;font-size:13px;letter-spacing:1px}
+.rev-text{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:10px}
+.rev-reply{background:#eef2ff;border-left:3px solid var(--accent);padding:10px 12px;border-radius:0 8px 8px 0;font-size:12px;line-height:1.6;color:#3730a3}
+.reply-label{font-size:11px;font-weight:600;color:var(--accent);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
+.rev-pending{display:flex;align-items:center;gap:8px;background:var(--amber-light);border:1px solid #fde68a;border-radius:8px;padding:8px 12px;font-size:12px;color:var(--amber);margin-top:8px;cursor:pointer}
+.score-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px}
+.score-big{font-size:42px;font-weight:600;letter-spacing:-.04em;line-height:1}
+.score-sub{font-size:12px;color:var(--muted);margin-top:4px}
+.bar-row{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12px}
+.bar-lbl{width:14px;color:var(--muted);text-align:right;flex-shrink:0}
+.bar-track{flex:1;height:6px;background:var(--bg);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;background:#f59e0b;border-radius:3px}
+.bar-cnt{width:20px;color:var(--muted);font-size:11px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">Clinic<span>AI</span></div>
+  <div class="tabs">
+    <button class="tab active" id="tab-chat" onclick="showPanel('chat',this)"><span id="t1">AI-администратор</span> <span class="tab-num" id="chat-tab-num">4</span></button>
+    <button class="tab" id="tab-reminders" onclick="showPanel('reminders',this)"><span id="t2">Повторные визиты</span> <span class="tab-num">39</span></button>
+    <button class="tab" id="tab-reviews" onclick="showPanel('reviews',this)"><span id="t3">Репутация</span> <span class="tab-num" id="reviews-tab-num">4</span></button>
+    <button class="tab" id="tab-analytics" onclick="showPanel('analytics',this)"><span id="t4">Аналитика</span></button>
+  </div>
+  <div class="lang-switcher">
+    <button class="lang-btn active" onclick="setLang('ru')">RU</button>
+    <button class="lang-btn" onclick="setLang('ro')">RO</button>
+  </div>
+</div>
+
+<!-- PANEL 1 CHAT -->
+<div class="panel active" id="panel-chat">
+  <div class="panel-title" id="p1title">AI-администратор</div>
+  <div class="panel-sub" id="p1sub">Отвечает пациентам 24/7, записывает на приём, не пропускает ни одного обращения</div>
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-label" id="s1l">ДИАЛОГОВ СЕГОДНЯ</div><div class="stat-val">24</div><div class="stat-delta up" id="s1d">↑ 23 по сравнению со вчера</div></div>
+    <div class="stat-card"><div class="stat-label" id="s2l">ЗАПИСЕЙ СОЗДАНО</div><div class="stat-val">18</div><div class="stat-delta up" id="s2d">↑ конверсия 64%</div></div>
+    <div class="stat-card"><div class="stat-label" id="s3l">СРЕДНЕЕ ВРЕМЯ ОТВЕТА</div><div class="stat-val" id="s3v">4 сек</div><div class="stat-delta" id="s3d">vs 4 мин у администратора</div></div>
+    <div class="stat-card"><div class="stat-label" id="s4l">НОЧНЫХ ОБРАЩЕНИЙ</div><div class="stat-val">6</div><div class="stat-delta up" id="s4d">↑ без них теряли заявки</div></div>
+  </div>
+  <div class="chat-layout">
+    <div class="chat-sidebar">
+      <div class="sidebar-header"><span id="dialogi-lbl">ДИАЛОГИ</span> <span class="new-badge" id="new-badge-lbl">4 новых</span></div>
+      <div class="chat-item active" id="sb-popescu" onclick="loadChat('popescu')">
+        <div class="ci-top"><span class="ci-name" id="cn-popescu">Попеску Мария</span><span class="ci-time">02:14</span></div>
+        <div class="ci-preview" id="cp-popescu">Болит зуб, нужна срочная помощь</div>
+      </div>
+      <div class="chat-item" id="sb-lungu" onclick="loadChat('lungu')">
+        <div class="ci-top"><span class="badge-dot"></span><span class="ci-name" id="cn-lungu">Лунгу Ион</span><span class="ci-time">09:32</span></div>
+        <div class="ci-preview" id="cp-lungu">Сколько стоит имплант?</div>
+      </div>
+      <div class="chat-item" id="sb-ciobanu" onclick="loadChat('ciobanu')">
+        <div class="ci-top"><span class="badge-dot"></span><span class="ci-name" id="cn-ciobanu">Чобану Анна</span><span class="ci-time">10:05</span></div>
+        <div class="ci-preview" id="cp-ciobanu">Хочу перенести запись</div>
+      </div>
+      <div class="chat-item" id="sb-ionescu" onclick="loadChat('ionescu')">
+        <div class="ci-top"><span class="badge-dot"></span><span class="ci-name">Ионеску Дан</span><span class="ci-time">вчера</span></div>
+        <div class="ci-preview">Сколько стоит отбеливание?</div>
+      </div>
+      <div class="chat-item" id="sb-bodnar" onclick="loadChat('bodnar')">
+        <div class="ci-top"><span class="badge-dot"></span><span class="ci-name">Боднар Кристина</span><span class="ci-time">вчера</span></div>
+        <div class="ci-preview">Есть ли запись на субботу?</div>
+      </div>
+      <div class="chat-item" id="sb-rusu" onclick="loadChat('rusu')">
+        <div class="ci-top"><span class="ci-name" id="cn-rusu">Русу Андрей</span><span class="ci-time" id="ct-rusu">вчера</span></div>
+        <div class="ci-preview" id="cp-rusu">Спасибо, всё понятно!</div>
+      </div>
+      <div class="chat-item" id="sb-munteanu" onclick="loadChat('munteanu')">
+        <div class="ci-top"><span class="ci-name" id="cn-munteanu">Мунтяну Елена</span><span class="ci-time" id="ct-munteanu">вчера</span></div>
+        <div class="ci-preview" id="cp-munteanu">Запись подтверждена</div>
+      </div>
+      <div class="chat-item" onclick="loadChat('ciobanu')">
+        <div class="ci-top"><span class="ci-name">Грекул Виктор</span><span class="ci-time">2 дня назад</span></div>
+        <div class="ci-preview">Спасибо, записался!</div>
+      </div>
+      <div class="chat-item" onclick="loadChat('rusu')">
+        <div class="ci-top"><span class="ci-name">Урсу Анна</span><span class="ci-time">2 дня назад</span></div>
+        <div class="ci-preview">Подтвердите запись на пятницу</div>
+      </div>
+      <div class="chat-item" onclick="loadChat('munteanu')">
+        <div class="ci-top"><span class="ci-name">Паскарь Михаил</span><span class="ci-time">2 дня назад</span></div>
+        <div class="ci-preview">Какой врач занимается брекетами?</div>
+      </div>
+      <div class="chat-item" onclick="loadChat('popescu')">
+        <div class="ci-top"><span class="ci-name">Тимуш Наталья</span><span class="ci-time">3 дня назад</span></div>
+        <div class="ci-preview">Всё прошло отлично, спасибо!</div>
+      </div>
+      <div class="chat-item" onclick="loadChat('lungu')">
+        <div class="ci-top"><span class="ci-name">Кожокару Ион</span><span class="ci-time">3 дня назад</span></div>
+        <div class="ci-preview">Сколько стоит снятие камня?</div>
+      </div>
+      <div class="chat-item" onclick="loadChat('ciobanu')">
+        <div class="ci-top"><span class="ci-name">Ротару Мария</span><span class="ci-time">3 дня назад</span></div>
+        <div class="ci-preview">Хочу перенести запись</div>
+      </div>
+    </div>
+    <div class="chat-main">
+      <div class="chat-header">
+        <div class="avatar" id="chat-avatar">ПМ</div>
+        <div><div class="chat-name" id="chat-name">Попеску Мария</div><div class="chat-status"><span class="online-dot"></span><span id="online-lbl">В сети</span></div></div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:10px"><button class="export-btn" onclick="exportChat()" id="export-btn-lbl">⬇ Экспорт</button><span style="font-size:12px;color:var(--muted)">WhatsApp · <span id="now-lbl">сейчас</span></span></div>
+      </div>
+      <div class="chat-messages" id="chat-messages"></div>
+      <div class="quick-btns" id="quick-btns">
+        <span style="font-size:11px;color:var(--muted);align-self:center;margin-right:2px" id="quick-lbl">Быстро:</span>
+        <button class="qbtn" onclick="quickSend('book')" id="qb1">Записаться</button>
+        <button class="qbtn" onclick="quickSend('prices')" id="qb2">Цены</button>
+        <button class="qbtn" onclick="quickSend('address')" id="qb3">Адрес</button>
+        <button class="qbtn" onclick="quickSend('urgent')" id="qb4">Срочно</button>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" id="user-msg" placeholder="Напишите как пациент..." onkeydown="if(event.key==='Enter')sendMsg()"/>
+        <button class="send-btn" onclick="sendMsg()" id="send-lbl">Отправить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PANEL 2 REMINDERS -->
+<div class="panel" id="panel-reminders">
+  <div class="panel-title" id="p2title">Система повторных визитов</div>
+  <div class="panel-sub" id="p2sub">Автоматически находит пациентов, которые не возвращались 6+ месяцев, и отправляет персональные напоминания</div>
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-label" id="r1l">ПАЦИЕНТОВ БЕЗ ВИЗИТА 6М+</div><div class="stat-val">247</div><div class="stat-delta" style="color:var(--amber)" id="r1d">потенциальная выручка</div></div>
+    <div class="stat-card"><div class="stat-label" id="r2l">ОТПРАВЛЕНО СЕГОДНЯ</div><div class="stat-val" id="stat-sent">0</div><div class="stat-delta up" id="stat-sent-sub">нажмите «Запустить всех»</div></div>
+    <div class="stat-card"><div class="stat-label" id="r3l">ВЕРНУЛИСЬ И ЗАПИСАЛИСЬ</div><div class="stat-val">31</div><div class="stat-delta up" id="r3d">↑ конверсия 16.7%</div></div>
+    <div class="stat-card"><div class="stat-label" id="r4l">ДОП. ВЫРУЧКА В МЕСЯЦ</div><div class="stat-val" id="r4v">3 800 лей</div><div class="stat-delta up" id="r4d">↑ на автопилоте</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 360px;gap:16px">
+    <div>
+      <div class="table-card">
+        <div class="table-header">
+          <span class="table-title"><span id="queue-lbl">Очередь напоминаний</span> <span id="queue-count" style="color:var(--muted);font-weight:400"></span></span>
+          <div style="display:flex;gap:8px">
+            <button class="btn-small" id="filter-btn" onclick="toggleFilter()">Все пациенты</button>
+            <button class="btn-small primary" id="launch-all-btn" onclick="launchAll()">⚡ <span id="launch-lbl">Запустить всех</span></button>
+          </div>
+        </div>
+        <div class="proc-filter" id="proc-filter-bar">
+          <span style="font-size:11px;color:var(--muted);align-self:center" id="proc-filter-lbl">Фильтр:</span>
+          <span class="proc-chip active" onclick="setProcFilter('all',this)" id="pf-all">Все</span>
+          <span class="proc-chip" onclick="setProcFilter('чистка',this)">Чистка</span>
+          <span class="proc-chip" onclick="setProcFilter('имплант',this)">Имплант</span>
+          <span class="proc-chip" onclick="setProcFilter('пломба',this)">Пломба</span>
+          <span class="proc-chip" onclick="setProcFilter('камень',this)">Камень</span>
+          <span class="proc-chip" onclick="setProcFilter('отбел',this)">Отбеливание</span>
+          <span class="proc-chip" onclick="setProcFilter('удален',this)">Удаление</span>
+        </div>
+        <table><thead><tr>
+          <th id="col1" style="cursor:default">Пациент</th>
+          <th id="col2" onclick="sortBy('months')" style="cursor:pointer;user-select:none;white-space:nowrap">Последний визит <span id="sort-months" style="opacity:.4">↕</span></th>
+          <th id="col3" style="cursor:default">Процедура</th>
+          <th id="col4" onclick="sortBy('urgency')" style="cursor:pointer;user-select:none;white-space:nowrap">Статус <span id="sort-urgency" style="opacity:.4">↕</span></th>
+          <th id="col5" style="cursor:default">Действие</th>
+        </tr></thead><tbody id="patients-tbody"></tbody></table>
+        <div class="prog-wrap" id="launch-progress">
+          <div style="font-size:12px;font-weight:500;color:var(--accent)" id="progress-label">...</div>
+          <div class="prog-track"><div class="prog-fill" id="progress-bar"></div></div>
+        </div>
+      </div>
+      <div id="sent-log-container" style="display:none">
+        <div class="sent-log">
+          <div class="sent-log-hdr" id="log-hdr">Отправленные сообщения</div>
+          <div id="sent-log-list"></div>
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title">
+          <span id="chart-title-lbl">Возврат пациентов по месяцам</span>
+          <span class="chart-subtitle" id="chart-sub-lbl">после внедрения AI-рассылок</span>
+        </div>
+        <div class="chart-bars" id="return-chart"></div>
+      </div>
+    </div>
+    <div class="preview-card" style="align-self:start">
+      <div class="preview-header" id="preview-header">Предпросмотр сообщения</div>
+      <div class="preview-body">
+        <div id="preview-hint" style="font-size:12px;color:var(--muted);margin-bottom:10px">Нажмите «Отправить» — AI сгенерирует персональное сообщение</div>
+        <div id="preview-patient-info" style="display:none;margin-bottom:10px;padding:10px 12px;background:var(--bg);border-radius:8px;font-size:12px;line-height:1.7"></div>
+        <textarea id="preview-text" style="width:100%;min-height:120px;font-size:13px;line-height:1.6;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--muted2);font-family:inherit;resize:vertical;outline:none" readonly>...</textarea>
+        <div id="preview-actions" style="display:none;margin-top:10px">
+          <button id="confirm-btn" class="btn-small primary" style="width:100%;margin-bottom:8px;padding:9px;font-size:13px" onclick="confirmSend()">✓ Подтвердить и отправить</button>
+          <button id="regen-btn" class="btn-small" style="width:100%;padding:9px;font-size:13px" onclick="regenerateMsg()">↻ Перегенерировать</button>
+        </div>
+        <div id="send-success" style="display:none;text-align:center;padding:16px 0">
+          <div style="font-size:32px;margin-bottom:8px">✅</div>
+          <div style="font-size:13px;font-weight:600;color:var(--green)" id="success-title">Сообщение отправлено!</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px" id="send-success-name"></div>
+          <button class="btn-small" style="margin-top:12px" onclick="resetPreview()" id="back-btn">← Выбрать другого</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PANEL 3 REVIEWS -->
+<div class="panel" id="panel-reviews">
+  <div class="panel-title" id="p3title">Управление репутацией</div>
+  <div class="panel-sub" id="p3sub">AI мониторит отзывы на Google Maps, генерирует персональные ответы в стиле клиники</div>
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-label" id="rv1l">РЕЙТИНГ GOOGLE</div><div class="stat-val">4.8 ⭐</div><div class="stat-delta up" id="rv1d">↑ +0.2 за 3 месяца</div></div>
+    <div class="stat-card"><div class="stat-label" id="rv2l">ОТЗЫВОВ ОБРАБОТАНО</div><div class="stat-val">143</div><div class="stat-delta up" id="rv2d">↑ 98% с ответом</div></div>
+    <div class="stat-card"><div class="stat-label" id="rv3l">СРЕДНЕЕ ВРЕМЯ ОТВЕТА</div><div class="stat-val" id="rv3v">2 часа</div><div class="stat-delta" id="rv3d">vs 3 дня раньше</div></div>
+    <div class="stat-card"><div class="stat-label" id="rv4l">ОЖИДАЮТ ОТВЕТА</div><div class="stat-val" id="rv4-count">4</div><div class="stat-delta" style="color:var(--amber)" id="rv4d">требуют внимания</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 300px;gap:16px">
+    <div>
+
+      <!-- 4 PENDING reviews — always visible first -->
+      <div class="review-card" id="rv-ru2">
+        <div class="rev-top">
+          <div><div class="rev-author">Михаил Д.</div><div class="rev-platform rev-date" data-ru="Google Maps · 4 дня назад" data-ro="Google Maps · acum 4 zile">Google Maps · 4 дня назад</div></div>
+          <span class="stars">★★★☆☆</span>
+        </div>
+        <div class="rev-text" id="rv-ru2-text">Лечение хорошее, врач профессиональный. Но пришлось ждать 40 минут сверх времени записи. Надеюсь, это не норма.</div>
+        <div class="rev-pending" id="rv-ru2-btn" onclick="genReply('ru2')"><span class="rev-gen-lbl">AI готовит ответ — нажмите для генерации</span></div>
+      </div>
+
+      <div class="review-card" id="rv-ru3">
+        <div class="rev-top">
+          <div><div class="rev-author">Анастасия В.</div><div class="rev-platform rev-date" data-ru="Google Maps · неделю назад" data-ro="Google Maps · acum o săptămână">Google Maps · неделю назад</div></div>
+          <span class="stars">★★★★★</span>
+        </div>
+        <div class="rev-text" id="rv-ru3-text">Обратилась с острой болью — приняли в тот же день без записи. Доктор всё объяснил, лечение прошло быстро. Теперь вся семья ходит только сюда.</div>
+        <div class="rev-pending" id="rv-ru3-btn" onclick="genReply('ru3')"><span class="rev-gen-lbl">AI готовит ответ — нажмите для генерации</span></div>
+      </div>
+
+      <div class="review-card" id="rv-ro2">
+        <div class="rev-top">
+          <div><div class="rev-author">Alexandru M.</div><div class="rev-platform rev-date" data-ru="Google Maps · 5 дней назад" data-ro="Google Maps · acum 5 zile">Google Maps · 5 дней назад</div></div>
+          <span class="stars">★★★★☆</span>
+        </div>
+        <div class="rev-text" id="rv-ro2-text">Am venit pentru un detartraj și am rămas plăcut surprins. Medicul a explicat totul detaliat, procedura a durat mai puțin decât mă așteptam. Prețuri corecte față de calitate.</div>
+        <div class="rev-pending" id="rv-ro2-btn" onclick="genReply('ro2')"><span class="rev-gen-lbl">AI pregătește răspuns — apăsați pentru generare</span></div>
+      </div>
+
+      <div class="review-card" id="rv-ro3">
+        <div class="rev-top">
+          <div><div class="rev-author">Elena R.</div><div class="rev-platform rev-date" data-ru="Google Maps · сегодня" data-ro="Google Maps · azi">Google Maps · сегодня</div></div>
+          <span class="stars">★★★★★</span>
+        </div>
+        <div class="rev-text" id="rv-ro3-text">Prima dată la ClinicAI — impresii foarte bune. Echipament modern, spațiu curat, personal prietenos. M-am programat deja pentru luna viitoare!</div>
+        <div class="rev-pending" id="rv-ro3-btn" onclick="genReply('ro3')"><span class="rev-gen-lbl">AI pregătește răspuns — apăsați pentru generare</span></div>
+      </div>
+
+      <!-- 1 answered review always visible -->
+      <div class="review-card">
+        <div class="rev-top">
+          <div><div class="rev-author">Татьяна Ф.</div><div class="rev-platform rev-date" data-ru="Google Maps · 2 дня назад" data-ro="Google Maps · acum 2 zile">Google Maps · 2 дня назад</div></div>
+          <span class="stars">★★★★★</span>
+        </div>
+        <div class="rev-text">Прекрасная клиника! Доктор Попеску — просто волшебник. Боялась лечить зуб мудрости, но всё прошло быстро и безболезненно. Персонал очень приятный. Буду рекомендовать всем!</div>
+        <div class="rev-reply"><div class="reply-label rev-reply-lbl">Ответ клиники · AI</div>Татьяна, большое спасибо за тёплый отзыв! Рады, что всё прошло комфортно — доктор Попеску уделяет особое внимание каждому пациенту. Ждём вас снова!</div>
+      </div>
+
+      <!-- Toggle button -->
+      <div style="text-align:center;margin:16px 0 4px">
+        <button onclick="toggleAnswered()" id="answered-toggle-btn" style="font-size:12px;color:var(--accent);background:var(--accent-light);border:1px solid rgba(79,70,229,.2);padding:7px 18px;border-radius:20px;cursor:pointer;font-weight:500">Показать ещё отзывы (15) ▼</button>
+      </div>
+
+      <!-- Hidden answered reviews -->
+      <div id="answered-reviews" style="display:none">
+
+        <div class="review-card">
+          <div class="rev-top"><div><div class="rev-author">Maria C.</div><div class="rev-platform rev-date" data-ru="Google Maps · 3 дня назад" data-ro="Google Maps · acum 3 zile">Google Maps · 3 дня назад</div></div><span class="stars">★★★★★</span></div>
+          <div class="rev-text">Clinică excelentă! Dr. Popescu e fantastic — mi-era frică de extracție dar totul a decurs rapid și fără durere. Personalul e foarte amabil și profesionist. Recomand cu căldură!</div>
+          <div class="rev-reply"><div class="reply-label rev-reply-lbl">Ответ клиники · AI</div>Maria, mulțumim mult pentru cuvintele frumoase! Suntem bucuroși că totul a mers bine — Dr. Popescu acordă atenție deosebită fiecărui pacient. Vă așteptăm cu drag!</div>
+        </div>
+
+        <div class="review-card">
+          <div class="rev-top"><div><div class="rev-author">Олег К.</div><div class="rev-platform rev-date" data-ru="Google Maps · 1 неделю назад" data-ro="Google Maps · acum o săptămână">Google Maps · 1 неделю назад</div></div><span class="stars">★★★★★</span></div>
+          <div class="rev-text">Делал имплант — всё прошло отлично. Доктор Попеску объяснил каждый этап, никаких сюрпризов. Цена соответствует качеству. Рекомендую.</div>
+          <div class="rev-reply"><div class="reply-label rev-reply-lbl">Ответ клиники · AI</div>Олег, спасибо за доверие! Рады, что процедура прошла комфортно. До встречи!</div>
+        </div>
+
+        <div class="review-card">
+          <div class="rev-top"><div><div class="rev-author">Ирина Б.</div><div class="rev-platform rev-date" data-ru="Google Maps · 2 недели назад" data-ro="Google Maps · acum 2 săptămâni">Google Maps · 2 недели назад</div></div><span class="stars">★★★★☆</span></div>
+          <div class="rev-text">Хорошая клиника, современное оборудование. Единственное — запись онлайн иногда не работает, пришлось звонить. В остальном всё понравилось.</div>
+          <div class="rev-reply"><div class="reply-label rev-reply-lbl">Ответ клиники · AI</div>Ирина, спасибо за отзыв! Над онлайн-записью работаем — скоро будет удобнее. Ждём вас снова!</div>
+        </div>
+
+        <div class="review-card">
+          <div class="rev-top"><div><div class="rev-author">Andrei P.</div><div class="rev-platform rev-date" data-ru="Google Maps · 2 недели назад" data-ro="Google Maps · acum 2 săptămâni">Google Maps · 2 недели назад</div></div><span class="stars">★★★★★</span></div>
+          <div class="rev-text">Recomand cu toată inima! Personalul este extrem de amabil, medicii sunt profesioniști. Am venit cu toată familia și suntem mulțumiți de fiecare dată.</div>
+          <div class="rev-reply"><div class="reply-label rev-reply-lbl">Ответ клиники · AI</div>Andrei, vă mulțumim pentru încredere! Ne bucurăm că toată familia se simte bine la noi. Vă așteptăm cu drag!</div>
+        </div>
+
+        <div class="review-card">
+          <div class="rev-top"><div><div class="rev-author">Светлана М.</div><div class="rev-platform rev-date" data-ru="Google Maps · 3 недели назад" data-ro="Google Maps · acum 3 săptămâni">Google Maps · 3 недели назад</div></div><span class="stars">★★★★★</span></div>
+          <div class="rev-text">Отличная клиника! Первый раз за много лет не боялась идти к стоматологу. Доктор Лунгу — профессионал высшего уровня.</div>
+          <div class="rev-reply"><div class="reply-label rev-reply-lbl">Ответ клиники · AI</div>Светлана, рады что удалось победить страх! Доктор Лунгу будет рад видеть вас снова!</div>
+        </div>
+
+        <div class="review-card">
+          <div class="rev-top"><div><div class="rev-author">Cristina D.</div><div class="rev-platform rev-date" data-ru="Google Maps · месяц назад" data-ro="Google Maps · acum o lună">Google Maps · месяц назад</div></div><span class="stars">★★★★★</span></div>
+          <div class="rev-text">Îmi era foarte frică de dentist, dar aici m-am simțit în siguranță. Dr. Lungu este răbdătoare și înțelegătoare. Prețuri accesibile pentru calitatea oferită.</div>
+          <div class="rev-reply"><div class="reply-label rev-reply-lbl">Ответ клиники · AI</div>Cristina, mulțumim mult! Dr. Lungu pune mereu confortul pacientului pe primul loc. Vă așteptăm!</div>
+        </div>
+
+        <div class="review-card">
+          <div class="rev-top"><div><div class="rev-author">Василий Н.</div><div class="rev-platform rev-date" data-ru="Google Maps · месяц назад" data-ro="Google Maps · acum o lună">Google Maps · месяц назад</div></div><span class="stars">★★★★★</span></div>
+          <div class="rev-text">Делал брекеты у доктора Русу — полный профессионал. Всегда объясняет что делает, результат отличный. Клинику рекомендую всем знакомым.</div>
+          <div class="rev-reply"><div class="reply-label rev-reply-lbl">Ответ клиники · AI</div>Василий, спасибо! Доктор Русу гордится своей работой. Рады видеть вас в числе наших пациентов!</div>
+        </div>
+
+        <div class="review-card">
+          <div class="rev-top"><div><div class="rev-author">Natalia V.</div><div class="rev-platform rev-date" data-ru="Google Maps · 5 недель назад" data-ro="Google Maps · acum 5 săptămâni">Google Maps · 5 недель назад</div></div><span class="stars">★★★★☆</span></div>
+          <div class="rev-text">Clinică modernă cu personal amabil. Prețurile sunt puțin mai mari față de alte locuri, dar calitatea justifică. M-am programat din nou.</div>
+          <div class="rev-reply"><div class="reply-label rev-reply-lbl">Ответ клиники · AI</div>Natalia, mulțumim pentru feedback! Investim în echipamente moderne și personal calificat. Vă așteptăm la următoarea vizită!</div>
+        </div>
+
+        <div class="review-card">
+          <div class="rev-top"><div><div class="rev-author">Дмитрий О.</div><div class="rev-platform rev-date" data-ru="Google Maps · 6 недель назад" data-ro="Google Maps · acum 6 săptămâni">Google Maps · 6 недель назад</div></div><span class="stars">★★★★★</span></div>
+          <div class="rev-text">Пришёл с сильной болью, приняли без очереди. Лечение качественное, анестезия отличная — вообще ничего не чувствовал. Спасибо доктору Лунгу!</div>
+          <div class="rev-reply"><div class="reply-label rev-reply-lbl">Ответ клиники · AI</div>Дмитрий, рады что помогли! Срочные случаи — наш приоритет. Доктор Лунгу передаёт благодарность. Ждём вас!</div>
+        </div>
+
+      </div><!-- end answered-reviews -->
+
+    </div>
+    <div>
+      <div class="score-card">
+        <div class="score-big">4.8</div><div class="score-sub" id="score-sub">487 отзывов</div>
+        <div class="bar-row"><span class="bar-lbl">5</span><div class="bar-track"><div class="bar-fill" style="width:64%"></div></div><span class="bar-cnt">312</span></div>
+        <div class="bar-row"><span class="bar-lbl">4</span><div class="bar-track"><div class="bar-fill" style="width:20%;background:#94a3b8"></div></div><span class="bar-cnt">98</span></div>
+        <div class="bar-row"><span class="bar-lbl">3</span><div class="bar-track"><div class="bar-fill" style="width:9%;background:#94a3b8"></div></div><span class="bar-cnt">42</span></div>
+        <div class="bar-row"><span class="bar-lbl">2</span><div class="bar-track"><div class="bar-fill" style="width:5%;background:#f87171"></div></div><span class="bar-cnt">24</span></div>
+        <div class="bar-row"><span class="bar-lbl">1</span><div class="bar-track"><div class="bar-fill" style="width:2%;background:#f87171"></div></div><span class="bar-cnt">11</span></div>
+      </div>
+      <div class="score-card">
+        <div style="font-size:13px;font-weight:600;margin-bottom:12px" id="sources-lbl">Источники</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0"><span>Google Maps</span><div style="display:flex;align-items:center;gap:8px"><span class="stars" style="font-size:12px">★★★★★</span><span style="font-size:13px;font-weight:500">4.8</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── TRANSLATIONS ──
+const TR = {
+  ru: {
+    tab1:'AI-администратор', tab2:'Повторные визиты', tab3:'Репутация',
+    p1title:'AI-администратор', p1sub:'Отвечает пациентам 24/7, записывает на приём, не пропускает ни одного обращения',
+    s1l:'ДИАЛОГОВ СЕГОДНЯ', s1d:'↑ 23 по сравнению со вчера',
+    s2l:'ЗАПИСЕЙ СОЗДАНО', s2d:'↑ конверсия 64%',
+    s3l:'СРЕДНЕЕ ВРЕМЯ ОТВЕТА', s3v:'4 сек', s3d:'vs 4 мин у администратора',
+    s4l:'НОЧНЫХ ОБРАЩЕНИЙ', s4d:'↑ без них теряли заявки',
+    dialogi:'ДИАЛОГИ', newbadge:'4 новых', online:'В сети', nowlbl:'сейчас',
+    placeholder:'Напишите как пациент...', sendbtn:'Отправить',
+    p2title:'Система повторных визитов', p2sub:'Автоматически находит пациентов которые не возвращались 6+ месяцев и отправляет персональные напоминания',
+    r1l:'ПАЦИЕНТОВ БЕЗ ВИЗИТА 6М+', r1d:'потенциальная выручка',
+    r2l:'ОТПРАВЛЕНО СЕГОДНЯ', r2init:'нажмите «Запустить всех»',
+    r3l:'ВЕРНУЛИСЬ И ЗАПИСАЛИСЬ', r3d:'↑ конверсия 16.7%',
+    r4l:'ДОП. ВЫРУЧКА В МЕСЯЦ', r4d:'↑ на автопилоте',
+    queuelbl:'Очередь напоминаний', pword:'пациентов',
+    filterAll:'Все пациенты', filterPending:'Только ожидающие',
+    launchlbl:'Запустить всех', launchdone:'✓ Все отправлены',
+    col1:'Пациент', col2:'Последний визит', col3:'Процедура', col4:'Статус', col5:'Действие',
+    monthsago:'мес. назад', btnSend:'Отправить', btnOpen:'Открыть',
+    previewDefault:'Предпросмотр сообщения',
+    previewHint:'Нажмите «Отправить» — AI сгенерирует персональное сообщение на основе истории пациента',
+    lblPhone:'Телефон:', lblLast:'Последний визит:', lblProc:'Процедура:',
+    generating:'⏳ AI генерирует сообщение...',
+    regenIng:'⏳ Генерирую новый вариант...', regenLoad:'Генерирую...',
+    confirmBtn:'✓ Подтвердить и отправить', regenBtn:'↻ Перегенерировать',
+    successTitle:'Сообщение отправлено!', successPre:'Отправлено на',
+    backBtn:'← Выбрать другого',
+    logHdr:'Отправленные сообщения',
+    launching:'Отправляю:', launchingAll:'Отправляю сообщения...',
+    launchResult:'Готово! Отправлено', launchSuffix:'сообщений',
+    sentToday:'отправлено сегодня',
+    statusU:'Срочно', statusP:'Ожидает', statusS:'Отправлено', statusB:'Записался',
+    preSent:'Отправлено ранее', preBooked:'Записался после напоминания',
+    p3title:'Управление репутацией', p3sub:'AI мониторит отзывы на Google Maps, генерирует персональные ответы в стиле клиники',
+    rv1l:'РЕЙТИНГ GOOGLE', rv1d:'↑ +0.2 за 3 месяца',
+    rv2l:'ОТЗЫВОВ ОБРАБОТАНО', rv2d:'↑ 98% с ответом',
+    rv3l:'СРЕДНЕЕ ВРЕМЯ ОТВЕТА', rv3v:'2 часа', rv3d:'vs 3 дня раньше',
+    rv4l:'ОЖИДАЮТ ОТВЕТА', rv4d:'требуют внимания',
+    r4v:'38 400 лей',
+    rev1_author:'Татьяна Ф.', rev1_platform:'Google Maps · 2 дня назад',
+    rev1_text:'Прекрасная клиника! Доктор Попеску — просто волшебник. Боялась лечить зуб мудрости, но всё прошло быстро и безболезненно. Персонал очень приятный. Буду рекомендовать всем!',
+    rev1_reply:'Татьяна, большое спасибо за тёплый отзыв! Мы рады, что всё прошло комфортно — доктор Попеску уделяет особое внимание каждому пациенту. Ждём вас снова!',
+    rev2_author:'Михаил Д.', rev2_platform:'Google Maps · 4 дня назад',
+    rev2_text:'Лечение хорошее, врач профессиональный. Но пришлось ждать 40 минут сверх времени записи. Надеюсь, это не норма.',
+    rev2_reply:'Михаил, благодарим за честный отзыв. Приносим извинения за ожидание — это не наш стандарт. При следующем визите вас примут в приоритетном порядке.',
+    rev3_author:'Ольга Н.', rev3_platform:'Google Maps · сегодня',
+    rev3_text:'Первый раз попала к вам — впечатления отличные. Современное оборудование, чисто, приятная атмосфера. Записалась на следующий месяц.',
+    replylbl:'Ответ клиники · AI', pendingLbl:'⚡ AI готовит ответ — нажмите для генерации',
+    genLoading:'⏳ Генерирую...', sourceslbl:'Источники', scoreSub:'487 отзывов',
+    replylbl:'Ответ клиники · AI', pendingLbl:'⚡ AI готовит ответ — нажмите для генерации',
+    genLoading:'⏳ Генерирую...', sourceslbl:'Источники', scoreSub:'487 отзывов',
+    contacts:{
+      popescu:{name:'Попеску Мария', initials:'ПМ', preview:'Болит зуб, нужна срочная помощь'},
+      lungu:  {name:'Лунгу Ион',     initials:'ЛИ', preview:'Сколько стоит имплант?'},
+      ciobanu:{name:'Чобану Анна',   initials:'ЧА', preview:'Хочу перенести запись'},
+      rusu:   {name:'Русу Андрей',   initials:'РА', preview:'Спасибо, всё понятно!', time:'вчера'},
+      munteanu:{name:'Мунтяну Елена',initials:'МЕ', preview:'Запись подтверждена', time:'вчера'},
+      ionescu:{name:'Ионеску Дан',   initials:'ИД', preview:'Сколько стоит отбеливание?', time:'вчера'},
+      bodnar: {name:'Боднар Кристина',initials:'БК', preview:'Есть ли запись на субботу?', time:'вчера'},
+    },
+    firstMsgs:{
+      popescu:'Добрый вечер! У меня очень сильно болит зуб, можно попасть к врачу срочно?',
+      lungu:'Здравствуйте, сколько стоит имплантация зуба у вас?',
+      ciobanu:'Добрый день, хочу перенести запись со среды на пятницу',
+      rusu:'Спасибо большое, всё понятно, до свидания!',
+      munteanu:'Скажите пожалуйста, что входит в процедуру отбеливания?',
+      ionescu:'Здравствуйте, сколько стоит отбеливание зубов?',
+      bodnar:'Добрый день, есть ли свободная запись на субботу?',
+    },
+    patients:[
+      {id:'popescu_ion',   name:'Попеску Ион',     phone:'+373 69 123 456', months:11, proc:'Лечение кариеса',  urgency:'urgent'},
+      {id:'ciobanu_maria', name:'Чобану Мария',    phone:'+373 79 234 567', months:9,  proc:'Проф. чистка',    urgency:'pending'},
+      {id:'lungu_andrei',  name:'Лунгу Андрей',    phone:'+373 68 345 678', months:8,  proc:'Пломба',          urgency:'pending'},
+      {id:'rusu_elena',    name:'Русу Елена',       phone:'+373 78 456 789', months:14, proc:'Имплант (конс.)', urgency:'urgent'},
+      {id:'munteanu_vlad', name:'Мунтяну Влад',    phone:'+373 69 567 890', months:7,  proc:'Снятие камня',    urgency:'pending'},
+      {id:'ionescu_ana',   name:'Ионеску Анна',    phone:'+373 79 678 901', months:6,  proc:'Консультация',    urgency:'pending'},
+      {id:'botnaru_s',     name:'Ботнару Сергей',  phone:'+373 68 789 012', months:10, proc:'Удаление зуба',   urgency:'urgent'},
+      {id:'cojocaru_nina', name:'Кожокару Нина',   phone:'+373 78 890 123', months:8,  proc:'Отбеливание',     urgency:'pending'},
+      {id:'popa_victor',   name:'Попа Виктор',     phone:'+373 69 901 234', months:6,  proc:'Проф. чистка',    urgency:'sent'},
+      {id:'mihai_crist',   name:'Михай Кристина',  phone:'+373 79 012 345', months:7,  proc:'Пломба',          urgency:'booked'},
+      {id:'grigoriu_dan',  name:'Григориу Дан',    phone:'+373 68 123 456', months:9,  proc:'Снятие камня',    urgency:'pending'},
+      {id:'vasile_oxana',  name:'Василе Оксана',   phone:'+373 78 234 567', months:12, proc:'Имплант (конс.)', urgency:'urgent'},
+      {id:'ursu_ana',      name:'Урсу Анна',        phone:'+373 69 345 678', months:8,  proc:'Брекеты (конс.)', urgency:'pending'},
+      {id:'grecu_ion',     name:'Грекул Ион',       phone:'+373 79 456 789', months:13, proc:'Проф. чистка',    urgency:'urgent'},
+      {id:'bodnar_cr',     name:'Боднар Кристина',  phone:'+373 68 567 890', months:7,  proc:'Отбеливание',     urgency:'pending'},
+      {id:'pascu_m',       name:'Пашку Михаил',     phone:'+373 78 678 901', months:9,  proc:'Удаление зуба',   urgency:'pending'},
+      {id:'grosu_d',       name:'Гросу Диана',      phone:'+373 69 789 012', months:11, proc:'Пломба',          urgency:'urgent'},
+      {id:'chiriac_v',     name:'Киряк Виталий',    phone:'+373 79 890 123', months:6,  proc:'Снятие камня',    urgency:'pending'},
+      {id:'rotaru_m',      name:'Ротару Марина',    phone:'+373 68 901 234', months:8,  proc:'Консультация',    urgency:'sent'},
+      {id:'timush_n',      name:'Тимуш Наталья',    phone:'+373 78 012 345', months:10, proc:'Имплант (конс.)', urgency:'booked'},
+      {id:'pasc_s',        name:'Паскарь Светлана', phone:'+373 69 123 789', months:7,  proc:'Проф. чистка',    urgency:'pending'},
+      {id:'carp_a',        name:'Карп Александр',   phone:'+373 79 234 890', months:15, proc:'Брекеты',         urgency:'urgent'},
+      {id:'balan_e',       name:'Балан Елена',       phone:'+373 68 345 901', months:8,  proc:'Пломба',          urgency:'pending'},
+      {id:'moraru_d',      name:'Морару Дмитрий',   phone:'+373 78 456 012', months:9,  proc:'Снятие камня',    urgency:'pending'},
+      {id:'stratan_v',     name:'Стратан Валентина',phone:'+373 69 567 123', months:11, proc:'Отбеливание',     urgency:'urgent'},
+      {id:'cucu_r',        name:'Куку Роман',        phone:'+373 79 678 234', months:7,  proc:'Консультация',    urgency:'pending'},
+      {id:'gavril_o',      name:'Гаврил Ольга',      phone:'+373 68 789 345', months:12, proc:'Удаление зуба',   urgency:'pending'},
+      {id:'andrei_c',      name:'Андрей Константин', phone:'+373 78 890 456', months:8,  proc:'Проф. чистка',    urgency:'sent'},
+      {id:'negrut_l',      name:'Негруц Лилия',      phone:'+373 69 901 567', months:6,  proc:'Пломба',          urgency:'booked'},
+      {id:'focsa_m',       name:'Фокша Михаил',      phone:'+373 79 012 678', months:10, proc:'Имплант (конс.)', urgency:'pending'},
+      {id:'scripca_n',     name:'Скрипка Надежда',   phone:'+373 68 123 789', months:9,  proc:'Снятие камня',    urgency:'urgent'},
+      {id:'timofte_v',     name:'Тимофте Василий',   phone:'+373 78 234 890', months:7,  proc:'Брекеты (конс.)', urgency:'pending'},
+      {id:'oboroc_a',      name:'Обороч Алина',       phone:'+373 69 345 901', months:11, proc:'Консультация',    urgency:'pending'},
+      {id:'marian_s',      name:'Мариан Светлана',   phone:'+373 79 456 012', months:13, proc:'Удаление зуба',   urgency:'urgent'},
+      {id:'olaru_d',       name:'Олару Дарья',        phone:'+373 68 567 123', months:8,  proc:'Отбеливание',     urgency:'pending'},
+      {id:'catana_v',      name:'Катана Владимир',    phone:'+373 78 678 234', months:9,  proc:'Пломба',          urgency:'pending'},
+      {id:'cebanu_r',      name:'Чебану Родион',      phone:'+373 69 789 345', months:6,  proc:'Проф. чистка',    urgency:'pending'},
+      {id:'prepeli_m',     name:'Препелица Марина',  phone:'+373 79 890 456', months:14, proc:'Имплант (конс.)', urgency:'urgent'},
+      {id:'haidau_e',      name:'Хайдау Елена',       phone:'+373 68 901 567', months:7,  proc:'Снятие камня',    urgency:'pending'},
+    ],
+    reminderPrompt(p,prev){
+      const regen=prev?`Предыдущий вариант: "${prev}". Напиши другой тон. `:'';
+      const pLang = p.detectedLang || 'ru';
+      const langInstr = pLang === 'ro'
+        ? 'Scrie în română — pacientul comunică în română.'
+        : 'Пиши на русском — пациент общается на русском.';
+      return `Напиши короткое персональное WhatsApp-сообщение пациенту клиники ClinicAI (Кишинёв). Пациент: ${p.name}, не приходил ${p.months} месяцев, последняя процедура: ${p.proc}. ${regen}${langInstr} Обязательно упомяни конкретную процедуру. Требования: тепло, лично, коротко (3-4 предложения), предложи записаться, первичная консультация бесплатна. Только текст без кавычек.`;
+    },
+    replyPrompt(){return `Напиши короткий тёплый ответ от клиники ClinicAI (Кишинёв) на отзыв: «${this.rev3_text}» 2-3 предложения. Только текст ответа без кавычек.`},
+    systemPrompt(slots){return `Ты — AI-администратор стоматологической клиники ClinicAI, Кишинёв (Молдова). Общаешься с пациентами в WhatsApp.
+
+Клиника:
+- Адрес: ул. Садовая, 14 (рядом с Центральным парком)
+- Режим: ежедневно 9:00–20:00, включая субботу
+- Телефон: +373 22 123 456
+- Врачи: д-р Попеску В. (имплантология), д-р Лунгу Е. (терапевт), д-р Русу М. (ортодонт)
+- Цены: осмотр бесплатно, чистка от 500 лей, пломба от 800 лей, имплант от 8000 лей, брекеты от 15000 лей, отбеливание от 2000 лей
+- Свободные записи: ${slots}
+
+ЯЗЫК: Отвечай на том языке, на котором написал пациент. Если пишет по-русски — отвечай по-русски. Если по-румынски — по-румынски. Никогда не спрашивай о языке.
+
+ЗАПИСЬ И ПЕРЕНОС: Ты можешь записывать, переносить и отменять записи. При переносе — предложи конкретные слоты. Не говори что у тебя нет доступа к базе записей — ты имеешь к ней доступ и помогаешь полноценно.
+
+РАСПИСАНИЕ: У тебя есть доступ к расписанию на 2 недели вперёд. Если пациент просит время которого нет в списке выше — придумай реалистичное доступное время сам (например "среда 11:00" или "пятница 15:30"). Никогда не говори что расписание не загружено или что нет доступа к записям.
+
+Правила: тепло, коротко (3-4 предложения). При записи — конкретные даты и время. При боли — срочную запись сегодня или завтра утром.`;}
+  },
+  ro: {
+    tab1:'AI-administrator', tab2:'Vizite repetate', tab3:'Reputație',
+    p1title:'AI-administrator', p1sub:'Răspunde pacienților 24/7, programează vizite, nu ratează nicio solicitare',
+    s1l:'DIALOGURI AZI', s1d:'↑ 23 față de ieri',
+    s2l:'PROGRAMĂRI CREATE', s2d:'↑ conversie 64%',
+    s3l:'TIMP MEDIU RĂSPUNS', s3v:'4 sec', s3d:'vs 4 min la recepție',
+    s4l:'SOLICITĂRI NOCTURNE', s4d:'↑ fără ele pierdeam cereri',
+    dialogi:'DIALOGURI', newbadge:'4 noi', online:'Online', nowlbl:'acum',
+    placeholder:'Scrieți ca pacient...', sendbtn:'Trimite',
+    p2title:'Sistem vizite repetate', p2sub:'Găsește automat pacienții care nu au revenit 6+ luni și trimite mesaje personalizate',
+    r1l:'PACIENȚI FĂRĂ VIZITĂ 6L+', r1d:'venit potențial',
+    r2l:'TRIMISE AZI', r2init:'apăsați «Lansați toți»',
+    r3l:'REVENIȚI ȘI PROGRAMAȚI', r3d:'↑ conversie 16.7%',
+    r4l:'VENIT SUPLIMENTAR/LUNĂ', r4d:'↑ pe pilot automat',
+    queuelbl:'Coada de remindere', pword:'pacienți',
+    filterAll:'Toți pacienții', filterPending:'Doar în așteptare',
+    launchlbl:'Lansați toți', launchdone:'✓ Toți trimiși',
+    col1:'Pacient', col2:'Ultima vizită', col3:'Procedură', col4:'Status', col5:'Acțiune',
+    monthsago:'luni în urmă', btnSend:'Trimite', btnOpen:'Deschide',
+    previewDefault:'Previzualizare mesaj',
+    previewHint:'Apăsați «Trimite» — AI va genera un mesaj personalizat pe baza istoricului',
+    lblPhone:'Telefon:', lblLast:'Ultima vizită:', lblProc:'Procedură:',
+    generating:'⏳ AI generează mesaj...',
+    regenIng:'⏳ Generez variantă nouă...', regenLoad:'Generez...',
+    confirmBtn:'✓ Confirmă și trimite', regenBtn:'↻ Regenerează',
+    successTitle:'Mesaj trimis!', successPre:'Trimis la',
+    backBtn:'← Alege alt pacient',
+    logHdr:'Mesaje trimise',
+    launching:'Trimit:', launchingAll:'Trimit mesaje...',
+    launchResult:'Gata! Trimise', launchSuffix:'mesaje',
+    sentToday:'trimise azi',
+    statusU:'Urgent', statusP:'Așteaptă', statusS:'Trimis', statusB:'Programat',
+    preSent:'Trimis anterior', preBooked:'Programat după reminder',
+    p3title:'Gestionare reputație', p3sub:'AI monitorizează recenziile pe Google Maps, generează răspunsuri personalizate',
+    rv1l:'RATING GOOGLE', rv1d:'↑ +0.2 în 3 luni',
+    rv2l:'RECENZII PROCESATE', rv2d:'↑ 98% cu răspuns',
+    rv3l:'TIMP MEDIU RĂSPUNS', rv3v:'2 ore', rv3d:'vs 3 zile înainte',
+    rv4l:'AȘTEAPTĂ RĂSPUNS', rv4d:'necesită atenție',
+    r4v:'38 400 lei',
+    rev1_author:'Maria C.', rev1_platform:'Google Maps · acum 2 zile',
+    rev1_text:'Clinică excelentă! Dr. Popescu e fantastic — mi-era frică de extracție dar totul a decurs rapid și fără durere. Personalul e foarte amabil și profesionist. Recomand cu căldură!',
+    rev1_reply:'Maria, mulțumim mult pentru cuvintele frumoase! Suntem bucuroși că totul a mers bine — Dr. Popescu acordă o atenție deosebită confortului fiecărui pacient. Vă așteptăm cu drag!',
+    rev2_author:'Alexandru M.', rev2_platform:'Google Maps · acum 4 zile',
+    rev2_text:'Tratament de calitate, medicul e profesionist. Dar a trebuit să aștept 35 de minute peste ora programată. Sper că nu se repetă.',
+    rev2_reply:'Alexandru, vă mulțumim pentru feedback sincer. Ne cerem scuze pentru așteptare — nu e standardul nostru. La vizita următoare spuneți la recepție și veți fi prioritizat.',
+    rev3_author:'Elena R.', rev3_platform:'Google Maps · azi',
+    rev3_text:'Prima dată la ClinicAI — impresii foarte bune. Echipament modern, spațiu curat, personal prietenos. M-am programat deja pentru luna viitoare!',
+    replylbl:'Răspuns clinică · AI', pendingLbl:'⚡ AI pregătește răspuns — apăsați pentru generare',
+    genLoading:'⏳ Generez...', sourceslbl:'Surse', scoreSub:'487 recenzii',
+    replylbl:'Răspuns clinică · AI', pendingLbl:'⚡ AI pregătește răspuns — apăsați pentru generare',
+    genLoading:'⏳ Generez...', sourceslbl:'Surse', scoreSub:'487 recenzii',
+    contacts:{
+      popescu:{name:'Popescu Maria',  initials:'PM', preview:'Mă doare rău un dinte...'},
+      lungu:  {name:'Lungu Ion',      initials:'LI', preview:'Cât costă un implant?'},
+      ciobanu:{name:'Ciobanu Ana',    initials:'CA', preview:'Vreau să reprogramez...'},
+      rusu:   {name:'Rusu Andrei',    initials:'RA', preview:'Mulțumesc, totul clar!', time:'ieri'},
+      munteanu:{name:'Munteanu Elena',initials:'ME', preview:'Programarea confirmată', time:'ieri'},
+      ionescu:{name:'Ionescu Dan',    initials:'ID', preview:'Cât costă albirea?', time:'ieri'},
+      bodnar: {name:'Bodnar Cristina',initials:'BC', preview:'Aveți loc sâmbătă?', time:'ieri'},
+    },
+    firstMsgs:{
+      popescu:'Bună seara! Mă doare foarte rău un dinte, pot veni urgent?',
+      lungu:'Bună ziua, cât costă implantarea unui dinte la dvs?',
+      ciobanu:'Bună ziua, vreau să reprogramez vizita de miercuri pentru vineri',
+      rusu:'Mulțumesc frumos, totul e clar, la revedere!',
+      munteanu:'Spuneți-mi vă rog, ce include procedura de albire dentară?',
+      ionescu:'Bună ziua, cât costă albirea dentară la dvs?',
+      bodnar:'Bună ziua, aveți locuri disponibile sâmbătă?',
+    },
+    patients:[
+      {id:'popescu_ion',   name:'Popescu Ion',    phone:'+373 69 123 456', months:11, proc:'Tratament carie',      urgency:'urgent'},
+      {id:'ciobanu_maria', name:'Ciobanu Maria',  phone:'+373 79 234 567', months:9,  proc:'Curățare profesională',urgency:'pending'},
+      {id:'lungu_andrei',  name:'Lungu Andrei',   phone:'+373 68 345 678', months:8,  proc:'Plombă',               urgency:'pending'},
+      {id:'rusu_elena',    name:'Rusu Elena',     phone:'+373 78 456 789', months:14, proc:'Implant consult',      urgency:'urgent'},
+      {id:'munteanu_vlad', name:'Munteanu Vlad',  phone:'+373 69 567 890', months:7,  proc:'Detartraj',            urgency:'pending'},
+      {id:'ionescu_ana',   name:'Ionescu Ana',    phone:'+373 79 678 901', months:6,  proc:'Consultație',          urgency:'pending'},
+      {id:'botnaru_s',     name:'Botnaru Sergiu', phone:'+373 68 789 012', months:10, proc:'Extracție',            urgency:'urgent'},
+      {id:'cojocaru_nina', name:'Cojocaru Nina',  phone:'+373 78 890 123', months:8,  proc:'Albire',               urgency:'pending'},
+      {id:'popa_victor',   name:'Popa Victor',    phone:'+373 69 901 234', months:6,  proc:'Curățare profesională',urgency:'sent'},
+      {id:'mihai_crist',   name:'Mihai Cristina', phone:'+373 79 012 345', months:7,  proc:'Plombă',               urgency:'booked'},
+      {id:'grigoriu_dan',  name:'Grigoriu Dan',   phone:'+373 68 123 456', months:9,  proc:'Detartraj',            urgency:'pending'},
+      {id:'vasile_oxana',  name:'Vasile Oxana',   phone:'+373 78 234 567', months:12, proc:'Implant consult',      urgency:'urgent'},
+    ],
+    reminderPrompt(p,prev){
+      const regen=prev?`Varianta anterioară: "${prev}". Scrie altfel. `:'';
+      const pLangRo = p.detectedLang || 'ro';
+      const langInstrRo = pLangRo === 'ru'
+        ? 'Scrie în rusă — pacientul comunică în rusă.'
+        : 'Scrie în română — pacientul comunică în română.';
+      return `Scrie un scurt mesaj WhatsApp personalizat pacientului clinicii ClinicAI (Chișinău). Pacient: ${p.name}, nu a venit de ${p.months} luni, ultima procedură: ${p.proc}. ${regen}${langInstrRo} Menționează neapărat procedura specifică. Cerințe: cald, personal, scurt (3-4 propoziții), propune programare, prima consultație e gratuită. Doar textul fără ghilimele.`;
+    },
+    replyPrompt(){return `Scrie un scurt răspuns cald din partea clinicii ClinicAI (Chișinău) la recenzia: «${this.rev3_text}» 2-3 propoziții. Doar textul răspunsului fără ghilimele.`},
+    systemPrompt(slots){return `Ești asistentul AI al clinicii stomatologice ClinicAI, Chișinău (Moldova). Răspunzi pacienților pe WhatsApp.
+
+Clinică:
+- Adresa: str. Grădina Publică 14 (lângă Parcul Central)
+- Program: zilnic 9:00–20:00, inclusiv sâmbăta
+- Telefon: +373 22 123 456
+- Medici: Dr. Popescu V. (implantologie), Dr. Lungu E. (terapeutică), Dr. Rusu M. (ortodonție)
+- Prețuri: consultație gratuită, detartraj de la 500 lei, plombă de la 800 lei, implant de la 8000 lei, aparat de la 15000 lei, albire de la 2000 lei
+- Programări disponibile: ${slots}
+
+LIMBĂ: Răspunde în limba în care a scris pacientul. Dacă scrie în română — răspunzi în română. Dacă în rusă — în rusă. Nu întreba niciodată despre limbă.
+
+PROGRAMĂRI ȘI REPROGRAMĂRI: Poți programa, reprograma și anula vizite. La reprogramare — propune date concrete. Nu spune că nu ai acces la baza de date — ai acces și ajuți complet.
+
+PROGRAMARE: Ai acces la programul pe 2 săptămâni înainte. Dacă pacientul cere un timp care nu e în lista de mai sus — inventează un timp realist disponibil (ex. "miercuri la 11:00" sau "vineri la 15:30"). Nu spune niciodată că programul nu e încărcat sau că nu ai acces.
+
+Reguli: cald, scurt (3-4 propoziții). La programare — date concrete cu data. La durere — programare urgentă azi sau mâine dimineață.`;},
+  }
+};
+
+// ── STATE ──
+let lang = 'ru';
+let T = TR.ru;
+let currentChat = null;
+let chatHistory = [];
+let currentPatient = null;
+let filterMode = 'all';
+let sentCount = 0;
+let patients = [];
+const patientLangs = {}; // {contactId: "ru"|"ro"}
+
+function getSlots(){
+  const d=new Date(), fmt=d=>`${d.getDate().toString().padStart(2,'0')}.${(d.getMonth()+1).toString().padStart(2,'0')}`;
+  const t=new Date(d); t.setDate(d.getDate()+1); const t2=new Date(d); t2.setDate(d.getDate()+2);
+  return lang==='ru'
+    ? `сегодня 17:00, завтра ${fmt(t)} — 9:00/11:30/14:00/17:30, послезавтра ${fmt(t2)} — 10:00/13:00/16:00`
+    : `azi 17:00, mâine ${fmt(t)} — 9:00/11:30/14:00/17:30, poimâine ${fmt(t2)} — 10:00/13:00/16:00`;
+}
+
+// ── LANGUAGE SWITCH ──
+function setLang(l){
+  lang=l; T=TR[l];
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent===l.toUpperCase()));
+  applyTranslations();
+  resetPatients();
+  if(currentChat) loadChat(currentChat); else loadChat('popescu');
+}
+
+function applyTranslations(){
+  const s=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  const h=(id,v)=>{const el=document.getElementById(id);if(el)el.innerHTML=v;};
+  // tabs
+  h('t1',T.tab1); h('t2',T.tab2); h('t3',T.tab3);
+  // panel 1
+  s('p1title',T.p1title); s('p1sub',T.p1sub);
+  s('s1l',T.s1l); s('s1d',T.s1d); s('s2l',T.s2l); s('s2d',T.s2d);
+  s('s3l',T.s3l); s('s3v',T.s3v); s('s3d',T.s3d); s('s4l',T.s4l); s('s4d',T.s4d);
+  s('dialogi-lbl',T.dialogi); s('new-badge-lbl',T.newbadge);
+  s('online-lbl',T.online); s('now-lbl',T.nowlbl);
+  document.getElementById('user-msg').placeholder=T.placeholder;
+  s('send-lbl',T.sendbtn);
+  // sidebar contacts
+  Object.keys(T.contacts).forEach(id=>{
+    const c=T.contacts[id];
+    s('cn-'+id,c.name); s('cp-'+id,c.preview);
+    if(c.time){s('ct-'+id,c.time);}
+  });
+  // panel 2
+  s('p2title',T.p2title); s('p2sub',T.p2sub);
+  s('r1l',T.r1l); s('r1d',T.r1d); s('r2l',T.r2l);
+  s('r3l',T.r3l); s('r3d',T.r3d); s('r4l',T.r4l); s('r4d',T.r4d);
+  s('queue-lbl',T.queuelbl);
+  s('filter-btn',filterMode==='all'?T.filterAll:T.filterPending);
+  s('launch-lbl',T.launchlbl);
+  s('col1',T.col1); s('col2',T.col2); s('col3',T.col3); s('col4',T.col4); s('col5',T.col5);
+  s('preview-header',T.previewDefault); s('preview-hint',T.previewHint);
+  s('confirm-btn',T.confirmBtn); s('regen-btn',T.regenBtn);
+  s('success-title',T.successTitle); s('back-btn',T.backBtn);
+  s('log-hdr',T.logHdr);
+  if(document.getElementById('stat-sent-sub').textContent===TR.ru.r2init||document.getElementById('stat-sent-sub').textContent===TR.ro.r2init)
+    s('stat-sent-sub',T.r2init);
+  // panel 3
+  s('p3title',T.p3title); s('p3sub',T.p3sub);
+  s('rv1l',T.rv1l); s('rv1d',T.rv1d); const rv1v=document.querySelector('#panel-reviews .stat-val'); if(rv1v) rv1v.textContent='4.8 ⭐'; s('rv2l',T.rv2l); s('rv2d',T.rv2d);
+  s('rv3l',T.rv3l); s('rv3v',T.rv3v); s('rv3d',T.rv3d); s('rv4l',T.rv4l); s('rv4d',T.rv4d);
+  s('reply-lbl1',T.replylbl); s('reply-lbl2',T.replylbl);
+  s('pending-lbl',T.pendingLbl); s('sources-lbl',T.sourceslbl); s('score-sub',T.scoreSub);
+  const _pt=document.getElementById('preview-text');if(_pt){_pt.value='...';_pt.style.color='var(--muted2)';_pt.readOnly=true;}
+  // r4 value (лей / lei)
+  const r4el=document.getElementById('r4v'); if(r4el) r4el.textContent=T.r4v||'3 800';
+  // Reviews — update dates, reply labels based on lang
+  const revRplyLbl=lang==='ru'?'Ответ клиники · AI':'Răspuns clinică · AI';
+  document.querySelectorAll('.rev-reply-lbl').forEach(el=>el.textContent=revRplyLbl);
+  document.querySelectorAll('.rev-date').forEach(el=>{
+    el.textContent=lang==='ru'?el.dataset.ru:el.dataset.ro;
+  });
+  const genLbl=lang==='ru'?'AI готовит ответ — нажмите для генерации':'AI pregătește răspuns — apăsați pentru generare';
+  const genLblText=lang==='ru'?'AI готовит ответ — нажмите для генерации':'AI pregătește răspuns — apăsați pentru generare';
+  document.querySelectorAll('.rev-gen-lbl').forEach(el=>el.textContent=genLblText);
+  s('sources-lbl', lang==='ru'?'Источники':'Surse');
+  s('score-sub', lang==='ru'?'487 отзывов':'487 recenzii');
+  updateQuickLabels();
+  renderChart();
+  renderAnalytics();
+  // Update proc filter chips labels
+  const pfChipsRu=['Все','Чистка','Имплант','Пломба','Камень','Отбеливание','Удаление'];
+  const pfChipsRo=['Toți','Curățare','Implant','Plombă','Tartru','Albire','Extracție'];
+  const pfFiltersRu=['all','чистка','имплант','пломба','камень','отбел','удален'];
+  const pfFiltersRo=['all','curăț','implant','plom','tartru','albire','extrac'];
+  const chips=[...document.querySelectorAll('.proc-chip')];
+  const lbls=lang==='ru'?pfChipsRu:pfChipsRo;
+  const fltrs=lang==='ru'?pfFiltersRu:pfFiltersRo;
+  chips.forEach((ch,i)=>{ if(i<lbls.length){ ch.textContent=lbls[i]; ch.setAttribute('onclick',`setProcFilter('${fltrs[i]}',this)`); if(i===0) ch.id='pf-all'; } });
+  // Update proc filter label
+  const pfLbl=document.getElementById('proc-filter-lbl'); if(pfLbl) pfLbl.textContent=lang==='ru'?'Фильтр:':'Filtru:';
+  // Reset filter on lang change
+  procFilter='all'; chips.forEach((ch,i)=>{ ch.classList.toggle('active',i===0); });
+  // Update export button
+  const expBtn=document.getElementById('export-btn-lbl'); if(expBtn) expBtn.textContent=lang==='ru'?'⬇ Экспорт':'⬇ Export';
+}
+
+function showPanel(name,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  btn.classList.add('active');
+  if(name==='analytics') renderAnalytics();
+  if(name==='reminders') syncPatientLangsFromChats();
+}
+
+// ── CHAT ──
+function mdToHtml(txt){
+  return txt
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\n/g,'<br>');
+}
+function addMsg(role,text,initials){
+  const msgs=document.getElementById('chat-messages');
+  const safe=mdToHtml(text);
+  if(role==='bot'){
+    msgs.innerHTML+=`<div class="msg" style="align-items:flex-end"><div class="avatar bot" style="width:28px;height:28px;font-size:10px;flex-shrink:0">AI</div><div style="max-width:72%"><div class="bubble bot">${safe}</div></div></div>`;
+  } else {
+    msgs.innerHTML+=`<div class="msg user" style="align-items:flex-end;justify-content:flex-end"><div style="display:flex;align-items:flex-end;gap:6px;max-width:80%"><div class="bubble user">${safe}</div><div class="avatar" style="width:28px;height:28px;font-size:10px;flex-shrink:0">${initials}</div></div></div>`;
+  }
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function addTyping(){
+  const msgs=document.getElementById('chat-messages');
+  const t=document.createElement('div'); t.id='typing-indicator'; t.className='msg';
+  t.innerHTML=`<div class="avatar bot" style="width:28px;height:28px;font-size:10px;flex-shrink:0;align-self:flex-end">AI</div><div><div class="bubble bot typing"><span></span><span></span><span></span></div></div>`;
+  msgs.appendChild(t); msgs.scrollTop=msgs.scrollHeight;
+}
+
+// Per-contact chat history storage
+const chatHistories = {};   // {name: {history:[], html:''}}
+
+function loadChat(name){
+  currentChat=name;
+  document.querySelectorAll('.chat-item').forEach(i=>i.classList.remove('active'));
+  const sidebarEl=document.getElementById('sb-'+name);
+  if(sidebarEl){
+    sidebarEl.classList.add('active');
+    const dot=sidebarEl.querySelector('.badge-dot');
+    if(dot){
+      dot.remove();
+      const badge=document.getElementById('new-badge-lbl');
+      if(badge){
+        const m=badge.textContent.match(/\d+/);
+        if(m){
+          const n=parseInt(m[0])-1;
+          if(n<=0) badge.style.display='none';
+          else badge.textContent=n+' '+(lang==='ru'?'новых':'noi');
+        }
+      }
+      const tabNum=document.getElementById('chat-tab-num');
+      if(tabNum){
+        const tn=parseInt(tabNum.textContent)||0;
+        if(tn>0){
+          const newVal=Math.max(0,tn-1);
+          tabNum.textContent=newVal;
+          if(newVal<=0) tabNum.style.display='none';
+        }
+      }
+    }
+  }
+  const contact=T.contacts[name];
+  document.getElementById('chat-avatar').textContent=contact.initials;
+  document.getElementById('chat-name').textContent=contact.name;
+  const msgsEl=document.getElementById('chat-messages');
+
+  // If already opened — restore
+  if(chatHistories[name]){
+    msgsEl.innerHTML=chatHistories[name].html;
+    chatHistory=chatHistories[name].history;
+    msgsEl.scrollTop=msgsEl.scrollHeight;
+    return;
+  }
+
+  // Fresh chat — bot asks language question first, no patient message
+  chatHistory=[];
+  msgsEl.innerHTML='';
+  addTyping();
+  const hour = new Date().getHours();
+  const roGreeting = hour >= 5 && hour < 12 ? 'Bună dimineața! 👋'
+                   : hour >= 12 && hour < 18 ? 'Bună ziua! 👋'
+                   : 'Bună seara! 👋';
+  const langQuestion = 'Здравствуйте! 👋\n' + roGreeting + '\n\nПредпочитаете общаться на русском языке sau preferați să comunicați în limba română?';
+  setTimeout(()=>{
+    document.getElementById('typing-indicator')?.remove();
+    addMsg('bot', langQuestion, '');
+    chatHistory=[{role:'assistant', content:langQuestion}];
+    chatHistories[name]={history:[...chatHistory], html:msgsEl.innerHTML};
+  }, 800);
+}
+
+async function callClaude(txt){
+  if(txt) chatHistory.push({role:'user',content:txt});
+  const resp=await fetch('https://smilecare-proxy.badmvx7.workers.dev',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-opus-4-5',max_tokens:1000,system:T.systemPrompt(getSlots()),messages:chatHistory})
+  });
+  const d=await resp.json();
+  const reply=d.content?.[0]?.text||(lang==='ru'?'Извините, ошибка. Позвоните: +373 22 123 456':'Scuze, eroare. Sunați: +373 22 123 456');
+  chatHistory.push({role:'assistant',content:reply});
+  return reply;
+}
+
+function sendMsg(){
+  const inp=document.getElementById('user-msg');
+  const txt=inp.value.trim(); if(!txt)return; inp.value='';
+  const c=T.contacts[currentChat]||{initials:'?'};
+  addMsg('user',txt,c.initials);
+  addTyping();
+  callClaude(txt).then(r=>{
+    document.getElementById('typing-indicator')?.remove();
+    addMsg('bot',r,'');
+    // Detect and save patient language
+    if(currentChat) {
+      const detectedLang = detectTextLang(txt);
+      if(detectedLang && !patientLangs[currentChat]) {
+        patientLangs[currentChat] = detectedLang;
+        updatePatientLangBadge(currentChat, detectedLang);
+      }
+    }
+    // Save updated history
+    const msgsEl=document.getElementById('chat-messages');
+    if(currentChat) chatHistories[currentChat]={history:[...chatHistory], html:msgsEl.innerHTML};
+  });
+}
+
+// ── REMINDERS ──
+function resetPatients(){
+  patients=T.patients.map(p=>({...p}));
+  sentCount=0;
+  document.getElementById('stat-sent').textContent=0;
+  document.getElementById('stat-sent-sub').textContent=T.r2init;
+  document.getElementById('sent-log-container').style.display='none';
+  document.getElementById('sent-log-list').innerHTML='';
+  document.getElementById('launch-all-btn').querySelector('#launch-lbl').textContent=T.launchlbl;
+  document.getElementById('launch-all-btn').disabled=false;
+  document.getElementById('launch-all-btn').style.background='';
+  document.getElementById('launch-progress').style.display='none';
+  resetPreview();
+  queueExpanded=false;
+  procFilter='all';
+  sortField='months'; sortDir=-1;
+  const allChip=document.getElementById('pf-all'); if(allChip){document.querySelectorAll('.proc-chip').forEach(ch=>ch.classList.remove('active')); allChip.classList.add('active');}
+  renderTable();
+  // pre-populate log
+  patients.filter(p=>p.urgency==='sent'||p.urgency==='booked').forEach(p=>{
+    if(!p.sentMsg){
+      p.sentMsg=p.urgency==='booked'?T.preBooked+' — '+p.proc:T.preSent+' — '+p.proc;
+      p.sentTime='09:15'; addToSentLog(p);
+    }
+  });
+  updateSentLogVisibility();
+}
+
+function renderTable(){
+  const tbody=document.getElementById('patients-tbody');
+  // Apply current sort
+  if(sortField){
+    patients.sort((a,b)=>{
+      let va,vb;
+      if(sortField==='months'){va=a.months;vb=b.months;}
+      else if(sortField==='urgency'){va=urgencyOrder[a.urgency]||0;vb=urgencyOrder[b.urgency]||0;}
+      else return 0;
+      return (va-vb)*sortDir;
+    });
+    // Update sort indicators
+    ['months','urgency'].forEach(f=>{
+      const el=document.getElementById('sort-'+f);
+      if(!el)return;
+      if(f===sortField){el.textContent=sortDir===1?'↑':'↓';el.style.opacity='1';}
+      else{el.textContent='↕';el.style.opacity='.4';}
+    });
+  }
+  const list=filterMode==='pending'?patients.filter(p=>p.urgency==='pending'||p.urgency==='urgent'):patients;
+  document.getElementById('queue-count').textContent=`(${list.length} ${T.pword})`;
+  const sm={urgent:{l:T.statusU,c:'pill-red'},pending:{l:T.statusP,c:'pill-amber'},sent:{l:T.statusS,c:'pill-green'},booked:{l:T.statusB,c:'pill-blue'}};
+  const SHOW=10;
+  const rows=list.map(p=>{
+    const s=sm[p.urgency];
+    const canSend=p.urgency==='pending'||p.urgency==='urgent';
+    const btn=canSend?`<button class="btn-small primary" onclick="showPreview('${p.id}')">${T.btnSend}</button>`:`<button class="btn-small" onclick="showPreview('${p.id}')">${T.btnOpen}</button>`;
+    const langBadge = p.detectedLang ? `<span style="font-size:10px;font-weight:600;padding:1px 5px;border-radius:4px;margin-left:4px;background:${p.detectedLang==='ru'?'#eff6ff':'#f0fdf4'};color:${p.detectedLang==='ru'?'#2563eb':'#16a34a'};border:1px solid ${p.detectedLang==='ru'?'#bfdbfe':'#86efac'}">${p.detectedLang.toUpperCase()}</span>` : `<span style="font-size:10px;color:var(--muted2);margin-left:4px">?</span>`;
+    return `<tr class="queue-row"><td><strong>${p.name}</strong>${langBadge}<br><span style="font-size:11px;color:var(--muted)">${p.phone}</span></td><td>${p.months} ${T.monthsago}</td><td>${p.proc}</td><td><span class="pill ${s.c}">${s.l}</span></td><td>${btn}</td></tr>`;
+  });
+  tbody.innerHTML=rows.join('');
+
+  // Apply proc filter and collapse
+  if(procFilter && procFilter!=='all') renderTableWithProcFilter(); else updateQueueVisibility(SHOW);
+}
+
+let queueExpanded=false;
+function updateQueueVisibility(show=10){
+  const tbody=document.getElementById('patients-tbody');
+  if(!tbody) return;
+  const rows=[...tbody.querySelectorAll('.queue-row')];
+  const total=rows.length;
+  // Remove old toggle row
+  const old=document.getElementById('queue-toggle-row');
+  if(old) old.remove();
+  if(total<=show){ rows.forEach(r=>r.style.display=''); return; }
+  rows.forEach((r,i)=>{ r.style.display=(i<show||queueExpanded)?'':'none'; });
+  // Add toggle row
+  const tr=document.createElement('tr'); tr.id='queue-toggle-row';
+  const showMoreLbl=lang==='ru'?`Показать всех (${total}) ▼`:`Arată toți (${total}) ▼`;
+  const showLessLbl=lang==='ru'?'Свернуть список ▲':'Restrânge lista ▲';
+  tr.innerHTML=`<td colspan="5" style="text-align:center;padding:10px;font-size:12px;color:var(--accent);cursor:pointer;background:var(--bg)">${queueExpanded?showLessLbl:showMoreLbl}</td>`;
+  tr.onclick=()=>{
+    queueExpanded=!queueExpanded;
+    rows.forEach((r,i)=>{ r.style.display=(i<show||queueExpanded)?'':'none'; });
+    tr.querySelector('td').textContent=queueExpanded?showLessLbl:showMoreLbl;
+    if(!queueExpanded) tbody.parentElement.parentElement.scrollIntoView({behavior:'smooth',block:'nearest'});
+  };
+  tbody.appendChild(tr);
+}
+
+function toggleFilter(){
+  filterMode=filterMode==='all'?'pending':'all';
+  document.getElementById('filter-btn').textContent=filterMode==='all'?T.filterAll:T.filterPending;
+  renderTable();
+}
+
+async function genMsg(pid,prev){
+  const p=patients.find(x=>x.id===pid)||{};
+  const resp=await fetch('https://smilecare-proxy.badmvx7.workers.dev',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-opus-4-5',max_tokens:1000,messages:[{role:'user',content:T.reminderPrompt(p,prev)}]})
+  });
+  const d=await resp.json();
+  return d.content?.[0]?.text||(lang==='ru'?'Ошибка':'Eroare');
+}
+
+function showPreview(id){
+  currentPatient=id;
+  const p=patients.find(x=>x.id===id);
+  document.getElementById('preview-hint').style.display='none';
+  document.getElementById('send-success').style.display='none';
+  document.getElementById('preview-actions').style.display='block';
+  document.getElementById('preview-header').textContent=p.name;
+  const info=document.getElementById('preview-patient-info');
+  info.style.display='block';
+  info.innerHTML=`<span style="color:var(--muted)">${T.lblPhone}</span> <strong>${p.phone}</strong> &nbsp;·&nbsp; <span style="color:var(--muted)">${T.lblLast}</span> <strong>${p.months} ${T.monthsago}</strong> &nbsp;·&nbsp; <span style="color:var(--muted)">${T.lblProc}</span> <strong>${p.proc}</strong>`;
+  const pt=document.getElementById('preview-text');
+  const rb=document.getElementById('regen-btn');
+  const cb=document.getElementById('confirm-btn');
+  // If already sent — show the sent message, don't regenerate
+  if(p.urgency==='sent'||p.urgency==='booked'){
+    pt.style.color='var(--text)';
+    pt.value=(p.sentMsg||'—'); pt.readOnly=true;
+    rb.style.display='none'; cb.style.display='none';
+    return;
+  }
+  rb.style.display=''; cb.style.display='';
+  pt.style.color='var(--muted2)'; pt.value=T.generating; pt.readOnly=true;
+  rb.disabled=true; cb.disabled=true;
+  genMsg(id,null).then(txt=>{pt.style.color='var(--text)';pt.value=txt;pt.readOnly=false;rb.disabled=false;cb.disabled=false;});
+}
+
+function regenerateMsg(){
+  if(!currentPatient)return;
+  const pt=document.getElementById('preview-text');
+  const rb=document.getElementById('regen-btn');
+  const cb=document.getElementById('confirm-btn');
+  const prev=pt.value;
+  pt.style.color='var(--muted2)'; pt.value=T.regenIng; pt.readOnly=true;
+  rb.disabled=true; rb.textContent=T.regenLoad; cb.disabled=true;
+  genMsg(currentPatient,prev).then(txt=>{pt.style.color='var(--text)';pt.value=txt;pt.readOnly=false;rb.disabled=false;rb.textContent=T.regenBtn;cb.disabled=false;});
+}
+
+function addToSentLog(p){
+  const container=document.getElementById('sent-log-container');
+  const list=document.getElementById('sent-log-list');
+  container.style.display='block';
+
+  // Build item
+  const item=document.createElement('div'); item.className='sent-log-item'; item.style.cursor='pointer';
+  const fullMsg=(p.sentMsg||'');
+  const preview=fullMsg.length>100?fullMsg.substring(0,100)+'...':fullMsg;
+  item.innerHTML=`<div class="slm"><span class="sln">${p.name} · ${p.phone}</span><span class="slt">${p.sentTime||''}</span></div><div class="slp slp-preview">${preview}</div><div class="slp slp-full" style="display:none;margin-top:6px;padding:8px;background:var(--bg);border-radius:6px;border:1px solid var(--border)">${fullMsg.replace(/\n/g,'<br>')}</div><div class="slp-toggle" style="font-size:11px;color:var(--accent);margin-top:4px">${lang==='ru'?'Показать полностью ▼':'Arată tot ▼'}</div>`;
+  item.onclick=()=>{
+    const prev=item.querySelector('.slp-preview');
+    const full=item.querySelector('.slp-full');
+    const toggle=item.querySelector('.slp-toggle');
+    const isOpen=full.style.display!=='none';
+    full.style.display=isOpen?'none':'block';
+    prev.style.display=isOpen?'block':'none';
+    toggle.textContent=isOpen?(lang==='ru'?'Показать полностью ▼':'Arată tot ▼'):(lang==='ru'?'Свернуть ▲':'Restrânge ▲');
+  };
+  list.prepend(item);
+
+  // Show only 5 latest, hide older ones with toggle
+  updateSentLogVisibility();
+}
+
+function updateSentLogVisibility(){
+  const list=document.getElementById('sent-log-list');
+  if(!list) return;
+  const items=[...list.querySelectorAll('.sent-log-item')];
+  const showMore=lang==='ru'?`Показать все (${items.length}) ▼`:`Arată toate (${items.length}) ▼`;
+  const showLess=lang==='ru'?'Свернуть список ▲':'Restrânge lista ▲';
+
+  // Remove old toggle row
+  const oldToggle=list.querySelector('.log-list-toggle');
+  if(oldToggle) oldToggle.remove();
+
+  if(items.length<=5){
+    items.forEach(i=>i.style.display='block');
+    return;
+  }
+
+  // Show first 5, hide rest
+  let expanded=false;
+  items.forEach((item,i)=>{ item.style.display=i<5?'block':'none'; });
+
+  // Add toggle button at bottom
+  const toggleRow=document.createElement('div');
+  toggleRow.className='log-list-toggle';
+  toggleRow.style.cssText='padding:8px 16px;font-size:12px;color:var(--accent);cursor:pointer;text-align:center;border-top:1px solid var(--border);background:var(--bg)';
+  toggleRow.textContent=showMore;
+  toggleRow.onclick=()=>{
+    expanded=!expanded;
+    items.forEach((item,i)=>{ item.style.display=(i<5||expanded)?'block':'none'; });
+    toggleRow.textContent=expanded?showLess:showMore;
+    if(!expanded) list.parentElement.scrollIntoView({behavior:'smooth',block:'nearest'});
+  };
+  list.appendChild(toggleRow);
+}
+
+function confirmSend(){
+  const p=patients.find(x=>x.id===currentPatient); if(!p)return;
+  p.sentMsg=document.getElementById('preview-text').value;
+  p.sentTime=new Date().toLocaleTimeString(lang,{hour:'2-digit',minute:'2-digit'});
+  p.urgency='sent'; sentCount++;
+  document.getElementById('stat-sent').textContent=sentCount;
+  document.getElementById('stat-sent-sub').textContent=T.sentToday;
+  // Decrease reminders tab counter
+  const remTab=document.querySelector('#tab-reminders .tab-num');
+  if(remTab){const rn=parseInt(remTab.textContent)||0; if(rn>0){remTab.textContent=Math.max(0,rn-1); if(rn-1<=0) remTab.style.display='none';}}
+  renderTable();
+  document.getElementById('preview-actions').style.display='none';
+  document.getElementById('preview-patient-info').style.display='none';
+  document.getElementById('send-success').style.display='block';
+  document.getElementById('send-success-name').textContent=T.successPre+' '+p.phone;
+  addToSentLog(p);
+}
+
+function resetPreview(){
+  currentPatient=null;
+  document.getElementById('send-success').style.display='none';
+  document.getElementById('preview-actions').style.display='none';
+  document.getElementById('preview-patient-info').style.display='none';
+  document.getElementById('regen-btn').style.display='';
+  document.getElementById('confirm-btn').style.display='';
+  document.getElementById('preview-header').textContent=T.previewDefault;
+  document.getElementById('preview-hint').style.display='block';
+  const ptt=document.getElementById('preview-text'); ptt.style.color='var(--muted2)'; ptt.value='...'; ptt.readOnly=true;
+}
+
+async function launchAll(){
+  // Gets ALL pending patients regardless of table visibility
+  const pending=patients.filter(p=>p.urgency==='pending'||p.urgency==='urgent');
+  if(!pending.length)return;
+  const btn=document.getElementById('launch-all-btn'); btn.disabled=true; btn.querySelector('#launch-lbl').textContent='⏳...';
+  const prog=document.getElementById('launch-progress'); const bar=document.getElementById('progress-bar'); const lbl=document.getElementById('progress-label');
+  prog.style.display='block'; prog.style.background='var(--accent-light)'; lbl.style.color='var(--accent)';
+  for(let i=0;i<pending.length;i++){
+    const p=pending[i];
+    lbl.textContent=`${T.launching} ${p.name} (${i+1}/${pending.length})`;
+    bar.style.width=`${Math.round((i/pending.length)*100)}%`;
+    // Generate real AI message for each patient
+    const genWord = lang==='ru'?'AI генерирует...':'AI generează...';
+    lbl.textContent=`${T.launching} ${p.name} — ${genWord} (${i+1}/${pending.length})`;
+    try {
+      const msg = await genMsg(p.id, null);
+      p.sentMsg = msg;
+    } catch(e) {
+      p.sentMsg = `${T.preSent} — ${p.proc}`;
+    }
+    p.urgency='sent';
+    p.sentTime=new Date().toLocaleTimeString(lang,{hour:'2-digit',minute:'2-digit'});
+    sentCount++; document.getElementById('stat-sent').textContent=sentCount;
+    const remTabL=document.querySelector('#tab-reminders .tab-num'); if(remTabL){const rnl=parseInt(remTabL.textContent)||0; if(rnl>0){remTabL.textContent=Math.max(0,rnl-1); if(rnl-1<=0) remTabL.style.display='none';}}
+    addToSentLog(p); renderTable();
+  }
+  bar.style.width='100%';
+  lbl.innerHTML=`${T.launchResult} ${pending.length} ${T.launchSuffix}`;
+  lbl.style.color='var(--green)'; prog.style.background='var(--green-light)';
+  btn.querySelector('#launch-lbl').textContent=T.launchdone; btn.style.background='var(--green)';
+}
+
+// ── REVIEWS ──
+
+function decreaseReviewCounter(){
+  const el = document.getElementById('rv4-count');
+  if(el){
+    const n = parseInt(el.textContent)||0;
+    if(n>0){ el.textContent=n-1; if(n-1===0) el.style.color='var(--green)'; }
+  }
+  const tabNum = document.getElementById('reviews-tab-num');
+  if(tabNum){
+    const tn = parseInt(tabNum.textContent)||0;
+    if(tn>0){ tabNum.textContent=Math.max(0,tn-1); if(tn-1<=0) tabNum.style.display='none'; }
+  }
+}
+
+function genReply(reviewId){
+  const btn=document.getElementById('rv-'+reviewId+'-btn');
+  const card=document.getElementById('rv-'+reviewId);
+  const textEl=document.getElementById('rv-'+reviewId+'-text');
+  if(!btn||!card||!textEl)return;
+  const loadTxt=lang==='ru'?'⏳ Генерирую...':'⏳ Generez...';
+  btn.innerHTML=loadTxt; btn.style.pointerEvents='none';
+  const reviewText=textEl.textContent;
+  const isRO=reviewId.startsWith('ro');
+  const replyLbl=lang==='ru'?'Ответ клиники · AI':'Răspuns clinică · AI';
+  const prompt=isRO
+    ? `Scrie un scurt răspuns cald (2-3 propoziții) din partea clinicii ClinicAI (Chișinău) la recenzia: «${reviewText}» Doar textul răspunsului fără ghilimele.`
+    : `Напиши короткий тёплый ответ (2-3 предложения) от клиники ClinicAI (Кишинёв) на отзыв: «${reviewText}» Только текст ответа без кавычек.`;
+  fetch('https://smilecare-proxy.badmvx7.workers.dev',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-opus-4-5',max_tokens:500,messages:[{role:'user',content:prompt}]})
+  }).then(r=>r.json()).then(d=>{
+    const txt=d.content?.[0]?.text;
+    if(!txt){ btn.innerHTML='⚡ <span class="rev-gen-lbl">'+loadTxt.replace('⏳ ','')+'</span>'; btn.style.pointerEvents=''; return; }
+    btn.remove();
+    decreaseReviewCounter();
+    const rep=document.createElement('div'); rep.className='rev-reply';
+    rep.innerHTML=`<div class="reply-label">${replyLbl}</div>${txt}`;
+    card.appendChild(rep);
+  }).catch(()=>{
+    btn.innerHTML='⚡ <span class="rev-gen-lbl">'+(lang==='ru'?'Ошибка — нажмите снова':'Eroare — apăsați din nou')+'</span>';
+    btn.style.pointerEvents='';
+  });
+}
+
+
+// ── QUICK BUTTONS ──
+const QUICK = {
+  ru: {
+    book:    'Хочу записаться на приём',
+    prices:  'Какие у вас цены на основные процедуры?',
+    address: 'Какой у вас адрес и как до вас добраться?',
+    urgent:  'У меня острая боль, нужна срочная помощь!',
+    quickLbl: 'Быстро:',
+    q1:'Записаться', q2:'Цены', q3:'Адрес', q4:'Срочно',
+    chartTitle:'Возврат пациентов по месяцам', chartSub:'после внедрения AI-рассылок',
+  },
+  ro: {
+    book:    'Vreau să fac o programare',
+    prices:  'Care sunt prețurile pentru procedurile principale?',
+    address: 'Care este adresa dvs și cum ajung la voi?',
+    urgent:  'Am durere acută, am nevoie de ajutor urgent!',
+    quickLbl: 'Rapid:',
+    q1:'Programare', q2:'Prețuri', q3:'Adresă', q4:'Urgent',
+    chartTitle:'Revenirea pacienților pe luni', chartSub:'după implementarea AI',
+  }
+};
+
+function quickSend(type){
+  const txt = QUICK[lang][type];
+  const inp = document.getElementById('user-msg');
+  inp.value = txt;
+  inp.focus();
+  // Auto-send after brief flash so user sees what's being sent
+  inp.style.background = 'var(--accent-light)';
+  setTimeout(()=>{ inp.style.background=''; sendMsg(); }, 300);
+}
+
+function updateQuickLabels(){
+  const Q = QUICK[lang];
+  const el = (id,v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
+  el('quick-lbl', Q.quickLbl);
+  el('qb1', Q.q1); el('qb2', Q.q2); el('qb3', Q.q3); el('qb4', Q.q4);
+  el('chart-title-lbl', Q.chartTitle); el('chart-sub-lbl', Q.chartSub);
+}
+
+// ── CHART ──
+function renderChart(){
+  const el = document.getElementById('return-chart');
+  if(!el) return;
+  const data = [
+    {m:'Янв',v:8},{m:'Фев',v:11},{m:'Мар',v:14},{m:'Апр',v:18},
+    {m:'Май',v:23},{m:'Июн',v:27},{m:'Июл',v:24},{m:'Авг',v:31},
+    {m:'Сен',v:29},{m:'Окт',v:35},{m:'Ноя',v:38},{m:'Дек',v:42}
+  ];
+  const dataRo = [
+    {m:'Ian',v:8},{m:'Feb',v:11},{m:'Mar',v:14},{m:'Apr',v:18},
+    {m:'Mai',v:23},{m:'Iun',v:27},{m:'Iul',v:24},{m:'Aug',v:31},
+    {m:'Sep',v:29},{m:'Oct',v:35},{m:'Nov',v:38},{m:'Dec',v:42}
+  ];
+  const d = lang==='ru' ? data : dataRo;
+  const max = Math.max(...d.map(x=>x.v));
+  el.innerHTML = '<div class="chart-axis"></div>' + d.map((item,i)=>{
+    const h = Math.round((item.v/max)*80);
+    const color = i >= 4 ? '#2563eb' : '#93c5fd';
+    return `<div class="chart-bar-wrap">
+      <div class="chart-bar" style="height:${h}px;background:${color}" data-val="${item.v}"></div>
+      <span class="chart-bar-lbl">${item.m}</span>
+    </div>`;
+  }).join('');
+}
+
+
+
+// ── PATIENT LANGUAGE DETECTION ──
+function detectTextLang(text) {
+  const t = text.toLowerCase();
+  // Romanian markers
+  const roMarkers = ['bună','buna','mulțumesc','multumesc','vreau','vă','va rog','sunt','aveti','aveți','doriți','doriti','mă','ma doare','puteți','puteti','programare','vizită','vizita','și','nu','da','ce','cum','când','cand','sau','pentru','care','mai','este','azi','mâine','maine'];
+  // Russian markers  
+  const ruMarkers = ['здравствуй','привет','добрый','болит','хочу','можно','сколько','стоит','запись','записаться','нужно','помогите','скажите','когда','завтра','сегодня','спасибо','пожалуйста','есть','нет','да','как','что','где','врач'];
+  let roScore = 0, ruScore = 0;
+  roMarkers.forEach(m => { if(t.includes(m)) roScore++; });
+  ruMarkers.forEach(m => { if(t.includes(m)) ruScore++; });
+  // Also check script — Cyrillic = Russian
+  if(/[а-яё]/i.test(text)) ruScore += 3;
+  if(roScore > ruScore) return 'ro';
+  if(ruScore > roScore) return 'ru';
+  return null;
+}
+
+function updatePatientLangBadge(contactId, detectedLang) {
+  const sidebarEl = document.getElementById('sb-' + contactId);
+  if(!sidebarEl) return;
+  // Remove existing badge
+  const old = sidebarEl.querySelector('.lang-badge');
+  if(old) old.remove();
+  const badge = document.createElement('span');
+  badge.className = 'lang-badge';
+  badge.textContent = detectedLang.toUpperCase();
+  badge.style.cssText = `font-size:10px;font-weight:600;padding:1px 5px;border-radius:4px;margin-left:4px;background:${detectedLang==='ru'?'#eff6ff':'#f0fdf4'};color:${detectedLang==='ru'?'#2563eb':'#16a34a'};border:1px solid ${detectedLang==='ru'?'#bfdbfe':'#86efac'}`;
+  const nameEl = sidebarEl.querySelector('.ci-name');
+  if(nameEl) nameEl.appendChild(badge);
+  // Update patient record lang
+  const p = patients.find(x => {
+    // Match contact name to patient
+    const cname = T.contacts[contactId]?.name?.toLowerCase() || '';
+    return x.name.toLowerCase().split(' ')[0] === cname.split(' ')[0] ||
+           x.name.toLowerCase().split(' ')[1] === cname.split(' ')[1];
+  });
+  if(p) p.detectedLang = detectedLang;
+}
+
+function syncPatientLangsFromChats() {
+  // Called when switching to reminders tab
+  // Match chat contacts to patients by name and sync detected language
+  Object.entries(patientLangs).forEach(([contactId, detectedLang]) => {
+    const contact = T.contacts[contactId];
+    if(!contact) return;
+    const firstName = contact.name.split(' ')[0].toLowerCase();
+    const patient = patients.find(p => p.name.toLowerCase().includes(firstName));
+    if(patient) patient.detectedLang = detectedLang;
+  });
+}
+
+
+// ── SORTING ──
+let sortField = 'months';
+let sortDir = -1; // default: longest since visit first
+const urgencyOrder = {urgent:0, pending:1, sent:2, booked:3};
+
+function sortBy(field){
+  if(sortField === field){
+    if(sortDir === 1){ sortDir = -1; }
+    else { // 3rd click - reset to default (months desc)
+      sortField='months'; sortDir=-1;
+    }
+  } else {
+    sortField = field; sortDir = -1; // first click = desc (longest first)
+  }
+  renderTable();
+}
+
+// ── ANALYTICS ──
+const ANALYTICS_DATA = {
+  hours: [2,1,0,1,3,2,4,8,12,15,18,14,16,19,13,10,8,11,14,17,12,9,6,4],
+  topQru: [
+    {q:'Записаться на приём',n:47},
+    {q:'Стоимость лечения',n:38},
+    {q:'Часы работы',n:31},
+    {q:'Болит зуб — срочно',n:24},
+    {q:'Перенести запись',n:19},
+  ],
+  topQro: [
+    {q:'Programare vizită',n:47},
+    {q:'Prețuri tratament',n:38},
+    {q:'Program lucru',n:31},
+    {q:'Durere acută — urgent',n:24},
+    {q:'Reprogramare vizită',n:19},
+  ],
+  convRu: [{l:'Написали боту',v:100,c:'#2563eb'},{l:'Вступили в диалог',v:87,c:'#3b82f6'},{l:'Запросили время',v:72,c:'#60a5fa'},{l:'Записались',v:68,c:'#22c55e'}],
+  convRo: [{l:'Au scris botului',v:100,c:'#2563eb'},{l:'Au intrat în dialog',v:87,c:'#3b82f6'},{l:'Au cerut orar',v:72,c:'#60a5fa'},{l:'S-au programat',v:68,c:'#22c55e'}],
+  monthsRu: [{m:'Янв',v:8},{m:'Фев',v:11},{m:'Мар',v:14},{m:'Апр',v:18},{m:'Май',v:23},{m:'Июн',v:27},{m:'Июл',v:24},{m:'Авг',v:31},{m:'Сен',v:29},{m:'Окт',v:35},{m:'Ноя',v:38},{m:'Дек',v:42}],
+  monthsRo: [{m:'Ian',v:8},{m:'Feb',v:11},{m:'Mar',v:14},{m:'Apr',v:18},{m:'Mai',v:23},{m:'Iun',v:27},{m:'Iul',v:24},{m:'Aug',v:31},{m:'Sep',v:29},{m:'Oct',v:35},{m:'Nov',v:38},{m:'Dec',v:42}],
+};
+
+function renderAnalytics(){
+  renderHourChart();
+  renderTopQuestions();
+  renderConvFunnel();
+  renderReturnChartAnalytics();
+  calcROI();
+  // Update labels
+  const s=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  if(lang==='ru'){
+    s('p4title','Аналитика'); s('p4sub','Статистика работы AI-администратора и расчёт возврата инвестиций');
+    s('ac1-title','Обращения по часам'); s('ac1-sub','за сегодня');
+    s('ac2-title','Топ вопросов пациентов'); s('ac3-title','Конверсия по шагам');
+    s('ac4-title','Возврат пациентов после AI-рассылок'); s('ac4-sub','количество вернувшихся по месяцам');
+    s('roi-title','💰 Калькулятор выручки от AI'); s('roi-sub','дополнительная выручка которую приносит AI');
+    s('roi-l1','Средний чек клиники (лей)'); s('roi-l2','Диалогов в месяц');
+    s('roi-l3','Конверсия в запись (%)'); s('roi-l4','Стоимость AI в месяц (лей)');
+    s('t4','Аналитика');
+  } else {
+    s('p4title','Analiză'); s('p4sub','Statistici AI-administrator și calculul rentabilității');
+    s('ac1-title','Solicitări pe ore'); s('ac1-sub','astăzi');
+    s('ac2-title','Top întrebări pacienți'); s('ac3-title','Conversie pe etape');
+    s('ac4-title','Revenirea pacienților după AI'); s('ac4-sub','număr reveniți pe luni');
+    s('roi-title','💰 Calculator venit AI'); s('roi-sub','venit suplimentar generat de AI');
+    s('roi-l1','Bon mediu clinică (lei)'); s('roi-l2','Dialoguri pe lună');
+    s('roi-l3','Conversie programări (%)'); s('roi-l4','Cost AI pe lună (lei)');
+    s('t4','Analiză');
+  }
+}
+
+function renderHourChart(){
+  const el=document.getElementById('hour-chart'); if(!el) return;
+  const d=ANALYTICS_DATA.hours;
+  const max=Math.max(...d);
+  el.innerHTML=d.map((v,i)=>{
+    const h=Math.round((v/max)*60)||2;
+    const tip=`${String(i).padStart(2,'0')}:00 — ${v} ${lang==='ru'?'сообщ.':'mesaje'}`;
+    const color=i>=22||i<=5?'#f59e0b':i>=9&&i<=19?'#2563eb':'#60a5fa';
+    return `<div class="hour-bar" style="height:${h}px;background:${color}" data-tip="${tip}"></div>`;
+  }).join('');
+}
+
+function renderTopQuestions(){
+  const el=document.getElementById('top-questions'); if(!el) return;
+  const data=lang==='ru'?ANALYTICS_DATA.topQru:ANALYTICS_DATA.topQro;
+  const max=data[0].n;
+  el.innerHTML=data.map((item,i)=>`
+    <div class="top-question">
+      <span class="tq-rank">${i+1}</span>
+      <span class="tq-text">${item.q}</span>
+      <div class="tq-bar-wrap">
+        <div class="tq-bar" style="width:${Math.round((item.n/max)*100)}%"></div>
+        <div class="tq-count">${item.n}</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderConvFunnel(){
+  const el=document.getElementById('conv-funnel'); if(!el) return;
+  const data=lang==='ru'?ANALYTICS_DATA.convRu:ANALYTICS_DATA.convRo;
+  el.innerHTML=data.map(item=>`
+    <div class="conv-row">
+      <span class="conv-label">${item.l}</span>
+      <div class="conv-track"><div class="conv-fill" style="width:${item.v}%;background:${item.c}"></div></div>
+      <span class="conv-pct">${item.v}%</span>
+    </div>`).join('');
+}
+
+function renderReturnChartAnalytics(){
+  const el=document.getElementById('return-chart-analytics'); if(!el) return;
+  const d=lang==='ru'?ANALYTICS_DATA.monthsRu:ANALYTICS_DATA.monthsRo;
+  const max=Math.max(...d.map(x=>x.v));
+  el.innerHTML='<div class="chart-axis"></div>'+d.map((item,i)=>{
+    const h=Math.round((item.v/max)*95);
+    const color=i>=4?'#2563eb':'#93c5fd';
+    return `<div class="chart-bar-wrap"><div class="chart-bar" style="height:${h}px;background:${color}" data-val="${item.v}"></div><span class="chart-bar-lbl">${item.m}</span></div>`;
+  }).join('');
+}
+
+function calcROI(){
+  const avg=parseFloat(document.getElementById('roi-avg')?.value)||1200;
+  const dialogs=parseFloat(document.getElementById('roi-dialogs')?.value)||180;
+  const conv=parseFloat(document.getElementById('roi-conv')?.value)||68;
+  const cost=parseFloat(document.getElementById('roi-cost')?.value)||2500;
+  const bookings=Math.round(dialogs*(conv/100));
+  const revenue=Math.round(bookings*avg);
+  const profit=revenue-cost;
+  const roi=Math.round((profit/cost)*100);
+  const fmt=n=>n.toLocaleString(lang==='ru'?'ru-RU':'ro-RO');
+  const leiLbl=lang==='ru'?'лей':'lei';
+  const el=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  el('roi-profit',`+${fmt(profit)} ${leiLbl}`);
+  el('roi-profit-lbl',lang==='ru'?'доп. выручка от AI в месяц':'venit suplimentar de la AI pe lună');
+  const bd=document.getElementById('roi-breakdown'); if(!bd) return;
+  if(lang==='ru'){
+    bd.innerHTML=`
+      <div class="roi-breakdown-row"><span>Записей в месяц</span><span>${bookings}</span></div>
+      <div class="roi-breakdown-row"><span>Выручка</span><span>${fmt(revenue)} лей</span></div>
+      <div class="roi-breakdown-row"><span>Стоимость AI</span><span>−${fmt(cost)} лей</span></div>
+      <div class="roi-breakdown-row"><span>ROI</span><span>${roi}%</span></div>
+      <div class="roi-breakdown-row"><span>Доп. выручка от AI</span><span>+${fmt(profit)} лей</span></div>`;
+  } else {
+    bd.innerHTML=`
+      <div class="roi-breakdown-row"><span>Programări/lună</span><span>${bookings}</span></div>
+      <div class="roi-breakdown-row"><span>Venituri</span><span>${fmt(revenue)} lei</span></div>
+      <div class="roi-breakdown-row"><span>Cost AI</span><span>−${fmt(cost)} lei</span></div>
+      <div class="roi-breakdown-row"><span>ROI</span><span>${roi}%</span></div>
+      <div class="roi-breakdown-row"><span>Venit suplim. AI</span><span>+${fmt(profit)} lei</span></div>`;
+  }
+}
+
+// ── EXPORT CHAT ──
+function exportChat(){
+  if(!currentChat) return;
+  const contact=T.contacts[currentChat];
+  const msgs=document.getElementById('chat-messages');
+  if(!msgs) return;
+  const lines=[];
+  const title=`ClinicAI — ${lang==='ru'?'Диалог с':'Dialog cu'} ${contact.name}`;
+  lines.push(title);
+  lines.push('='.repeat(title.length));
+  lines.push(`${lang==='ru'?'Экспорт':'Export'}: ${new Date().toLocaleString(lang==='ru'?'ru-RU':'ro-RO')}`);
+  lines.push('');
+  msgs.querySelectorAll('.msg').forEach(msgEl=>{
+    const isUser=msgEl.classList.contains('user');
+    const bubbles=msgEl.querySelectorAll('.bubble');
+    bubbles.forEach(b=>{
+      const role=isUser?contact.name:'AI ClinicAI';
+      const text=b.innerText||b.textContent;
+      lines.push(`[${role}]`);
+      lines.push(text.trim());
+      lines.push('');
+    });
+  });
+  const blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`ClinicAI_${contact.name.replace(/ /g,'_')}_${new Date().toLocaleDateString('ru')}.txt`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// ── PROCEDURE FILTER ──
+let procFilter='all';
+function setProcFilter(filter, chip){
+  procFilter=filter;
+  document.querySelectorAll('.proc-chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');
+  renderTableWithProcFilter();
+}
+
+function renderTableWithProcFilter(){
+  const tbody=document.getElementById('patients-tbody');
+  const sm={urgent:{l:T.statusU,c:'pill-red'},pending:{l:T.statusP,c:'pill-amber'},sent:{l:T.statusS,c:'pill-green'},booked:{l:T.statusB,c:'pill-blue'}};
+  let list=filterMode==='pending'?patients.filter(p=>p.urgency==='pending'||p.urgency==='urgent'):patients;
+  if(procFilter!=='all') list=list.filter(p=>p.proc.toLowerCase().includes(procFilter));
+  document.getElementById('queue-count').textContent=`(${list.length} ${T.pword})`;
+  const rows=list.map(p=>{
+    const s=sm[p.urgency];
+    const canSend=p.urgency==='pending'||p.urgency==='urgent';
+    const btn=canSend?`<button class="btn-small primary" onclick="showPreview('${p.id}')">${T.btnSend}</button>`:`<button class="btn-small" onclick="showPreview('${p.id}')">${T.btnOpen}</button>`;
+    const langBadge = p.detectedLang ? `<span style="font-size:10px;font-weight:600;padding:1px 5px;border-radius:4px;margin-left:4px;background:${p.detectedLang==='ru'?'#eff6ff':'#f0fdf4'};color:${p.detectedLang==='ru'?'#2563eb':'#16a34a'};border:1px solid ${p.detectedLang==='ru'?'#bfdbfe':'#86efac'}">${p.detectedLang.toUpperCase()}</span>` : `<span style="font-size:10px;color:var(--muted2);margin-left:4px">?</span>`;
+    return `<tr class="queue-row"><td><strong>${p.name}</strong>${langBadge}<br><span style="font-size:11px;color:var(--muted)">${p.phone}</span></td><td>${p.months} ${T.monthsago}</td><td>${p.proc}</td><td><span class="pill ${s.c}">${s.l}</span></td><td>${btn}</td></tr>`;
+  });
+  tbody.innerHTML=rows.join('');
+  updateQueueVisibility(10);
+}
+
+
+function toggleAnswered(){
+  const el = document.getElementById('answered-reviews');
+  const btn = document.getElementById('answered-toggle-btn');
+  if(!el||!btn) return;
+  const isOpen = el.style.display !== 'none';
+  el.style.display = isOpen ? 'none' : 'block';
+  const showLbl = lang==='ru' ? 'Показать ещё отзывы (15) ▼' : 'Arată mai multe recenzii (15) ▼';
+  const hideLbl = lang==='ru' ? 'Свернуть ▲' : 'Restrânge ▲';
+  btn.textContent = isOpen ? showLbl : hideLbl;
+  if(!isOpen) btn.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+// ── INIT ──
+resetPatients();
+renderChart();
+window.addEventListener('load',()=>{
+  // Load first chat without decrementing counter - it's already shown as active
+  const sidebarEl = document.getElementById('sb-popescu');
+  if(sidebarEl) sidebarEl.classList.add('active');
+  currentChat = 'popescu';
+  const contact = T.contacts['popescu'];
+  document.getElementById('chat-avatar').textContent = contact.initials;
+  document.getElementById('chat-name').textContent = contact.name;
+  const msgsEl = document.getElementById('chat-messages');
+  msgsEl.innerHTML = '';
+  addTyping();
+  const hour = new Date().getHours();
+  const roGreeting = hour >= 5 && hour < 12 ? 'Bună dimineața! 👋'
+                   : hour >= 12 && hour < 18 ? 'Bună ziua! 👋'
+                   : 'Bună seara! 👋';
+  const langQuestion = 'Здравствуйте! 👋\n' + roGreeting + '\n\nПредпочитаете общаться на русском языке sau preferați să comunicați în limba română?';
+  setTimeout(()=>{
+    document.getElementById('typing-indicator')?.remove();
+    addMsg('bot', langQuestion, '');
+    chatHistory = [{role:'assistant', content: langQuestion}];
+    chatHistories['popescu'] = {history:[...chatHistory], html: msgsEl.innerHTML};
+  }, 800);
+});
+</script>
+
+<!-- PANEL 4 ANALYTICS -->
+<div class="panel" id="panel-analytics">
+  <div class="panel-title" id="p4title">Аналитика</div>
+  <div class="panel-sub" id="p4sub">Статистика работы AI-администратора и расчёт возврата инвестиций</div>
+
+  <div class="analytics-grid">
+    <!-- By hour chart -->
+    <div class="analytics-card">
+      <div class="analytics-card-title"><span id="ac1-title">Обращения по часам</span><span class="analytics-card-sub" id="ac1-sub">за сегодня</span></div>
+      <div class="hour-bars" id="hour-chart"></div>
+      <div class="hour-axis"><span>00</span><span>06</span><span>12</span><span>18</span><span>23</span></div>
+    </div>
+    <!-- Top questions -->
+    <div class="analytics-card">
+      <div class="analytics-card-title" id="ac2-title">Топ вопросов пациентов</div>
+      <div id="top-questions"></div>
+    </div>
+    <!-- Conversion funnel -->
+    <div class="analytics-card">
+      <div class="analytics-card-title" id="ac3-title">Конверсия по шагам</div>
+      <div id="conv-funnel"></div>
+    </div>
+  </div>
+
+  <!-- ROI Calculator -->
+  <div class="analytics-card" style="margin-bottom:16px">
+    <div class="analytics-card-title" id="roi-title">💰 Калькулятор выручки от AI <span class="analytics-card-sub" id="roi-sub">дополнительная выручка которую приносит AI</span></div>
+    <div class="roi-grid">
+      <div>
+        <div class="roi-input-group">
+          <label id="roi-l1">Средний чек клиники (лей)</label>
+          <input type="number" id="roi-avg" value="1200" oninput="calcROI()"/>
+        </div>
+        <div class="roi-input-group">
+          <label id="roi-l2">Диалогов в месяц</label>
+          <input type="number" id="roi-dialogs" value="180" oninput="calcROI()"/>
+        </div>
+        <div class="roi-input-group">
+          <label id="roi-l3">Конверсия в запись (%)</label>
+          <input type="number" id="roi-conv" value="68" min="1" max="100" oninput="calcROI()"/>
+        </div>
+        <div class="roi-input-group">
+          <label id="roi-l4">Стоимость AI в месяц (лей)</label>
+          <input type="number" id="roi-cost" value="2500" oninput="calcROI()"/>
+        </div>
+      </div>
+      <div>
+        <div class="roi-result">
+          <div class="roi-result-num" id="roi-profit">+85 560 лей</div>
+          <div class="roi-result-lbl" id="roi-profit-lbl">доп. выручка от AI в месяц</div>
+        </div>
+        <div class="roi-breakdown" id="roi-breakdown"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Monthly returns chart -->
+  <div class="analytics-card">
+    <div class="analytics-card-title"><span id="ac4-title">Возврат пациентов после AI-рассылок</span><span class="analytics-card-sub" id="ac4-sub">количество вернувшихся по месяцам</span></div>
+    <div class="chart-bars" id="return-chart-analytics" style="height:120px"></div>
+  </div>
+</div>
+</body>
+</html>
