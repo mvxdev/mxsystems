@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diana — SmileCare</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+html,body{overflow:hidden;margin:0;padding:0;box-sizing:border-box;}
+*,*::before,*::after{box-sizing:border-box;}
+:root{
+  --g:#1a6b4a;--gl:#f0f7f4;--gm:#e0f0e9;--gd:#134f37;
+  --tx:#1a1a1a;--tm:#6b7280;--th:#9ca3af;
+  --bd:#e5e7eb;--bg:#fff;--sf:#f9fafb;--s2:#f3f4f6;
+  --r:12px;--rs:8px;
+}
+body{font-family:'Inter',sans-serif;background:#fff;display:flex;flex-direction:column;height:100vh;}
+
+/* HEADER */
+.hdr{padding:14px 16px;background:#fff;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.hdr-av{width:38px;height:38px;border-radius:50%;background:var(--gl);border:2px solid var(--gm);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;color:var(--g);flex-shrink:0;position:relative;}
+.hdr-dot{position:absolute;bottom:1px;right:1px;width:8px;height:8px;background:#22c55e;border:2px solid #fff;border-radius:50%;}
+.hdr-info{flex:1;}
+.hdr-name{font-size:13.5px;font-weight:600;color:var(--tx);}
+.hdr-sub{font-size:11px;color:var(--tm);margin-top:1px;display:flex;align-items:center;gap:4px;}
+.hdr-sub::before{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;background:#22c55e;}
+.hdr-by{font-size:10px;color:var(--th);text-align:right;line-height:1.4;}
+.hdr-by a{color:#2563eb;text-decoration:none;font-weight:600;}
+.hdr-by a:hover{text-decoration:underline;}
+
+/* LANG PICKER */
+.lang-screen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:24px;background:#fff;}
+.lang-logo{width:52px;height:52px;border-radius:50%;background:var(--gl);border:2px solid var(--gm);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;color:var(--g);}
+.lang-title{font-size:15px;font-weight:600;color:var(--tx);text-align:center;line-height:1.5;}
+.lang-sub{font-size:13px;color:var(--tm);text-align:center;line-height:1.5;}
+.lang-btns{display:flex;gap:10px;margin-top:4px;}
+.lang-btn{padding:10px 28px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:1.5px solid var(--g);font-family:'Inter',sans-serif;transition:all 0.15s;}
+.lang-btn.ru{background:var(--g);color:#fff;}
+.lang-btn.ru:hover{background:var(--gd);}
+.lang-btn.ro{background:#fff;color:var(--g);}
+.lang-btn.ro:hover{background:var(--gl);}
+
+/* MESSAGES */
+.msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;}
+.msgs::-webkit-scrollbar{width:3px;}
+.msgs::-webkit-scrollbar-thumb{background:var(--bd);border-radius:2px;}
+
+.mrow{display:flex;gap:7px;max-width:88%;animation:mIn 0.2s ease;}
+.mrow.bot{align-self:flex-start;}
+.mrow.usr{align-self:flex-end;flex-direction:row-reverse;}
+@keyframes mIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.mav{width:24px;height:24px;border-radius:50%;background:var(--gl);color:var(--g);font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:auto;}
+
+.mcol{display:flex;flex-direction:column;gap:2px;}
+
+.mbbl{padding:8px 12px;font-size:13px;line-height:1.6;word-break:break-word;}
+.bot .mbbl{background:var(--sf);color:var(--tx);border-radius:3px 12px 12px 12px;border:1px solid var(--bd);}
+.usr .mbbl{background:var(--g);color:#fff;border-radius:12px 3px 12px 12px;}
+
+/* Markdown in bot messages */
+.mbbl strong{font-weight:600;}
+.mbbl em{font-style:italic;}
+.mbbl ul{margin:4px 0 4px 16px;}
+.mbbl li{margin:2px 0;}
+
+.mtime{font-size:10px;color:var(--th);padding:0 3px;}
+.usr .mtime{text-align:right;}
+
+/* TYPING */
+.typing-bbl{background:var(--sf);border:1px solid var(--bd);border-radius:3px 12px 12px 12px;padding:10px 14px;display:flex;gap:4px;align-items:center;}
+.tdot{width:5px;height:5px;border-radius:50%;background:var(--th);animation:tb 1.2s infinite;}
+.tdot:nth-child(2){animation-delay:.2s;}
+.tdot:nth-child(3){animation-delay:.4s;}
+@keyframes tb{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-4px);opacity:1}}
+
+/* CONFIRM CARD */
+.ccard{background:#fff;border:1px solid var(--bd);border-radius:10px;overflow:hidden;width:220px;}
+.ccard-hdr{background:var(--gl);padding:7px 12px;font-size:10px;font-weight:700;color:var(--g);letter-spacing:.4px;text-transform:uppercase;}
+.ccard-body{padding:9px 12px;}
+.crow{display:flex;justify-content:space-between;gap:6px;padding:3px 0;font-size:11.5px;border-bottom:1px solid var(--s2);}
+.crow:last-child{border:none;}
+.ck{color:var(--tm);}
+.cv{color:var(--tx);font-weight:500;text-align:right;}
+.cbtns{display:flex;gap:6px;padding:8px 12px;border-top:1px solid var(--bd);}
+.cbtn{flex:1;padding:7px;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;border:none;}
+.cbtn.yes{background:var(--g);color:#fff;}
+.cbtn.yes:hover{background:var(--gd);}
+.cbtn.no{background:transparent;color:var(--tm);border:1px solid var(--bd);}
+.cbtn.no:hover{background:var(--sf);}
+
+/* QUICK REPLIES */
+.qr{display:flex;flex-wrap:wrap;gap:5px;padding:3px 14px 8px;}
+.qchip{font-size:11.5px;padding:5px 11px;border:1px solid rgba(26,107,74,.18);border-radius:18px;background:var(--gl);color:var(--g);cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;font-weight:500;}
+.qchip:hover{background:var(--gm);}
+
+/* INPUT */
+.inp-area{padding:9px 12px;border-top:1px solid var(--bd);display:flex;gap:7px;align-items:center;background:#fff;flex-shrink:0;}
+.inp{flex:1;border:1px solid var(--bd);border-radius:20px;padding:8px 14px;font-size:13px;font-family:'Inter',sans-serif;background:var(--sf);color:var(--tx);outline:none;transition:border-color .15s;}
+.inp:focus{border-color:var(--g);background:#fff;}
+.inp::placeholder{color:var(--th);}
+.send-btn{width:34px;height:34px;border-radius:50%;background:var(--g);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;}
+.send-btn:hover{background:var(--gd);}
+.send-btn svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-av">D<div class="hdr-dot"></div></div>
+  <div class="hdr-info">
+    <div class="hdr-name" id="hdr-name">Diana — ассистент клиники</div>
+    <div class="hdr-sub" id="hdr-sub">онлайн · отвечаю мгновенно</div>
+  </div>
+  <div class="hdr-by">by<br><a href="https://mxsystems.md" target="_blank">MX Systems</a></div>
+</div>
+
+<!-- LANG PICKER -->
+<div class="lang-screen" id="lang-screen">
+  <div class="lang-logo">D</div>
+  <div class="lang-title" id="ls-title">Добрый день! 👋<br>Bună ziua! 👋</div>
+  <div class="lang-sub" id="ls-sub">Выберите язык общения<br>Alegeți limba de comunicare</div>
+  <div class="lang-btns">
+    <button class="lang-btn ru" onclick="startChat('ru')">🇷🇺 Русский</button>
+    <button class="lang-btn ro" onclick="startChat('ro')">🇷🇴 Română</button>
+  </div>
+</div>
+
+<!-- CHAT -->
+<div id="chat-area" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
+  <div class="msgs" id="msgs"></div>
+  <div class="qr" id="qr"></div>
+  <div class="inp-area">
+    <input type="text" class="inp" id="inp" />
+    <button class="send-btn" id="send-btn">
+      <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+const WORKER = 'https://smilecare-proxy.badmvx7.workers.dev';
+const MODEL  = 'claude-haiku-4-5-20251001';
+
+
+function getSystemPromptRU() {
+  var now = new Date();
+  var days = ['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
+  var months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  var dayName = days[now.getDay()];
+  var dateStr = now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
+  var timeStr = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+  var tomorrow = days[(now.getDay()+1)%7];
+  return 'Ты — Diana, AI-ассистент стоматологической клиники SmileCare в Кишинёве. Отвечай кратко (2-4 предложения), тепло, профессионально. Используй markdown: **жирный** для важного, - для списков.\n\nТЕКУЩАЯ ДАТА И ВРЕМЯ: ' + dayName + ', ' + dateStr + ', ' + timeStr + '. Завтра — ' + tomorrow + '. Используй эти данные когда пациент говорит "завтра", "сегодня", "на следующей неделе" — называй конкретный день недели.\n\nУслуги: Консультация 150 MDL · Чистка 800 MDL · Кариес 600-1200 MDL · Имплант от 12 000 MDL · Брекеты от 18 000 MDL · Отбеливание 2 500 MDL\nВрачи: Dr. Marina Cebotari (терапевт, пн/ср/пт 9-18) · Dr. Andrei Lungu (хирург/имплантолог, вт/чт 10-19) · Dr. Elena Munteanu (ортодонт, пн-пт 14-20)\nАдрес: ул. Штефан чел Маре 50, Кишинёв · Тел: +373 22 123 456\n\nДля записи нужно: 1) услуга 2) конкретный день (число и день недели) 3) имя 4) телефон\nКогда собраны все 4 пункта — выведи ТОЛЬКО эту строку отдельно: ЗАПИСЬ_ГОТОВА: [услуга] | [конкретная дата и время] | [имя] | [телефон]. Формат строгий, никакого лишнего текста внутри полей.';
+}
+
+function getSystemPromptRO() {
+  var now = new Date();
+  var daysRo = ['duminică','luni','marți','miercuri','joi','vineri','sâmbătă'];
+  var monthsRo = ['ianuarie','februarie','martie','aprilie','mai','iunie','iulie','august','septembrie','octombrie','noiembrie','decembrie'];
+  var dayNameRo = daysRo[now.getDay()];
+  var dateStrRo = now.getDate() + ' ' + monthsRo[now.getMonth()] + ' ' + now.getFullYear();
+  var timeStrRo = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+  var tomorrowRo = daysRo[(now.getDay()+1)%7];
+  return 'Esti Diana, asistentul AI al clinicii stomatologice SmileCare din Chisinau. Raspunde scurt (2-4 propozitii), cald, profesional. Foloseste markdown: **bold** pentru important, - pentru liste.\n\nDATA SI ORA CURENTA: ' + dayNameRo + ', ' + dateStrRo + ', ' + timeStrRo + '. Maine — ' + tomorrowRo + '. Foloseste aceste date cand pacientul spune "maine", "azi", "saptamana viitoare" — mentioneaza ziua specifica.\n\nServicii: Consultatie 150 MDL · Igienizare 800 MDL · Carie 600-1200 MDL · Implant de la 12 000 MDL · Aparat dentar de la 18 000 MDL · Albire 2 500 MDL\nMedici: Dr. Marina Cebotari (terapeut, lun/mie/vin 9-18) · Dr. Andrei Lungu (chirurg/implantolog, mar/joi 10-19) · Dr. Elena Munteanu (ortodont, lun-vin 14-20)\nAdresa: str. Stefan cel Mare 50, Chisinau · Tel: +373 22 123 456\n\nPentru programare: 1) serviciu 2) zi concreta (data si ziua saptamanii) 3) nume 4) telefon\nCand ai toate 4 — scrie DOAR aceasta linie separat: PROGRAMARE_GATA: [serviciu] | [data si ora exacta] | [nume] | [telefon]. Format strict, fara text suplimentar in campuri.';
+}
+
+const T = {
+  ru: {
+    hdrName: 'Diana — ассистент клиники',
+    hdrSub:  'онлайн · отвечаю мгновенно',
+    inpPh:   'Напишите сообщение...',
+    confirmHdr: 'Проверьте данные',
+    yes: 'Подтвердить', no: 'Изменить',
+    lbl: { s:'Услуга', t:'Время', n:'Имя', p:'Телефон' },
+    qr: ['Записаться на приём','Узнать цены','Наши врачи','Адрес клиники'],
+    qr2: ['Записать ещё кого-то','Другие услуги'],
+    errConn: 'Ошибка соединения. Попробуйте позже.',
+    system: getSystemPromptRU()
+  },
+  ro: {
+    hdrName: 'Diana — asistentul clinicii',
+    hdrSub:  'online · răspund instant',
+    inpPh:   'Scrieți mesajul...',
+    confirmHdr: 'Verificați datele',
+    yes: 'Confirmă', no: 'Modifică',
+    lbl: { s:'Serviciu', t:'Data/Ora', n:'Nume', p:'Telefon' },
+    qr: ['Programare consultație','Prețuri servicii','Medicii noștri','Adresa clinicii'],
+    qr2: ['Altă programare','Alte servicii'],
+    errConn: 'Eroare de conexiune. Încercați mai târziu.',
+    system: getSystemPromptRO()
+  }
+};
+
+let lang = 'ru';
+let history = [];
+let pendingBooking = null;
+let convMessages = [];
+let sessionId = 'sess_' + Date.now();
+let bookingId = null; // track if booking already saved
+
+const msgsEl = document.getElementById('msgs');
+const inpEl  = document.getElementById('inp');
+const qrEl   = document.getElementById('qr');
+
+// ── Time-based greeting ──
+function timeGreeting(l) {
+  const h = new Date().getHours();
+  const ru = h<12?'Доброе утро':h<18?'Добрый день':h<22?'Добрый вечер':'Доброй ночи';
+  const ro = h<12?'Bună dimineața':h<18?'Bună ziua':h<22?'Bună seara':'Bună noaptea';
+  return l==='ru' ? ru : ro;
+}
+
+// ── Start chat after lang choice ──
+window.startChat = function(l) {
+  lang = l;
+  const tr = T[l];
+  document.getElementById('lang-screen').style.display = 'none';
+  const ca = document.getElementById('chat-area');
+  ca.style.display = 'flex';
+  document.getElementById('hdr-name').textContent = tr.hdrName;
+  document.getElementById('hdr-sub').textContent  = tr.hdrSub;
+  inpEl.placeholder = tr.inpPh;
+
+  const greet = l === 'ru'
+    ? `${timeGreeting('ru')}! Я Diana, ассистент клиники SmileCare 🦷\n\nПомогу записаться на приём, отвечу на вопросы о ценах и врачах. Чем могу помочь?`
+    : `${timeGreeting('ro')}! Sunt Diana, asistentul clinicii SmileCare 🦷\n\nVă pot ajuta să vă programați, să aflați prețurile sau informații despre medici. Cu ce vă pot ajuta?`;
+
+  setTimeout(() => {
+    showTyping();
+    setTimeout(() => {
+      removeTyping();
+      addMsg(greet, 'bot');
+      history.push({ role: 'assistant', content: greet });
+      setQR(tr.qr);
+    }, 800);
+  }, 100);
+};
+
+// ── Markdown renderer ──
+function renderMd(text) {
+  return text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*\*\*/g,'')        // remove empty ****
+    .replace(/\*\*\s*\*\*/g,'')    // remove ** ** with only spaces
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/\*\*/g,'')            // remove any leftover **
+    .replace(/^- (.+)/gm,'<li>$1</li>')
+    .replace(/(<li>.*<\/li>)/gs, s => '<ul>'+s+'</ul>')
+    .replace(/\n/g,'<br>');
+}
+
+// ── now ──
+function now() {
+  return new Date().toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'});
+}
+
+// ── Add message ──
+function addMsg(text, role, extra) {
+  const row  = document.createElement('div');
+  row.className = `mrow ${role}`;
+
+  if (role === 'bot') {
+    const av = document.createElement('div');
+    av.className = 'mav'; av.textContent = 'D';
+    row.appendChild(av);
+  }
+
+  const col = document.createElement('div');
+  col.className = 'mcol';
+
+  if (extra && extra.type === 'confirm') {
+    const bbl = document.createElement('div');
+    bbl.className = 'mbbl bot'; bbl.style.cssText='padding:0;background:transparent;border:none;';
+    const tr = T[lang];
+    bbl.innerHTML = `<div class="ccard">
+      <div class="ccard-hdr">${tr.confirmHdr}</div>
+      <div class="ccard-body">
+        <div class="crow"><span class="ck">${tr.lbl.s}</span><span class="cv">${extra.d.service}</span></div>
+        <div class="crow"><span class="ck">${tr.lbl.t}</span><span class="cv">${extra.d.time}</span></div>
+        <div class="crow"><span class="ck">${tr.lbl.n}</span><span class="cv">${extra.d.name}</span></div>
+        <div class="crow"><span class="ck">${tr.lbl.p}</span><span class="cv">${extra.d.phone}</span></div>
+      </div>
+      <div class="cbtns">
+        <button class="cbtn yes" onclick="confirmBooking(true)">${tr.yes}</button>
+        <button class="cbtn no"  onclick="confirmBooking(false)">${tr.no}</button>
+      </div>
+    </div>`;
+    col.appendChild(bbl);
+  } else {
+    const bbl = document.createElement('div');
+    bbl.className = 'mbbl';
+    if (role === 'bot') {
+      bbl.innerHTML = renderMd(text);
+    } else {
+      bbl.textContent = text;
+    }
+    col.appendChild(bbl);
+  }
+
+  const t = document.createElement('div');
+  t.className = 'mtime'; t.textContent = now();
+  col.appendChild(t);
+
+  row.appendChild(col);
+  msgsEl.appendChild(row);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+  convMessages.push({ role, text, time: now() });
+  // Save dialog even without booking
+  try {
+    const dialogs = JSON.parse(localStorage.getItem('smilecare_dialogs') || '[]');
+    const idx = dialogs.findIndex(d => d.sessionId === sessionId);
+    const entry = { sessionId, lang, channel: 'widget', updatedAt: new Date().toISOString(), conversation: [...convMessages] };
+    if (idx >= 0) dialogs[idx] = entry; else dialogs.unshift(entry);
+    // Keep only last 50 dialogs
+    localStorage.setItem('smilecare_dialogs', JSON.stringify(dialogs.slice(0,50)));
+  } catch(e) {}
+}
+
+function showTyping() {
+  const row = document.createElement('div');
+  row.className = 'mrow bot'; row.id = 'typing';
+  const av = document.createElement('div');
+  av.className = 'mav'; av.textContent = 'D';
+  row.appendChild(av);
+  const b = document.createElement('div');
+  b.className = 'typing-bbl';
+  b.innerHTML = '<div class="tdot"></div><div class="tdot"></div><div class="tdot"></div>';
+  row.appendChild(b);
+  msgsEl.appendChild(row);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+function removeTyping() {
+  const t = document.getElementById('typing');
+  if (t) t.remove();
+}
+
+function setQR(items) {
+  qrEl.innerHTML = '';
+  items.forEach(text => {
+    const btn = document.createElement('button');
+    btn.className = 'qchip'; btn.textContent = text;
+    btn.onclick = () => send(text);
+    qrEl.appendChild(btn);
+  });
+}
+
+// ── Parse booking ──
+function parseBooking(text) {
+  // Match ЗАПИСЬ_ГОТОВА or PROGRAMARE_GATA with flexible content
+  const m = text.match(/(?:ЗАПИСЬ_ГОТОВА|PROGRAMARE_GATA)[:\s]+([^|\n]+?)\s*\|\s*([^|\n]+?)\s*\|\s*([^|\n]+?)\s*\|\s*([^\n]+)/);
+  if (!m) return null;
+  // Clean up any extra text like "cu Dr. X" from time field
+  const service = m[1].trim();
+  let time = m[2].trim();
+  const name = m[3].trim();
+  const phone = m[4].trim().replace(/[^0-9+]/g, '').slice(0, 12) || m[4].trim();
+  return { service, time, name, phone };
+}
+
+// ── Save booking to localStorage ──
+function saveBooking(booking) {
+  try {
+    const stored = JSON.parse(localStorage.getItem('smilecare_bookings') || '[]');
+    if (bookingId) {
+      // Update existing booking
+      const idx = stored.findIndex(b => b.id === bookingId);
+      if (idx >= 0) {
+        stored[idx] = { ...stored[idx], ...booking, conversation: [...convMessages] };
+        localStorage.setItem('smilecare_bookings', JSON.stringify(stored));
+        return stored[idx];
+      }
+    }
+    // Create new
+    const entry = {
+      id: 'bk_' + Date.now(),
+      sessionId,
+      ...booking,
+      status: 'new',
+      channel: 'widget',
+      lang,
+      createdAt: new Date().toISOString(),
+      conversation: [...convMessages]
+    };
+    bookingId = entry.id;
+    stored.unshift(entry);
+    localStorage.setItem('smilecare_bookings', JSON.stringify(stored));
+    return entry;
+  } catch(e) {}
+}
+
+// ── Update conversation in localStorage after each message ──
+function updateStoredConversation() {
+  if (!bookingId) return;
+  try {
+    const stored = JSON.parse(localStorage.getItem('smilecare_bookings') || '[]');
+    const idx = stored.findIndex(b => b.id === bookingId);
+    if (idx >= 0) {
+      stored[idx].conversation = [...convMessages];
+      localStorage.setItem('smilecare_bookings', JSON.stringify(stored));
+    }
+  } catch(e) {}
+}
+
+// ── Send message ──
+async function send(text) {
+  if (!text.trim()) return;
+  // If starting a new booking session after completion
+  const newBookingPhrases = ['Записать ещё кого-то','Altă programare','записать ещё','altă programare'];
+  if (newBookingPhrases.some(p => text.toLowerCase().includes(p.toLowerCase()))) {
+    bookingId = null;
+    sessionId = 'sess_' + Date.now();
+    convMessages = [];
+  }
+  qrEl.innerHTML = '';
+  addMsg(text, 'usr');
+  history.push({ role: 'user', content: text });
+  inpEl.value = '';
+  showTyping();
+
+  try {
+    const res  = await fetch(WORKER, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 1000,
+        system: T[lang].system,
+        messages: history
+      })
+    });
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || T[lang].errConn;
+    removeTyping();
+
+    const booking = parseBooking(reply);
+    if (booking) {
+      pendingBooking = booking;
+      const clean = reply.replace(/(?:ЗАПИСЬ_ГОТОВА|PROGRAMARE_GATA):.*/, '').trim();
+      if (clean) addMsg(clean, 'bot');
+      addMsg('', 'bot', { type: 'confirm', d: booking });
+    } else {
+      addMsg(reply, 'bot');
+    }
+    history.push({ role: 'assistant', content: reply });
+    updateStoredConversation();
+
+    if (history.length <= 2) setQR(T[lang].qr);
+
+  } catch(e) {
+    removeTyping();
+    addMsg(T[lang].errConn, 'bot');
+  }
+}
+
+window.confirmBooking = function(yes) {
+  const tr = T[lang];
+  if (yes && pendingBooking) {
+    saveBooking(pendingBooking);
+    // Reset session so next booking creates a new entry
+    bookingId = null;
+    sessionId = 'sess_' + Date.now();
+    const msg = lang === 'ru'
+      ? `Отлично, **${pendingBooking.name}**! Запись подтверждена.\n\nЖдём вас в SmileCare. SMS придёт на **${pendingBooking.phone}**. 🦷`
+      : `Excelent, **${pendingBooking.name}**! Programarea este confirmată.\n\nVă așteptăm la SmileCare. SMS pe **${pendingBooking.phone}**. 🦷`;
+    addMsg(msg, 'bot');
+    history.push({ role: 'assistant', content: msg });
+    setQR(tr.qr2);
+  } else {
+    const msg = lang === 'ru' ? 'Конечно! Что хотите изменить?' : 'Desigur! Ce doriți să modificați?';
+    addMsg(msg, 'bot');
+    history.push({ role: 'assistant', content: msg });
+  }
+  pendingBooking = null;
+};
+
+inpEl.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); send(inpEl.value); } });
+document.getElementById('send-btn').onclick = () => send(inpEl.value);
+
+// ── Init lang screen greeting ──
+(function() {
+  const h = new Date().getHours();
+  const ru = h<12?'Доброе утро':h<18?'Добрый день':h<22?'Добрый вечер':'Доброй ночи';
+  const ro = h<12?'Bună dimineața':h<18?'Bună ziua':h<22?'Bună seara':'Bună noaptea';
+  document.getElementById('ls-title').innerHTML = `${ru}! 👋<br>${ro}! 👋`;
+})();
+</script>
+</body>
+</html>
