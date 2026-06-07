@@ -6,6 +6,13 @@
 <title>MX Systems — AI-автоматизация для бизнеса</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230a0f1e'/><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%232563ff'/><stop offset='100%25' stop-color='%237c3aed'/></linearGradient></defs><text x='16' y='22' font-family='Georgia,serif' font-size='16' font-weight='700' fill='url(%23g)' text-anchor='middle'>MX</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- GSAP + ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<!-- Lenis smooth scroll -->
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<!-- Typed.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.1.0/typed.umd.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -15,7 +22,7 @@
   --accent:#2563ff;--accent2:#7c3aed;--accent-light:#eef3ff;
   --green:#059669;--red:#dc2626;
 }
-html{scroll-behavior:smooth;scroll-snap-type:y mandatory}
+html{scroll-behavior:auto}
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden}
 .progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .3s;z-index:200}
 
@@ -34,7 +41,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;ove
 .nav-cta:hover{opacity:.9}
 
 /* SLIDES */
-.slide{min-height:100vh;padding:80px 48px 48px;scroll-snap-align:start;position:relative;display:flex;flex-direction:column;justify-content:center}
+.slide{min-height:100vh;padding:80px 48px 48px;position:relative;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
 .slide-inner{max-width:1100px;margin:0 auto;width:100%}
 .s-label{font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:var(--muted2);font-weight:600;margin-bottom:20px;display:flex;align-items:center;gap:10px}
 .s-label::before{content:'';width:24px;height:1px;background:var(--accent)}
@@ -210,13 +217,54 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;ove
   .modal-overlay{align-items:flex-end;padding:0}
   .modal{border-radius:20px 20px 0 0;max-height:92vh}
 }
+
+/* CANVAS PARTICLES */
+#hero-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;opacity:.5;z-index:0}
+.slide-1 .slide-inner{position:relative;z-index:1}
+
+/* NAV ENHANCEMENTS */
+.nav{transition:box-shadow .3s}
+.nav.scrolled{box-shadow:0 4px 32px rgba(10,15,30,.1)}
+.nav-links a{position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1.5px;background:var(--accent);transition:width .25s ease}
+.nav-links a:hover::after{width:100%}
+.nav-cta{transition:all .25s!important}
+.nav-cta:hover{transform:translateY(-1px)!important;box-shadow:0 8px 24px rgba(37,99,255,.4)!important;opacity:1!important}
+
+/* TYPED CURSOR */
+.typed-cursor{color:var(--accent);font-weight:300;font-style:normal}
+
+/* SLOGAN INITIAL STATE for GSAP */
+.slogan-item{will-change:transform,opacity}
+
+/* ENHANCED CARD HOVERS */
+.niche-card{will-change:transform}
+.product-card{will-change:transform}
+.case-card{will-change:transform}
+.pricing-col{will-change:transform}
+.hero-metric{transition:background .2s}
+.hero-metric:hover{background:var(--bg3)}
+
+/* COUNTER ANIMATE */
+.count-up{display:inline-block}
+
+/* MAGNETIC BUTTON */
+.btn-primary,.btn-white{will-change:transform}
+
+
+/* smooth snap */
+html{}
+.slide{}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 </head>
 <body>
 
 <div class="progress" id="progress-bar"></div>
 
-<nav class="nav">
+<nav class="nav" id="main-nav">
   <div class="nav-brand">MX<span>Systems</span></div>
   <div class="nav-links">
     <a href="#slide-3" id="nl-1">Для кого</a>
@@ -236,9 +284,11 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;ove
 
 <!-- SLIDE 1: HERO -->
 <div class="slide slide-1" id="slide-1">
-  <div class="slide-inner">
+  <canvas id="hero-canvas" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;opacity:0.45;z-index:0"></canvas>
+  <canvas id="hero-canvas"></canvas>
+  <div class="slide-inner" style="position:relative;z-index:1">
     <div class="hero-eyebrow fade"><span class="hero-eyebrow-dot"></span><span id="h-badge">AI-автоматизация для любого бизнеса · Кишинёв</span></div>
-    <h1 class="hero-h1 fade" id="h-title">Ваш бизнес работает.<br><span class="gr">AI не спит.</span></h1>
+    <h1 class="hero-h1 fade" id="h-title"><span id="hl1">Ваш бизнес работает.</span><br><span class="gr"><span id="typed-el"></span></span></h1>
     <p class="hero-sub fade" id="h-sub">MX Systems автоматизирует общение с клиентами, возврат и репутацию — для любого бизнеса. Быстро, умно, на двух языках.</p>
     <div class="hero-actions fade">
       <button class="btn-primary" id="h-btn1" onclick="openModal('demo')">Подключить бизнес</button>
@@ -248,7 +298,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;ove
       <div class="hero-metric"><div class="hero-metric-num" id="mn1">24/7</div><div class="hero-metric-lbl" id="m1">Без выходных</div></div>
       <div class="hero-metric"><div class="hero-metric-num" id="mn2">3 сек</div><div class="hero-metric-lbl" id="m2">Время ответа</div></div>
       <div class="hero-metric"><div class="hero-metric-num" id="mn3">RU+RO</div><div class="hero-metric-lbl" id="m3">Два языка</div></div>
-      <div class="hero-metric"><div class="hero-metric-num" id="mn4">48 ч</div><div class="hero-metric-lbl" id="m4">Запуск</div></div>
+      <div class="hero-metric"><div class="hero-metric-num" id="mn4">3–7 дней</div><div class="hero-metric-lbl" id="m4">Запуск</div></div>
     </div>
   </div>
 </div>
@@ -287,25 +337,25 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;ove
         <div class="niche-icon">🍽️</div>
         <div class="niche-title" id="n3t">Рестораны</div>
         <div class="niche-desc" id="n3d">Бронирование столиков, меню, акции, ответы на отзывы</div>
-        <div class="niche-tag" id="n3tag">Скоро</div>
+        <div class="niche-tag" id="n3tag">Уже работает</div>
       </div>
       <div class="niche-card fade">
         <div class="niche-icon">⚖️</div>
         <div class="niche-title" id="n4t">Юристы и врачи</div>
         <div class="niche-desc" id="n4d">Запись на консультацию, ответы на типовые вопросы, напоминания</div>
-        <div class="niche-tag" id="n4tag">Скоро</div>
+        <div class="niche-tag" id="n4tag">Уже работает</div>
       </div>
       <div class="niche-card fade">
         <div class="niche-icon">💇</div>
         <div class="niche-title" id="n5t">Красота и spa</div>
         <div class="niche-desc" id="n5d">Онлайн запись, напоминания о визите, работа с постоянными клиентами</div>
-        <div class="niche-tag" id="n5tag">Скоро</div>
+        <div class="niche-tag" id="n5tag">Уже работает</div>
       </div>
       <div class="niche-card fade">
         <div class="niche-icon">🏋️</div>
         <div class="niche-title" id="n6t">Фитнес и спорт</div>
         <div class="niche-desc" id="n6d">Запись на занятия, напоминания, продление абонементов</div>
-        <div class="niche-tag" id="n6tag">Скоро</div>
+        <div class="niche-tag" id="n6tag">Уже работает</div>
       </div>
       <div class="niche-card fade">
         <div class="niche-icon">🏠</div>
@@ -333,10 +383,10 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;ove
         <div class="product-card-top">
           <div class="product-card-num">01</div>
           <div class="product-card-title" id="c1t">AI-агент для клиентов</div>
-          <div class="product-card-desc" id="c1d">Отвечает клиентам в WhatsApp мгновенно. Записывает, консультирует, переносит встречи — на русском и румынском, круглосуточно.</div>
+          <div class="product-card-desc" id="c1d">Отвечает клиентам в WhatsApp, Telegram, Viber и через виджет на сайте. Записывает, консультирует — на RU и RO, 24/7.</div>
         </div>
         <div class="product-card-bottom">
-          <div class="product-feature"><span class="pf-dot"></span><span id="c1f1">Ответ за 3 секунды в любое время</span></div>
+          <div class="product-feature"><span class="pf-dot"></span><span id="c1f1">WhatsApp, Telegram, Viber, виджет на сайте</span></div>
           <div class="product-feature"><span class="pf-dot"></span><span id="c1f2">Определяет язык клиента автоматически</span></div>
           <div class="product-feature"><span class="pf-dot"></span><span id="c1f3">Запись, перенос, отмена визитов</span></div>
           <div class="product-feature"><span class="pf-dot"></span><span id="c1f4">Отвечает на цены, адрес, часы работы</span></div>
@@ -375,37 +425,136 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;ove
 <!-- SLIDE 5: CASES -->
 <div class="slide slide-5" id="slide-5">
   <div class="slide-inner">
-    <div class="s-label fade" id="cs-label">Кейсы</div>
-    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-.02em" class="fade" id="cs-title">Реальные результаты.</h2>
+    <div class="s-label fade" id="cs-label" style="display:none"></div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-.02em" class="fade" id="cs-title">Прогнозируемые результаты.</h2>
     <div class="cases-grid">
       <div class="case-card fade">
-        <div class="case-tag" id="cs1tag">Стоматология · Кишинёв</div>
-        <div class="case-title" id="cs1title">SmileCare — первый продукт MX Systems</div>
-        <div class="case-desc" id="cs1desc">AI-администратор для стоматологической клиники. Отвечает пациентам на RU и RO, записывает на приём, возвращает пациентов после длительного отсутствия, управляет репутацией на Google Maps.</div>
+        <div class="case-tag" id="cs1tag">Стоматология</div>
+        <div class="case-title" id="cs1title">AI-администратор для стоматологий</div>
+        <div class="case-desc" id="cs1desc">AI-администратор для стоматологической клиники. Отвечает пациентам на RU и RO, записывает на приём, возвращает пациентов, управляет репутацией на Google Maps.</div>
         <div class="case-results">
-          <div class="case-result"><div class="case-result-num">+40%</div><div class="case-result-lbl" id="cs1r1">записей</div></div>
-          <div class="case-result"><div class="case-result-num">4.8★</div><div class="case-result-lbl" id="cs1r2">рейтинг Google</div></div>
-          <div class="case-result"><div class="case-result-num">24/7</div><div class="case-result-lbl" id="cs1r3">работа бота</div></div>
+          <a class="case-result" href="https://hyperleap.ai/blog/ai-chatbot-statistics-2026" target="_blank" title="Healthcare IT News / Weill Cornell, 2025" style="text-decoration:none;color:inherit;cursor:pointer;">
+            <div class="case-result-num">+28%</div>
+            <div class="case-result-lbl" id="cs1r1">записей на приём ↗</div>
+          </a>
+          <a class="case-result" href="https://hyperleap.ai/blog/ai-chatbot-statistics-2026" target="_blank" title="Healthcare IT News, 2026" style="text-decoration:none;color:inherit;cursor:pointer;">
+            <div class="case-result-num">-31%</div>
+            <div class="case-result-lbl" id="cs1r2">пропусков визитов ↗</div>
+          </a>
+          <div class="case-result">
+            <div class="case-result-num">24/7</div>
+            <div class="case-result-lbl" id="cs1r3">работа бота</div>
+          </div>
         </div>
+        <div style="font-size:11px;color:var(--muted2);margin-top:8px;">* Healthcare IT News 2026 · Weill Cornell Medicine 2025</div>
       </div>
       <div class="case-card fade">
-        <div class="case-tag" id="cs2tag">Автосервис · Кишинёв</div>
-        <div class="case-title" id="cs2title">AutoPit — AI для автосервиса</div>
+        <div class="case-tag" id="cs2tag">Автосервис</div>
+        <div class="case-title" id="cs2title">AI-ассистент для автосервисов</div>
         <div class="case-desc" id="cs2desc">AI-ассистент для автосервиса. Уведомляет клиентов о статусе ремонта, возвращает забытых клиентов сезонными рассылками, отвечает на вопросы о ценах и записи 24/7.</div>
         <div class="case-results">
-          <div class="case-result"><div class="case-result-num">-70%</div><div class="case-result-lbl" id="cs2r1">звонков "как моя машина?"</div></div>
-          <div class="case-result"><div class="case-result-num">+35%</div><div class="case-result-lbl" id="cs2r2">повторных визитов</div></div>
+          <a class="case-result" href="https://masterofcode.com/blog/chatbot-statistics" target="_blank" title="Master of Code: Chatbot Statistics 2026" style="text-decoration:none;color:inherit;">
+            <div class="case-result-num">72%</div>
+            <div class="case-result-lbl" id="cs2r1">запросов решает бот ↗</div>
+          </a>
+          <a class="case-result" href="https://agentzap.ai/blog/ai-booking-statistics" target="_blank" title="AgentZap: AI Booking Statistics 2026" style="text-decoration:none;color:inherit;">
+            <div class="case-result-num">+24%</div>
+            <div class="case-result-lbl" id="cs2r2">записей вне рабочих часов ↗</div>
+          </a>
           <div class="case-result"><div class="case-result-num">24/7</div><div class="case-result-lbl" id="cs2r3">работа бота</div></div>
         </div>
+        <div style="font-size:11px;color:var(--muted2);margin-top:8px;">* Master of Code 2026 · AgentZap Research 2026</div>
       </div>
-    </div>
+    
+      <div class="case-card fade">
+        <div class="case-tag" id="cs3tag">Красота и SPA</div>
+        <div class="case-title" id="cs3title">AI-администратор для салонов красоты</div>
+        <div class="case-desc" id="cs3desc">AI-ассистент для салонов красоты и spa. Онлайн-запись к мастерам, напоминания о визите, возврат постоянных клиентов, ответы на отзывы 24/7.</div>
+        <div class="case-results">
+          <div class="case-result">
+            <div class="case-result-num">-65%</div>
+            <div class="case-result-lbl" id="cs3r1">пропущенных обращений ↗</div>
+          </div>
+          <a class="case-result" href="https://pleep.app/blog/blog-chat-bot-dlya-zapisi-klientov-salon" target="_blank" title="McKinsey / Beauty Industry Report 2025" style="text-decoration:none;color:inherit;cursor:pointer;">
+            <div class="case-result-num">+21%</div>
+            <div class="case-result-lbl" id="cs3r2">загрузка мастеров ↗</div>
+          </a>
+          <div class="case-result">
+            <div class="case-result-num">24/7</div>
+            <div class="case-result-lbl" id="cs3r3">работа бота</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--muted2);margin-top:8px;">* Zenoti Survey 2025 · McKinsey / Beauty Industry Report 2025</div>
+      </div>
+      <div class="case-card fade">
+        <div class="case-tag" id="cs4tag">Юристы и врачи</div>
+        <div class="case-title" id="cs4title">AI-ресепшн для юристов и врачей</div>
+        <div class="case-desc" id="cs4desc">AI-ассистент для юридических и медицинских офисов. Записывает на консультации, отвечает на типовые вопросы, сокращает пропуски встреч автоматическими напоминаниями.</div>
+        <div class="case-results">
+          <a class="case-result" href="https://hyperleap.ai/blog/ai-chatbot-statistics-2026" target="_blank" title="Healthcare IT News, 2026" style="text-decoration:none;color:inherit;cursor:pointer;">
+            <div class="case-result-num">52%</div>
+            <div class="case-result-lbl" id="cs4r1">обращений берёт бот ↗</div>
+          </a>
+          <a class="case-result" href="https://agentzap.ai/blog/ai-booking-statistics" target="_blank" title="AgentZap 2026" style="text-decoration:none;color:inherit;cursor:pointer;">
+            <div class="case-result-num">-28%</div>
+            <div class="case-result-lbl" id="cs4r2">отказов при записи ↗</div>
+          </a>
+          <div class="case-result">
+            <div class="case-result-num">24/7</div>
+            <div class="case-result-lbl" id="cs4r3">работа бота</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--muted2);margin-top:8px;">* Healthcare IT News 2026 · AgentZap Research 2026</div>
+      </div>
+      <div class="case-card fade">
+        <div class="case-tag" id="cs5tag">Рестораны</div>
+        <div class="case-title" id="cs5title">AI-хостес для ресторанов</div>
+        <div class="case-desc" id="cs5desc">AI-ассистент для ресторанов. Принимает бронирования столиков, отвечает на вопросы о меню и акциях, управляет отзывами на Google Maps круглосуточно.</div>
+        <div class="case-results">
+          <a class="case-result" href="https://masterofcode.com/blog/chatbot-statistics" target="_blank" title="Master of Code 2026" style="text-decoration:none;color:inherit;cursor:pointer;">
+            <div class="case-result-num">3.8×</div>
+            <div class="case-result-lbl" id="cs5r1">рост еженедельных броней ↗</div>
+          </a>
+          <a class="case-result" href="https://agentzap.ai/blog/ai-booking-statistics" target="_blank" title="Gartner 2025" style="text-decoration:none;color:inherit;cursor:pointer;">
+            <div class="case-result-num">40%</div>
+            <div class="case-result-lbl" id="cs5r2">броней вне рабочих часов ↗</div>
+          </a>
+          <div class="case-result">
+            <div class="case-result-num">24/7</div>
+            <div class="case-result-lbl" id="cs5r3">работа бота</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--muted2);margin-top:8px;">* Master of Code 2026 · Gartner Consumer Behavior 2025</div>
+      </div>
+      <div class="case-card fade">
+        <div class="case-tag" id="cs6tag">Фитнес и спорт</div>
+        <div class="case-title" id="cs6title">AI-тренер по записи для фитнес-клубов</div>
+        <div class="case-desc" id="cs6desc">AI-ассистент для фитнес-клубов и спортивных секций. Запись на тренировки, напоминания, продление абонементов, возврат ушедших клиентов.</div>
+        <div class="case-results">
+          <a class="case-result" href="https://marketingltb.com/blog/statistics/chatbot-statistics/" target="_blank" title="Marketing LTB 2026" style="text-decoration:none;color:inherit;cursor:pointer;">
+            <div class="case-result-num">+18%</div>
+            <div class="case-result-lbl" id="cs6r1">повторных визитов ↗</div>
+          </a>
+          <a class="case-result" href="https://agentzap.ai/blog/ai-booking-statistics" target="_blank" title="Salesforce 2025" style="text-decoration:none;color:inherit;cursor:pointer;">
+            <div class="case-result-num">2×</div>
+            <div class="case-result-lbl" id="cs6r2">конверсия vs форма ↗</div>
+          </a>
+          <div class="case-result">
+            <div class="case-result-num">62%</div>
+            <div class="case-result-lbl" id="cs6r3">рутины берёт бот</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--muted2);margin-top:8px;">* Salesforce State of Service 2025 · Marketing LTB 2026</div>
+      </div></div>
   </div>
 </div>
 
 <!-- SLIDE 6: ROI -->
 <div class="slide slide-6" id="slide-6">
   <div class="slide-inner">
-    <div class="s-label fade" id="roi-label">Считаем вместе</div>
+    <div class="s-label fade" id="roi-label">* Прогнозируемые показатели на основе данных рынка. Результаты зависят от специфики бизнеса.
+
+        Считаем вместе</div>
     <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-.02em" class="fade" id="roi-title">Сколько приносит AI<br>вашему бизнесу?</h2>
     <div class="roi-layout fade">
       <div class="roi-inputs-card">
@@ -440,7 +589,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;ove
         <div class="pricing-period" id="p1period">единоразово</div>
         <ul class="pricing-features">
           <li class="pricing-feature"><span class="pf-check">—</span><span id="p1f1">Настройка AI под ваш бизнес</span></li>
-          <li class="pricing-feature"><span class="pf-check">—</span><span id="p1f2">Интеграция с WhatsApp</span></li>
+          <li class="pricing-feature"><span class="pf-check">—</span><span id="p1f2">Интеграция с мессенджерами и сайтом</span></li>
           <li class="pricing-feature"><span class="pf-check">—</span><span id="p1f3">Обучение системы вашим данным</span></li>
           <li class="pricing-feature"><span class="pf-check">—</span><span id="p1f4">Тестирование и запуск</span></li>
           <li class="pricing-feature"><span class="pf-check">—</span><span id="p1f5">Обучение команды</span></li>
@@ -495,7 +644,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;ove
         <button class="modal-type-btn" id="mtab2" onclick="setModalType('call',this)">Запросить звонок</button>
       </div>
       <div class="modal-field"><label id="ml1">Имя</label><input type="text" id="m-name" placeholder="Ваше имя"></div>
-      <div class="modal-field"><label id="ml2">Телефон / WhatsApp</label><input type="tel" id="m-phone" placeholder="+373 __ ___ ___"></div>
+      <div class="modal-field"><label id="ml2">Телефон / WhatsApp / Telegram</label><input type="tel" id="m-phone" placeholder="+373 __ ___ ___"></div>
       <div class="modal-field"><label id="ml3">Ваш бизнес</label><input type="text" id="m-clinic" placeholder="Название и сфера"></div>
       <div class="modal-field">
         <label id="ml4">Удобное время</label>
@@ -512,7 +661,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;ove
     <div class="modal-success" id="modal-success">
       <div class="modal-success-icon">✅</div>
       <div class="modal-success-title" id="msuc-title">Заявка принята!</div>
-      <div class="modal-success-sub" id="msuc-sub">Свяжемся в течение 30 минут.<br>WhatsApp: <strong>+373 69 589 555</strong></div>
+      <div class="modal-success-sub" id="msuc-sub">Свяжемся в течение 2 часов.<br>WhatsApp / Telegram: <strong>+373 69 589 555</strong></div>
     </div>
   </div>
 </div>
@@ -529,12 +678,12 @@ const T = {
     'nl-1':'Для кого','nl-2':'Продукт','nl-3':'ROI','nl-4':'Цены',
     'nav-cta':'Получить демо',
     'nav-cta-btn':'Получить демо',
-    'h-badge':'AI-автоматизация для любого бизнеса · Кишинёв',
+    'h-badge':'AI-автоматизация для любого бизнеса · Кишинёв','hl1':'Ваш бизнес работает.','hl2':'',
     'h-title':'Ваш бизнес работает.<br><span class="gr">AI не спит.</span>',
     'h-sub':'MX Systems автоматизирует общение с клиентами, возврат и репутацию — для любого бизнеса. Быстро, умно, на двух языках.',
     'h-btn1':'Подключить бизнес','h-btn2':'Узнать больше',
     'm1':'Без выходных','m2':'Время ответа','m3':'Два языка','m4':'Запуск',
-    'mn1':'24/7','mn2':'3 сек','mn3':'RU+RO','mn4':'48 ч',
+    'mn1':'24/7','mn2':'3 сек','mn3':'RU+RO','mn4':'3–7 дней',
     'sl-label':'Факты',
     'sl1':'Каждый неотвеченный клиент —<br>это деньги которые ушли <em>к конкуренту.</em>',
     'sl2':'Сотрудник работает <em>8 часов.</em><br>Клиенты пишут 24.',
@@ -542,31 +691,31 @@ const T = {
     'fw-label':'Для кого','fw-title':'Подходит для<br>любого бизнеса.',
     'n1t':'Стоматологии','n1d':'Запись пациентов, напоминания, ответы на отзывы Google Maps','n1tag':'Уже работает',
     'n2t':'Автосервисы','n2d':'Запись на ТО, поиск запчастей, напоминание когда пора менять масло','n2tag':'Уже работает',
-    'n3t':'Рестораны','n3d':'Бронирование столиков, меню, акции, ответы на отзывы','n3tag':'Скоро',
-    'n4t':'Юристы и врачи','n4d':'Запись на консультацию, ответы на типовые вопросы, напоминания','n4tag':'Скоро',
-    'n5t':'Красота и spa','n5d':'Онлайн запись, напоминания о визите, работа с постоянными клиентами','n5tag':'Скоро',
-    'n6t':'Фитнес и спорт','n6d':'Запись на занятия, напоминания, продление абонементов','n6tag':'Скоро',
+    'n3t':'Рестораны','n3d':'Бронирование столиков, меню, акции, ответы на отзывы','n3tag':'Уже работает',
+    'n4t':'Юристы и врачи','n4d':'Запись на консультацию, ответы на типовые вопросы, напоминания','n4tag':'Уже работает',
+    'n5t':'Красота и spa','n5d':'Онлайн запись, напоминания о визите, работа с постоянными клиентами','n5tag':'Уже работает',
+    'n6t':'Фитнес и спорт','n6d':'Запись на занятия, напоминания, продление абонементов','n6tag':'Уже работает',
     'n7t':'Недвижимость','n7d':'Ответы на вопросы об объектах, запись на просмотр, квалификация лидов','n7tag':'Скоро',
     'n8t':'Ваша ниша','n8d':'Автоматизируем любой бизнес где есть общение с клиентами','n8tag':'Обсудим',
     'pr-label':'Платформа','pr-title':'Три модуля.<br>Одно решение.',
-    'c1t':'AI-агент для клиентов','c1d':'Отвечает клиентам в WhatsApp мгновенно. Записывает, консультирует — на русском и румынском, круглосуточно.',
-    'c1f1':'Ответ за 3 секунды в любое время','c1f2':'Определяет язык клиента автоматически','c1f3':'Запись, перенос, отмена визитов','c1f4':'Отвечает на цены, адрес, часы работы',
+    'c1t':'AI-агент для клиентов','c1d':'Отвечает в WhatsApp, Telegram, Viber и через виджет на сайте. Записывает, консультирует — на RU и RO, 24/7.',
+    'c1f1':'WhatsApp, Telegram, Viber, виджет на сайте','c1f2':'Определяет язык клиента автоматически','c1f3':'Запись, перенос, отмена визитов','c1f4':'Отвечает на цены, адрес, часы работы',
     'c2t':'Возврат клиентов','c2d':'Находит клиентов которые давно не возвращались. Генерирует персональное сообщение. Отправляет одним кликом.',
     'c2f1':'Персональное сообщение под каждого','c2f2':'На языке клиента — RU или RO','c2f3':'Конверсия в возврат 16.7%','c2f4':'Массовая рассылка одним кликом',
     'c3t':'Управление репутацией','c3d':'Мониторит отзывы на Google Maps. Генерирует персональные ответы в стиле бизнеса.',
     'c3f1':'Мониторинг Google Maps 24/7','c3f2':'Ответ на любой отзыв за секунды','c3f3':'Рост рейтинга +0.2 за 3 месяца','c3f4':'98% отзывов с ответом',
-    'cs-label':'Кейсы','cs-title':'Реальные результаты.',
-    'cs1tag':'Стоматология · Кишинёв','cs1title':'SmileCare — первый продукт MX Systems',
+    'cs-label':'','cs-title':'Прогнозируемые результаты.',
+    'cs1tag':'Стоматология','cs1title':'AI-администратор для стоматологий',
     'cs1desc':'AI-администратор для стоматологической клиники. Отвечает пациентам на RU и RO, записывает на приём, возвращает пациентов, управляет репутацией на Google Maps.',
     'cs1r1':'записей','cs1r2':'рейтинг Google','cs1r3':'работа бота',
-    'cs2tag':'Автосервис · Кишинёв','cs2title':'AutoPit — AI для автосервиса','cs2desc':'AI-ассистент для автосервиса. Уведомляет клиентов о статусе ремонта, возвращает клиентов сезонными рассылками, отвечает 24/7.','cs2r1':'звонков «как моя машина?»','cs2r2':'повторных визитов','cs2r3':'работа бота',
+    'cs2tag':'Автосервис','cs2title':'AI-ассистент для автосервисов','cs2desc':'AI-ассистент для автосервиса. Уведомляет клиентов о статусе ремонта, возвращает клиентов сезонными рассылками, отвечает 24/7.','cs2r1':'звонков «как моя машина?»','cs2r2':'повторных визитов','cs2r3':'работа бота',
     'roi-label':'Считаем вместе','roi-title':'Сколько приносит AI<br>вашему бизнесу?',
     'rl1':'Средний чек (лей)','rl2':'Диалогов в месяц','rl3':'Стоимость платформы (лей/мес)',
     'roi-rlbl':'Дополнительная выручка от AI','roi-rsub':'в месяц',
     'roi-bd1':'Новых обращений в месяц','roi-bd2':'Выручка с новых клиентов','roi-bd3':'Стоимость платформы','roi-bd4':'Итого выручка от AI',
     'p-label':'Условия','p-title':'Прозрачное<br>ценообразование.',
     'p1type':'Подключение','p1period':'единоразово','p1btn':'Запросить звонок',
-    'p1f1':'Настройка AI под ваш бизнес','p1f2':'Интеграция с WhatsApp','p1f3':'Обучение системы вашим данным','p1f4':'Тестирование и запуск','p1f5':'Обучение команды',
+    'p1f1':'Настройка AI под ваш бизнес','p1f2':'Интеграция с мессенджерами и сайтом','p1f3':'Обучение системы вашим данным','p1f4':'Тестирование и запуск','p1f5':'Обучение команды',
     'p2badge':'Рекомендуем','p2type':'Поддержка','p2period':'в месяц','p2btn':'Получить демо',
     'p2f1':'Поддержка 7 дней в неделю','p2f2':'Обновления и улучшения','p2f3':'Мониторинг работы системы','p2f4':'Аналитика и отчёты','p2f5':'Новые функции включены',
     'p-note':'При среднем чеке 1200 лей платформа окупается за <strong>1–2 месяца.</strong> Далее — чистая дополнительная выручка.',
@@ -581,14 +730,14 @@ const T = {
     'mph1':'Ваше имя','mph2':'+373 __ ___ ___','mph3':'Название и сфера',
     'mt0':'Выберите время','mt1':'Сегодня, в ближайшее время','mt2':'Завтра утром (9:00–12:00)','mt3':'Завтра днём (12:00–17:00)','mt4':'На этой неделе — в любое время',
     'modal-submit':'Отправить заявку →',
-    'msuc-title':'Заявка принята!','msuc-sub':'Свяжемся в течение 30 минут.<br>WhatsApp: <strong>+373 69 589 555</strong>',
+    'msuc-title':'Заявка принята!','msuc-sub':'Свяжемся в течение 2 часов.<br>WhatsApp / Telegram: <strong>+373 69 589 555</strong>',
     'cur':'лей','sending':'Отправляем...',
   },
   ro: {
     'nl-1':'Pentru cine','nl-2':'Produs','nl-3':'ROI','nl-4':'Prețuri',
     'nav-cta':'Obține demo',
     'nav-cta-btn':'Obține demo',
-    'h-badge':'Automatizare AI pentru orice afacere · Chișinău',
+    'h-badge':'Automatizare AI pentru orice afacere · Chișinău','hl1':'Afacerea ta lucrează.','hl2':'',
     'h-title':'Afacerea ta lucrează.<br><span class="gr">AI nu doarme.</span>',
     'h-sub':'MX Systems automatizează comunicarea cu clienții, revenirea lor și reputația — pentru orice afacere. Rapid, inteligent, în două limbi.',
     'h-btn1':'Conectează afacerea','h-btn2':'Află mai mult',
@@ -599,33 +748,45 @@ const T = {
     'sl2':'Angajatul lucrează <em>8 ore.</em><br>Clienții scriu 24.',
     'sl3':'Primul în nișa ta cu AI —<br><em>sau al doilea.</em> Alegerea vă aparține.',
     'fw-label':'Pentru cine','fw-title':'Potrivit pentru<br>orice afacere.',
-    'n1t':'Stomatologie','n1d':'Programări pacienți, remindere, răspunsuri la recenzii Google Maps','n1tag':'Deja funcționează',
-    'n2t':'Service auto','n2d':'Programare ITP, căutare piese, reminder când e schimbul de ulei','n2tag':'Deja funcționează',
-    'n3t':'Restaurante','n3d':'Rezervări mese, meniu, promoții, răspunsuri la recenzii','n3tag':'În curând',
-    'n4t':'Avocați și medici','n4d':'Programare consultații, răspunsuri la întrebări tipice, remindere','n4tag':'În curând',
-    'n5t':'Beauty și spa','n5d':'Programare online, remindere vizite, lucru cu clienții fideli','n5tag':'În curând',
-    'n6t':'Fitness și sport','n6d':'Programare la antrenamente, remindere, reînnoire abonamente','n6tag':'În curând',
+    'n1t':'Stomatologie','n1d':'Programări pacienți, remindere, răspunsuri la recenzii Google Maps','n1tag':'Funcționează',
+    'n2t':'Service auto','n2d':'Programare ITP, căutare piese, reminder când e schimbul de ulei','n2tag':'Funcționează',
+    'n3t':'Restaurante','n3d':'Rezervări mese, meniu, promoții, răspunsuri la recenzii','n3tag':'Funcționează',
+    'n4t':'Avocați și medici','n4d':'Programare consultații, răspunsuri la întrebări tipice, remindere','n4tag':'Funcționează',
+    'n5t':'Beauty și spa','n5d':'Programare online, remindere vizite, lucru cu clienții fideli','n5tag':'Funcționează',
+    'n6t':'Fitness și sport','n6d':'Programare la antrenamente, remindere, reînnoire abonamente','n6tag':'Funcționează',
     'n7t':'Imobiliare','n7d':'Răspunsuri despre proprietăți, programare vizionări, calificarea lead-urilor','n7tag':'În curând',
     'n8t':'Nișa ta','n8d':'Automatizăm orice afacere unde există comunicare cu clienții','n8tag':'Discutăm',
     'pr-label':'Platformă','pr-title':'Trei module.<br>O soluție.',
-    'c1t':'Agent AI pentru clienți','c1d':'Răspunde clienților pe WhatsApp instant. Programează, consultă — în română și rusă, non-stop.',
-    'c1f1':'Răspuns în 3 secunde oricând','c1f2':'Detectează limba clientului automat','c1f3':'Programare, reprogramare, anulare','c1f4':'Răspunde la prețuri, adresă, program',
+    'c1t':'Agent AI pentru clienți','c1d':'Răspunde pe WhatsApp, Telegram, Viber și prin widget pe site. Programează, consultă — RU și RO, non-stop.',
+    'c1f1':'WhatsApp, Telegram, Viber, widget pe site','c1f2':'Detectează limba clientului automat','c1f3':'Programare, reprogramare, anulare','c1f4':'Răspunde la prețuri, adresă, program',
     'c2t':'Revenirea clienților','c2d':'Găsește clienții care nu au mai revenit. Generează mesaj personalizat. Trimite cu un clic.',
     'c2f1':'Mesaj personalizat pentru fiecare','c2f2':'În limba clientului — RO sau RU','c2f3':'Conversie la revenire 16.7%','c2f4':'Trimitere în masă cu un clic',
     'c3t':'Gestionare reputație','c3d':'Monitorizează recenziile pe Google Maps. Generează răspunsuri personalizate în stilul afacerii.',
     'c3f1':'Monitorizare Google Maps 24/7','c3f2':'Răspuns la orice recenzie în secunde','c3f3':'Creștere rating +0.2 în 3 luni','c3f4':'98% recenzii cu răspuns',
-    'cs-label':'Cazuri','cs-title':'Rezultate reale.',
-    'cs1tag':'Stomatologie · Chișinău','cs1title':'SmileCare — primul produs MX Systems',
+    'cs-label':'','cs-title':'Rezultate prognozate.',
+    'cs1tag':'Stomatologie','cs1title':'Stomatologie — soluție AI',
     'cs1desc':'Administrator AI pentru clinică stomatologică. Răspunde pacienților în RO și RU, programează vizite, returnează pacienții, gestionează reputația pe Google Maps.',
     'cs1r1':'programări','cs1r2':'rating Google','cs1r3':'bot activ',
-    'cs2tag':'Service auto · Chișinău','cs2title':'AutoPit — AI pentru service auto','cs2desc':'Asistent AI pentru service auto. Notifică clienții despre statusul reparației, returnează clienți cu trimiteri sezoniere, răspunde 24/7.','cs2r1':'apeluri «cum e mașina?»','cs2r2':'vizite repetate','cs2r3':'bot activ',
+    'cs2tag':'Service auto','cs2title':'Service auto — soluție AI','cs2desc':'Asistent AI pentru service auto. Notifică clienții despre statusul reparației, returnează clienți cu trimiteri sezoniere, răspunde 24/7.','cs2r1':'apeluri «cum e mașina?»','cs2r2':'vizite repetate','cs2r3':'bot activ',
+    'cs3tag':'Frumusețe și SPA','cs3title':'Administrator AI pentru saloane de frumusețe',
+    'cs3desc':'Asistent AI pentru saloane de frumusețe și spa. Programări online, remindere, returnarea clienților fideli, răspunsuri la recenzii 24/7.',
+    'cs3r1':'solicitări ratate ↗','cs3r2':'utilizare maeștri ↗','cs3r3':'bot activ',
+    'cs4tag':'Avocați și medici','cs4title':'Recepție AI pentru avocați și medici',
+    'cs4desc':'Asistent AI pentru birouri juridice și medicale. Programează consultații, răspunde la întrebări frecvente, reduce neprezentările prin remindere automate.',
+    'cs4r1':'solicitări gestionate de bot ↗','cs4r2':'refuzuri la programare ↗','cs4r3':'bot activ',
+    'cs5tag':'Restaurante','cs5title':'Gazdă AI pentru restaurante',
+    'cs5desc':'Asistent AI pentru restaurante. Acceptă rezervări, răspunde la întrebări despre meniu, gestionează recenziile pe Google Maps non-stop.',
+    'cs5r1':'creștere rezervări ↗','cs5r2':'rezervări în afara orelor ↗','cs5r3':'bot activ',
+    'cs6tag':'Fitness și sport','cs6title':'Asistent AI pentru cluburi de fitness',
+    'cs6desc':'Asistent AI pentru cluburi de fitness. Programări, remindere, reînnoire abonamente, returnarea clienților pierduți.',
+    'cs6r1':'vizite repetate ↗','cs6r2':'conversie vs formular ↗','cs6r3':'bot activ',
     'roi-label':'Calculăm împreună','roi-title':'Cât aduce AI<br>afacerii tale?',
     'rl1':'Bon mediu (lei)','rl2':'Dialoguri pe lună','rl3':'Costul platformei (lei/lună)',
     'roi-rlbl':'Venit suplimentar de la AI','roi-rsub':'pe lună',
     'roi-bd1':'Solicitări noi pe lună','roi-bd2':'Venituri din clienți noi','roi-bd3':'Costul platformei','roi-bd4':'Total venit de la AI',
     'p-label':'Condiții','p-title':'Prețuri<br>transparente.',
     'p1type':'Conectare','p1period':'o singură dată','p1btn':'Solicită apel',
-    'p1f1':'Configurare AI pentru afacerea dvs','p1f2':'Integrare cu WhatsApp','p1f3':'Antrenarea sistemului cu datele dvs','p1f4':'Testare și lansare','p1f5':'Instruirea echipei',
+    'p1f1':'Configurare AI pentru afacerea dvs','p1f2':'Integrare cu mesagerie și site','p1f3':'Antrenarea sistemului cu datele dvs','p1f4':'Testare și lansare','p1f5':'Instruirea echipei',
     'p2badge':'Recomandat','p2type':'Suport','p2period':'pe lună','p2btn':'Obține demo',
     'p2f1':'Suport 7 zile pe săptămână','p2f2':'Actualizări și îmbunătățiri','p2f3':'Monitorizarea funcționării','p2f4':'Analiză și rapoarte','p2f5':'Funcții noi incluse',
     'p-note':'La un bon mediu de 1200 lei, platforma se amortizează în <strong>2–3 luni.</strong> Ulterior — venit suplimentar pur.',
@@ -640,13 +801,13 @@ const T = {
     'mph1':'Numele dvs','mph2':'+373 __ ___ ___','mph3':'Denumire și domeniu',
     'mt0':'Alegeți ora','mt1':'Astăzi, cât mai curând','mt2':'Mâine dimineață (9:00–12:00)','mt3':'Mâine după-amiază (12:00–17:00)','mt4':'Săptămâna aceasta — oricând',
     'modal-submit':'Trimite cererea →',
-    'msuc-title':'Cerere primită!','msuc-sub':'Vă contactăm în 30 de minute.<br>WhatsApp: <strong>+373 69 589 555</strong>',
+    'msuc-title':'Cerere primită!','msuc-sub':'Vă contactăm în 30 de minute.<br>WhatsApp / Telegram: <strong>+373 69 589 555</strong>',
     'cur':'lei','sending':'Se trimite...',
   }  ,en: {
     'nl-1':'For whom','nl-2':'Product','nl-3':'ROI','nl-4':'Pricing',
     'nav-cta':'Get demo',
     'nav-cta-btn':'Get demo',
-    'h-badge':'AI automation for any business · Chișinău',
+    'h-badge':'AI automation for any business · Chișinău','hl1':'Your business runs.','hl2':'',
     'h-title':'Your business runs.<br><span class="gr">AI never sleeps.</span>',
     'h-sub':'MX Systems automates client communication, retention and reputation — for any business. Fast, smart, in any language.',
     'h-btn1':'Connect your business','h-btn2':'Learn more',
@@ -657,33 +818,45 @@ const T = {
     'sl2':'Your staff works <em>8 hours.</em><br>Clients write 24.',
     'sl3':'First in your niche with AI —<br><em>or second.</em> Your choice.',
     'fw-label':'For whom','fw-title':'Works for<br>any business.',
-    'n1t':'Dental clinics','n1d':'Patient scheduling, reminders, Google Maps review responses','n1tag':'Live now',
+    'n1t':'Dental clinics','n1d':'Patient scheduling, reminders, Google Maps review responses','n1tag':'Live',
     'n2t':'Auto service','n2d':'Appointment booking, parts search, oil change reminders','n2tag':'Live',
-    'n3t':'Restaurants','n3d':'Table reservations, menu, promotions, review responses','n3tag':'Coming soon',
-    'n4t':'Lawyers & doctors','n4d':'Consultation booking, FAQ responses, reminders','n4tag':'Coming soon',
-    'n5t':'Beauty & spa','n5d':'Online booking, visit reminders, loyalty client management','n5tag':'Coming soon',
-    'n6t':'Fitness & sports','n6d':'Class scheduling, reminders, membership renewals','n6tag':'Coming soon',
+    'n3t':'Restaurants','n3d':'Table reservations, menu, promotions, review responses','n3tag':'Live',
+    'n4t':'Lawyers & doctors','n4d':'Consultation booking, FAQ responses, reminders','n4tag':'Live',
+    'n5t':'Beauty & spa','n5d':'Online booking, visit reminders, loyalty client management','n5tag':'Live',
+    'n6t':'Fitness & sports','n6d':'Class scheduling, reminders, membership renewals','n6tag':'Live',
     'n7t':'Real estate','n7d':'Property inquiries, viewing appointments, lead qualification','n7tag':'Coming soon',
     'n8t':'Your niche','n8d':'We automate any business with client communication','n8tag':'Let us talk',
     'pr-label':'Platform','pr-title':'Three modules.<br>One solution.',
-    'c1t':'AI client agent','c1d':'Responds to clients on WhatsApp instantly. Books, consults — in any language, 24/7.',
-    'c1f1':'3 second response any time','c1f2':'Auto-detects client language','c1f3':'Booking, rescheduling, cancellation','c1f4':'Answers pricing, address, hours',
+    'c1t':'AI client agent','c1d':'Responds via WhatsApp, Telegram, Viber and website widget. Books, consults — in any language, 24/7.',
+    'c1f1':'WhatsApp, Telegram, Viber, website widget','c1f2':'Auto-detects client language','c1f3':'Booking, rescheduling, cancellation','c1f4':'Answers pricing, address, hours',
     'c2t':'Client retention','c2d':'Finds clients who have not returned. Generates personal messages. Sends with one click.',
     'c2f1':'Personal message for each client','c2f2':'In the client language','c2f3':'16.7% conversion to return','c2f4':'Mass send with one click',
     'c3t':'Reputation management','c3d':'Monitors Google Maps reviews. Generates personal replies in your business style.',
     'c3f1':'Google Maps monitoring 24/7','c3f2':'Reply to any review in seconds','c3f3':'Rating growth +0.2 in 3 months','c3f4':'98% reviews with reply',
-    'cs-label':'Cases','cs-title':'Real results.',
-    'cs1tag':'Dental clinic · Chișinău','cs1title':'SmileCare — first MX Systems product',
+    'cs-label':'','cs-title':'Projected results.',
+    'cs1tag':'Dental clinic','cs1title':'Dental clinic — AI solution',
     'cs1desc':'AI administrator for a dental clinic. Responds to patients in RO and RU, books appointments, returns patients, manages Google Maps reputation.',
     'cs1r1':'bookings','cs1r2':'Google rating','cs1r3':'bot uptime',
-    'cs2tag':'Auto service · Chișinău','cs2title':'AutoPit — AI for auto service','cs2desc':'AI assistant for auto service. Notifies clients about repair status, brings back customers with seasonal campaigns, responds 24/7.','cs2r1':'calls «how is my car?»','cs2r2':'repeat visits','cs2r3':'bot uptime',
+    'cs2tag':'Auto service','cs2title':'Auto service — AI solution','cs2desc':'AI assistant for auto service. Notifies clients about repair status, brings back customers with seasonal campaigns, responds 24/7.','cs2r1':'calls «how is my car?»','cs2r2':'repeat visits','cs2r3':'bot uptime',
+    'cs3tag':'Beauty & SPA','cs3title':'AI Administrator for Beauty Salons',
+    'cs3desc':'AI assistant for beauty salons and spas. Online booking, visit reminders, client retention, review management 24/7.',
+    'cs3r1':'missed inquiries ↗','cs3r2':'stylist utilization ↗','cs3r3':'bot uptime',
+    'cs4tag':'Lawyers & doctors','cs4title':'AI Reception for Lawyers & Doctors',
+    'cs4desc':'AI assistant for legal and medical offices. Books consultations, answers FAQs, reduces no-shows with automated reminders.',
+    'cs4r1':'inquiries handled by bot ↗','cs4r2':'booking drop-offs ↗','cs4r3':'bot uptime',
+    'cs5tag':'Restaurants','cs5title':'AI Host for Restaurants',
+    'cs5desc':'AI assistant for restaurants. Accepts table reservations, answers menu questions, manages Google Maps reviews around the clock.',
+    'cs5r1':'weekly reservation growth ↗','cs5r2':'bookings after hours ↗','cs5r3':'bot uptime',
+    'cs6tag':'Fitness & sports','cs6title':'AI Assistant for Fitness Clubs',
+    'cs6desc':'AI assistant for fitness clubs. Class scheduling, reminders, membership renewals, win-back campaigns.',
+    'cs6r1':'repeat visits ↗','cs6r2':'conversion vs form ↗','cs6r3':'bot uptime',
     'roi-label':'Calculate together','roi-title':'How much does AI bring<br>your business?',
     'rl1':'Average check (MDL)','rl2':'Dialogues per month','rl3':'Platform cost (MDL/month)',
     'roi-rlbl':'Additional AI revenue','roi-rsub':'per month',
     'roi-bd1':'New clients per month','roi-bd2':'Revenue from new clients','roi-bd3':'Platform cost','roi-bd4':'Total AI revenue',
     'p-label':'Pricing','p-title':'Transparent<br>pricing.',
     'p1type':'Setup','p1period':'one-time','p1btn':'Request a call',
-    'p1f1':'AI configured for your business','p1f2':'WhatsApp integration','p1f3':'System trained on your data','p1f4':'Testing and launch','p1f5':'Team training',
+    'p1f1':'AI configured for your business','p1f2':'Messenger & website widget integration','p1f3':'System trained on your data','p1f4':'Testing and launch','p1f5':'Team training',
     'p2badge':'Recommended','p2type':'Support','p2period':'per month','p2btn':'Get demo',
     'p2f1':'Support 7 days a week','p2f2':'Updates and improvements','p2f3':'System monitoring','p2f4':'Analytics and reports','p2f5':'New features included',
     'p-note':'With an average check of 70 EUR, the platform pays off in <strong>2-3 months.</strong> Then — pure additional revenue.',
@@ -698,7 +871,7 @@ const T = {
     'mph1':'Your name','mph2':'+__ ___ ___ ___','mph3':'Company name and industry',
     'mt0':'Select time','mt1':'Today, as soon as possible','mt2':'Tomorrow morning (9:00-12:00)','mt3':'Tomorrow afternoon (12:00-17:00)','mt4':'This week anytime',
     'modal-submit':'Send request',
-    'msuc-title':'Request received!','msuc-sub':'We will contact you within 30 minutes.<br>WhatsApp: <strong>+373 69 589 555</strong>',
+    'msuc-title':'Request received!','msuc-sub':'We will contact you within 30 minutes.<br>WhatsApp / Telegram: <strong>+373 69 589 555</strong>',
     'cur':'MDL','sending':'Sending...',
   }
 };
@@ -712,23 +885,24 @@ function setLang(l, btn){
   if(btn) btn.classList.add('on');
   applyTranslations();
   document.documentElement.lang = l;
+  if(typeof initTyped === 'function') initTyped(l);
 }
 
 function applyTranslations(){
   const t = T[lang];
-  const ids = ['nl-1','nl-2','nl-3','nl-4','mn1','mn2','mn3','mn4','nav-cta-btn','h-badge','h-sub','h-btn1','h-btn2','m1','m2','m3','m4',
+  const ids = ['nl-1','nl-2','nl-3','nl-4','mn1','mn2','mn3','mn4','nav-cta-btn','hl1','h-badge','h-sub','h-btn1','h-btn2','m1','m2','m3','m4',
     'sl-label','sl1','sl2','sl3','fw-label','fw-title',
     'n1t','n1d','n1tag','n2t','n2d','n2tag','n3t','n3d','n3tag','n4t','n4d','n4tag',
     'n5t','n5d','n5tag','n6t','n6d','n6tag','n7t','n7d','n7tag','n8t','n8d','n8tag',
     'pr-label','pr-title','c1t','c1d','c1f1','c1f2','c1f3','c1f4',
     'c2t','c2d','c2f1','c2f2','c2f3','c2f4','c3t','c3d','c3f1','c3f2','c3f3','c3f4',
-    'cs-label','cs-title','cs1tag','cs1title','cs1desc','cs1r1','cs1r2','cs1r3','cs2tag','cs2title','cs2desc','cs2r1','cs2r2','cs2r3',
+    'cs-label','cs-title','cs1tag','cs1title','cs1desc','cs1r1','cs1r2','cs1r3','cs2tag','cs2title','cs2desc','cs2r1','cs2r2','cs2r3','cs3tag','cs3title','cs3desc','cs3r1','cs3r2','cs3r3','cs4tag','cs4title','cs4desc','cs4r1','cs4r2','cs4r3','cs5tag','cs5title','cs5desc','cs5r1','cs5r2','cs5r3','cs6tag','cs6title','cs6desc','cs6r1','cs6r2','cs6r3',
     'roi-label','roi-title','rl1','rl2','rl3','roi-rlbl','roi-rsub','roi-bd1','roi-bd2','roi-bd3','roi-bd4',
     'p-label','p-title','p1type','p1period','p1btn','p1f1','p1f2','p1f3','p1f4','p1f5',
     'p2badge','p2type','p2period','p2btn','p2f1','p2f2','p2f3','p2f4','p2f5','p-note',
     'cta-label','cta-h','cta-sub','cta-btn1','cta-btn2','cwa','cemail',
     'mtab1','mtab2','ml1','ml2','ml3','ml4','modal-submit','msuc-title','msuc-sub',
-    'nav-cta-btn','h-title'];
+    'nav-cta-btn','hl1']; // h-title managed by Typed.js
   ids.forEach(id=>{ if(t[id]) s(id, t[id]); });
   ph('m-name', t['mph1']); ph('m-phone', t['mph2']); ph('m-clinic', t['mph3']);
   // Update select options
@@ -758,13 +932,11 @@ function openModal(type){
   });
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow='hidden';
-  document.documentElement.style.scrollSnapType='none';
 }
 
 function closeModal(){
   document.getElementById('modal-overlay').classList.remove('open');
   document.body.style.overflow='';
-  document.documentElement.style.scrollSnapType='y mandatory';
 }
 
 function setModalType(type, btn){
@@ -827,47 +999,176 @@ function calcRoi(){
   s('ri-profit',`${fmt(profit)} ${cur}`);
 }
 
-// Scroll progress + fade
-window.addEventListener('scroll',()=>{
-  const h=document.documentElement.scrollHeight-window.innerHeight;
-  document.getElementById('progress-bar').style.width=(window.scrollY/h*100)+'%';
-});
 
-const obs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting) e.target.querySelectorAll('.fade').forEach((el,i)=>setTimeout(()=>el.classList.add('in'),i*80));
+// ── TYPED.JS ──
+const typedStrings = {
+  ru: ['AI не спит.', 'AI отвечает.', 'AI работает.'],
+  ro: ['AI nu doarme.', 'AI răspunde.', 'AI lucrează.'],
+  en: ['AI never sleeps.', 'AI responds.', 'AI works.'],
+};
+let _typed = null;
+function initTyped(l) {
+  const el = document.getElementById('typed-el');
+  if (!el) return;
+  if (_typed) { try { _typed.destroy(); } catch(e) {} el.innerHTML = ''; }
+  _typed = new Typed('#typed-el', {
+    strings: typedStrings[l] || typedStrings.ru,
+    typeSpeed: 55, backSpeed: 30, backDelay: 2200,
+    loop: true, showCursor: true, cursorChar: '|',
   });
-},{threshold:0.05});
-document.querySelectorAll('.slide').forEach(s2=>obs.observe(s2));
-setTimeout(()=>{
-  document.querySelector('.slide')?.querySelectorAll('.fade').forEach((el,i)=>setTimeout(()=>el.classList.add('in'),i*100));
-},100);
-
-
-// Auto-detect language by IP
-async function detectLang(){
-  try {
-    const r = await fetch('https://ipapi.co/json/');
-    const d = await r.json();
-    const country = d.country_code;
-    if(country === 'MD') return 'ru';
-    if(country === 'RO') return 'ro';
-    const eu = ['GB','DE','FR','IT','ES','NL','BE','AT','SE','NO','DK','FI','PL','CZ','HU','SK','HR','BG','GR','PT'];
-    if(eu.includes(country)) return 'en';
-    return 'ru';
-  } catch(e) { return 'ru'; }
 }
+window.addEventListener('DOMContentLoaded', () => initTyped('ru'));
 
-detectLang().then(function(l){
-  lang = l;
-  var btns = document.querySelectorAll('.lang-sw button');
-  btns.forEach(function(b){ b.classList.remove('on'); });
-  var idx = l === 'ru' ? 0 : l === 'ro' ? 1 : 2;
-  if(btns[idx]) btns[idx].classList.add('on');
-  applyTranslations();
+// ── LENIS SMOOTH SCROLL ──
+const lenis = new Lenis({
+  duration: 1.4,
+  easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+  smoothWheel: true,
+  wheelMultiplier: 0.8,
 });
 
-calcRoi();
+function lenisRaf(time) { lenis.raf(time); requestAnimationFrame(lenisRaf); }
+requestAnimationFrame(lenisRaf);
+
+// ── GSAP + ScrollTrigger ──
+gsap.registerPlugin(ScrollTrigger);
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add(time => lenis.raf(time * 1000));
+gsap.ticker.lagSmoothing(0);
+
+// Progress bar
+lenis.on('scroll', ({scroll, limit}) => {
+  document.getElementById('progress-bar').style.width = (scroll / limit * 100) + '%';
+});
+
+// Nav shadow on scroll
+lenis.on('scroll', ({scroll}) => {
+  const nav = document.querySelector('.nav');
+  if (nav) nav.style.boxShadow = scroll > 40 ? '0 4px 24px rgba(10,15,30,.08)' : '';
+});
+
+// ── АНИМАЦИИ ПРИ СКРОЛЛЕ ──
+// Все .fade элементы — через ScrollTrigger вместо IntersectionObserver
+document.querySelectorAll('.fade:not(.slide-1 .fade)').forEach(el => {
+  gsap.fromTo(el,
+    { opacity: 0, y: 22 },
+    { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 88%' } }
+  );
+});
+
+// Slide-1 hero — сразу показать
+document.querySelectorAll('.slide-1 .fade').forEach((el, i) => {
+  gsap.to(el, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', delay: i * 0.1 });
+});
+
+// Niche cards stagger
+gsap.utils.toArray('.niche-card').forEach((el, i) => {
+  gsap.fromTo(el,
+    { opacity: 0, y: 28 },
+    { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out', delay: (i % 4) * 0.07,
+      scrollTrigger: { trigger: el, start: 'top 90%' } }
+  );
+});
+
+// Product cards
+gsap.utils.toArray('.product-card').forEach((el, i) => {
+  gsap.fromTo(el,
+    { opacity: 0, y: 36 },
+    { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out', delay: i * 0.12,
+      scrollTrigger: { trigger: el, start: 'top 87%' } }
+  );
+});
+
+// Case cards
+gsap.utils.toArray('.case-card').forEach((el, i) => {
+  gsap.fromTo(el,
+    { opacity: 0, y: 28 },
+    { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out', delay: (i % 2) * 0.1,
+      scrollTrigger: { trigger: el, start: 'top 88%' } }
+  );
+});
+
+// Slogan items slide from left
+gsap.utils.toArray('.slogan-item').forEach((el, i) => {
+  gsap.fromTo(el,
+    { opacity: 0, x: -40 },
+    { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out', delay: i * 0.12,
+      scrollTrigger: { trigger: el, start: 'top 86%' } }
+  );
+});
+
+// Pricing cols
+gsap.utils.toArray('.pricing-col').forEach((el, i) => {
+  gsap.fromTo(el,
+    { opacity: 0, y: 32 },
+    { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', delay: i * 0.15,
+      scrollTrigger: { trigger: el, start: 'top 87%' } }
+  );
+});
+
+
+// ── CANVAS PARTICLES ──
+(function(){
+  const cv = document.getElementById('hero-canvas');
+  if (!cv) return;
+  const ctx = cv.getContext('2d');
+  let W, H;
+  const pts = [];
+
+  function resize(){
+    W = cv.width = cv.offsetWidth;
+    H = cv.height = cv.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  for (let i = 0; i < 50; i++) pts.push({
+    x: Math.random() * 1400,
+    y: Math.random() * 900,
+    vx: (Math.random() - .5) * .25,
+    vy: (Math.random() - .5) * .25,
+    r: Math.random() * 1.2 + .5,
+    a: Math.random() * .35 + .1,
+  });
+
+  let mx = -999, my = -999;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+  function draw(){
+    ctx.clearRect(0, 0, W, H);
+    pts.forEach(p => {
+      const dx = mx - p.x, dy = my - p.y;
+      const d = Math.sqrt(dx*dx + dy*dy);
+      if (d < 200) { p.vx += dx/d * .012; p.vy += dy/d * .012; }
+      p.vx *= .985; p.vy *= .985;
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(37,99,255,${p.a})`;
+      ctx.fill();
+    });
+    for (let i = 0; i < pts.length; i++) {
+      for (let j = i+1; j < pts.length; j++) {
+        const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
+        const d = Math.sqrt(dx*dx + dy*dy);
+        if (d < 160) {
+          ctx.beginPath();
+          ctx.moveTo(pts[i].x, pts[i].y);
+          ctx.lineTo(pts[j].x, pts[j].y);
+          ctx.strokeStyle = `rgba(37,99,255,${.07*(1-d/160)})`;
+          ctx.lineWidth = .4;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
 </script>
 </body>
 </html>
