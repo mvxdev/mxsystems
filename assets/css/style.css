@@ -478,3 +478,35 @@ ul, ol { padding: 0; list-style: none; }
 .calc-sum { font: 500 clamp(40px, 5.6vw, 72px)/1 var(--f-mono); letter-spacing: -.05em; color: var(--accent); font-variant-numeric: tabular-nums; }
 .calc-note { flex-basis: 100%; margin-top: 8px; font: 400 12px/1.5 var(--f-mono); color: var(--muted); }
 .calc-cta { width: 100%; white-space: normal; text-align: left; }
+
+
+/* ========== 10. КАК РАБОТАЕМ (таймлайн) ========== */
+.steps { position: relative; display: grid; gap: 0; counter-reset: step; }
+/* Линия шкалы: на телефоне вертикальная слева, на десктопе — горизонтальная сверху.
+   scaleY/scaleX(0 → 1) «прорисовывает» её, когда секция появилась (класс .is-in) */
+.steps::before { content: ""; position: absolute; left: 4px; top: 6px; bottom: 6px; width: 1px; background: var(--accent); transform: scaleY(0); transform-origin: top; transition: transform 1.4s var(--ease) .2s; }
+.steps.is-in::before, html:not(.js) .steps::before { transform: none; }
+.step { position: relative; padding: 0 0 36px 36px; }
+/* Точка на шкале у каждого шага */
+.step::before { content: ""; position: absolute; left: 0; top: 4px; width: 9px; height: 9px; border-radius: 50%; background: var(--bg); border: 1px solid var(--accent); }
+.step:first-child::before { background: var(--accent); }    /* первый шаг (бесплатный) — закрашенная точка */
+.step-n { display: block; margin-bottom: 10px; font: 400 12px/1.3 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.step h3 { margin-bottom: 10px; font: 500 clamp(26px, 2.6vw, 34px)/1.05 var(--f-serif); letter-spacing: -.01em; }
+.step p { color: #bdb5a7; font-size: 15px; max-width: 34ch; }
+@media (min-width: 900px) {
+  .steps { grid-template-columns: repeat(4, 1fr); column-gap: 32px; padding-top: 40px; }
+  .steps::before { left: 0; right: 0; top: 4px; bottom: auto; width: auto; height: 1px; transform: scaleX(0); transform-origin: left; }
+  .step { padding: 0; }
+  .step::before { top: -40px; }
+}
+
+/* --- «Всё остаётся у вас» --- */
+.own { display: grid; gap: 28px; margin-top: clamp(56px, 8vw, 96px); padding: clamp(24px, 4vw, 48px); border: 1px solid var(--rule-2); background: var(--bg-2); }
+@media (min-width: 900px) { .own { grid-template-columns: 4fr 8fr; column-gap: 48px; align-items: start; } }
+.own-title { font: 500 clamp(32px, 4vw, 52px)/1 var(--f-serif); letter-spacing: -.02em; }
+.own-title em { font-style: italic; color: var(--accent); }
+.own-list { display: grid; gap: 0; }
+@media (min-width: 700px) { .own-list { grid-template-columns: repeat(3, 1fr); column-gap: 28px; } }
+.own-list li { display: grid; gap: 8px; padding: 14px 0; border-top: 1px solid var(--ink); }
+.own-list b { font: 400 12px/1.3 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; }
+.own-list span { color: #bdb5a7; font-size: 15px; }
