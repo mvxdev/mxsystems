@@ -144,14 +144,227 @@
           </div>
           <!-- Строка доверия — в виде сносок, каждая ведёт к своему кейсу -->
           <ul class="notes" aria-label="Системы в ежедневной работе">
-            <li><sup>¹</sup><a href="#case-fastload"><span class="k">Логистика · США</span><br>Система в ежедневной работе</a></li>
-            <li><sup>²</sup><a href="#case-4power"><span class="k">Автосервис · Кишинёв</span><br>Система в ежедневной работе</a></li>
+            <li><sup>¹</sup><a href="#case-4power"><span class="k">Автосервис · Кишинёв</span><br>Система в ежедневной работе</a></li>
+            <li><sup>²</sup><a href="#case-fastload"><span class="k">Логистика · США</span><br>Система в ежедневной работе</a></li>
           </ul>
         </div>
       </div>
     </section>
 
-    <!-- ===== КЕЙСЫ ===== (шаг 2) -->
+    <!-- ===== КЕЙСЫ ===== -->
+    <section class="section cases" id="cases" aria-labelledby="cases-title">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <p class="eyebrow"><b>01</b> / Кейсы</p>
+          <h2 class="h2" id="cases-title">Две системы, которые <em>работают каждый день</em></h2>
+          <p>Не макеты и не пилоты — обе системы каждый день используют команды клиентов. Интерфейсы ниже — упрощённые копии на демо-данных.</p>
+        </div>
+
+        <!-- ===== КЕЙС 01 — 4Power Club =====
+             Порядок кейсов: на RU и RO первым идёт 4Power (местному владельцу ближе автосервис
+             в Кишинёве), на EN первым — FastLoad. -->
+        <article class="case" id="case-4power" aria-labelledby="fp-title">
+          <header class="case-head reveal">
+            <div class="case-tags">
+              <span class="case-no">Кейс 01</span>
+              <span class="badge"><i class="live-dot"></i>В эксплуатации</span>
+            </div>
+            <h3 class="case-title" id="fp-title">Система управления автосервисом <em>4Power Club</em></h3>
+            <dl class="case-meta">
+              <div><dt>Клиент</dt><dd>4Power Club</dd></div>
+              <div><dt>Отрасль</dt><dd>Автосервис · Кишинёв</dd></div>
+              <div><dt>Команда</dt><dd>6 постов, механики, 4 приёмщика, склад</dd></div>
+            </dl>
+          </header>
+
+          <div class="case-body">
+            <div class="case-text reveal">
+              <section class="case-block">
+                <h4>Задача</h4>
+                <p>Информация терялась на стыках между людьми: приёмщик не узнавал, что машина готова, если её принимал коллега; машины, ждущие заказных запчастей 2–3 недели, забывались; склад принимал детали, но никому не сообщал; запчасти, заказанные под машину не на территории, теряли привязку к ней; клиентов о готовности оповещали вручную. Учёт запчастей при этом вёлся в 1С.</p>
+              </section>
+              <section class="case-block">
+                <h4>Что сделали</h4>
+                <ul class="done">
+                  <li><b>Доска машин в реальном времени</b> — по дням и по колонкам статусов, срочные подсвечиваются, видно, сколько дней машина ждёт.</li>
+                  <li><b>Учёт запчастей по циклу</b> «машины ждут → заказано → на складе → установка» и отдельная вкладка для деталей, пришедших без привязки к машине.</li>
+                  <li><b>Синхронизация с 1С</b> — приходы на склад подтягиваются автоматически, без двойного ввода.</li>
+                  <li><b>«Экран цеха»</b> — общий монитор для механиков, ничего ставить не нужно.</li>
+                  <li><b>Пороги и рабочие часы</b> — система сама поднимает тревогу, если машина или деталь застряли дольше нормы.</li>
+                  <li><b>Уведомления</b> сотрудникам в Telegram и автоматические уведомления клиентам о готовности авто.</li>
+                  <li><b>Ежедневная сводка владельцу.</b></li>
+                  <li><b>Поиск</b> по госномеру, VIN, телефону, фамилии, номеру наряда; роли и доступы сотрудников.</li>
+                </ul>
+              </section>
+            </div>
+
+            <!-- Упрощённый макет доски машин. Данные демонстрационные, госномеров нет.
+                 data-labels — тексты статусов для анимации (на языке страницы) -->
+            <div class="case-ui reveal d1">
+              <p class="sr-only">Упрощённый макет доски машин 4Power Club на демо-данных: колонки «В ожидании ремонта», «Ждёт запчасти», «Готова».</p>
+              <div class="ui" id="board-4p" aria-hidden="true">
+                <div class="ui-bar"><i class="live-dot"></i><span>4Power · доска машин</span><span class="r">демо</span></div>
+                <div class="ui-sub"><span>Сегодня</span><span>6 постов</span><span>склад · синхр. с 1С</span></div>
+                <div class="board">
+                  <div class="col" data-col="wait">
+                    <h5>В ожидании ремонта <span class="cnt">2</span></h5>
+                    <div class="col-cards">
+                      <div class="car"><b>Toyota RAV4</b><span class="car-status">пост 3 · 1 дн</span></div>
+                      <div class="car"><b>Kia Sportage</b><span class="car-status">пост 5 · сегодня</span></div>
+                    </div>
+                  </div>
+                  <div class="col" data-col="parts">
+                    <h5>Ждёт запчасти <span class="cnt">2</span></h5>
+                    <div class="col-cards">
+                      <div class="car" data-moving data-labels='["заказано · 9 дн","деталь на складе","клиент уведомлён"]'><b>Audi Q5</b><span class="car-status">заказано · 9 дн</span></div>
+                      <div class="car is-urgent"><b>BMW M3</b><span class="car-status">ждёт 16 дн · срочно</span></div>
+                    </div>
+                  </div>
+                  <div class="col" data-col="ready">
+                    <h5>Готова <span class="cnt">1</span></h5>
+                    <div class="col-cards">
+                      <div class="car is-done"><b>VW Passat</b><span class="car-status">клиент уведомлён</span></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="toast">✓ Клиенту ушло сообщение в WhatsApp</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-result reveal">
+            <h4>Результат</h4>
+            <div class="kpis">
+              <div class="kpi kpi--acc"><b><span class="count" data-to="600">600</span>+</b><span>автоматических тестов</span></div>
+              <div class="kpi"><b><span class="count" data-to="6">6</span></b><span>постов в одной системе</span></div>
+              <div class="kpi"><b><span class="count" data-to="4">4</span></b><span>приёмщика видят одно и то же</span></div>
+              <div class="kpi"><b>1С</b><span>синхронизация склада</span></div>
+            </div>
+            <ul class="results">
+              <li>В эксплуатации — вся команда работает в одной системе.</li>
+              <li>Меньше созвонов и переписки «готова ли машина / пришла ли деталь» — статус видно, а не выясняется.</li>
+              <li>Ни одна машина не теряется в ожидании запчастей — система сама напоминает.</li>
+              <li>600+ автоматических тестов — надёжность проверяется при каждом изменении.</li>
+            </ul>
+          </div>
+
+          <footer class="case-foot reveal">
+            <p class="stack"><span>Стек</span>Node.js · PostgreSQL · Vue 3 PWA · 1С (REST API) · Telegram · WhatsApp Business</p>
+            <details class="shots">
+              <summary class="btn">Смотреть скриншоты <span class="arrow" aria-hidden="true">↓</span></summary>
+              <!-- ВАЖНО: скриншоты публикуются ТОЛЬКО на демо-данных —
+                   без реальных госномеров, имён сотрудников и телефонов клиентов.
+                   Картинки кладите в assets/cases/4power/ -->
+              <div class="shots-grid">
+                <div class="shot">скриншот · assets/cases/4power/01</div>
+                <div class="shot">скриншот · assets/cases/4power/02</div>
+                <div class="shot">скриншот · assets/cases/4power/03</div>
+              </div>
+            </details>
+          </footer>
+        </article>
+        <!-- ===== КЕЙС 02 — FastLoad ===== -->
+        <article class="case" id="case-fastload" aria-labelledby="fl-title">
+          <header class="case-head reveal">
+            <div class="case-tags">
+              <span class="case-no">Кейс 02</span>
+              <span class="badge"><i class="live-dot"></i>В эксплуатации</span>
+            </div>
+            <h3 class="case-title" id="fl-title">FastLoad — платформа для диспетчерской <em>IS Logistics Solutions</em></h3>
+            <!-- dl (список определений): пары «название — значение» -->
+            <dl class="case-meta">
+              <div><dt>Клиент</dt><dd>IS Logistics Solutions LLC</dd></div>
+              <div><dt>Отрасль</dt><dd>Логистика · США</dd></div>
+              <div><dt>Команда</dt><dd>8 диспетчеров, 40 водителей</dd></div>
+            </dl>
+          </header>
+
+          <div class="case-body case-body--flip">
+            <div class="case-text reveal">
+              <section class="case-block">
+                <h4>Задача</h4>
+                <p>Диспетчеры вручную мониторили биржу грузов Sylectus (американская площадка, где брокеры выкладывают грузы): обновляли страницу, сверяли каждый груз с местоположением и типом трака каждого водителя, вручную писали брокерам ставки. Хорошие грузы разбирают за минуты, а всё, что публиковалось вне смены, компания теряла.</p>
+              </section>
+              <section class="case-block">
+                <h4>Что сделали</h4>
+                <ul class="done">
+                  <li><b>Мониторинг биржи 24/7.</b> Система сама забирает новые грузы и подбирает их под каждого водителя — по зоне и радиусу, типу трака, датам и лимиту пробега; сразу считает порожний пробег до точки загрузки.</li>
+                  <li><b>Мгновенные уведомления в Telegram.</b> Подходящий груз приходит водителю и диспетчеру сразу после публикации.</li>
+                  <li><b>Ставка брокеру в один клик.</b> Письмо уходит с Gmail водителя или компании с готовой подписью и описанием трака (доступ к Gmail прошёл проверку Google).</li>
+                  <li><b>Кабинет водителя:</b> свои грузы, профиль, зоны работы, подключение Gmail и Telegram.</li>
+                  <li><b>Панель SMS-рассылок с AI-вариативностью текстов</b> — каждое сообщение уникально, меньше попадает в спам.</li>
+                </ul>
+              </section>
+            </div>
+
+            <!-- Упрощённый макет интерфейса FastLoad. Все данные демонстрационные.
+                 aria-hidden — для скринридеров это декорация, вместо неё читается текст .sr-only -->
+            <div class="case-ui reveal d1">
+              <p class="sr-only">Упрощённый макет интерфейса FastLoad на демо-данных: список подобранных грузов с кнопкой отправки ставки.</p>
+              <div class="ui" aria-hidden="true">
+                <div class="ui-bar"><i class="live-dot"></i><span>FastLoad · подходящие грузы</span><span class="r">демо</span></div>
+                <div class="ui-sub"><span>Водитель: Demo D.</span><span>Dry Van 53'</span><span>зона: Southeast · 300 mi</span></div>
+                <div class="fl-list" id="fl-list">
+                  <div class="load">
+                    <div class="load-top"><span class="broker">Get Freight LLC</span><span class="tag">новый · 4 сек</span></div>
+                    <div class="route"><b>Miami, FL</b><span class="arr">→</span><b>Dayton, NJ</b></div>
+                    <div class="load-meta"><span>1 214 mi</span><span>порожний 38 mi</span><span>Dry Van</span></div>
+                    <div class="bid"><span class="rate">$ 2 450</span><span class="send">Send bid</span></div>
+                  </div>
+                  <div class="load">
+                    <div class="load-top"><span class="broker">Sample Logistics Co</span><span class="tag">12 мин</span></div>
+                    <div class="route"><b>Orlando, FL</b><span class="arr">→</span><b>Charlotte, NC</b></div>
+                    <div class="load-meta"><span>526 mi</span><span>порожний 52 mi</span><span>Dry Van</span></div>
+                    <div class="bid"><span class="rate">$ 1 240</span><span class="send">Send bid</span></div>
+                  </div>
+                  <div class="load">
+                    <div class="load-top"><span class="broker">Demo Brokerage Inc</span><span class="tag">ставка отправлена</span></div>
+                    <div class="route"><b>Tampa, FL</b><span class="arr">→</span><b>Atlanta, GA</b></div>
+                    <div class="load-meta"><span>456 mi</span><span>порожний 17 mi</span><span>Dry Van</span></div>
+                    <div class="bid is-sent"><span class="rate">$ 1 100</span><span class="send">✓ Отправлено</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Результат — как приборная панель: крупные моноширинные цифры с подписями капсом -->
+          <div class="case-result reveal">
+            <h4>Результат</h4>
+            <div class="kpis">
+              <div class="kpi kpi--acc"><b>+<span class="count" data-to="20">20</span>–<span class="count" data-to="30">30</span>%</b><span>грузов за счёт нерабочих часов</span></div>
+              <div class="kpi"><b>24/7</b><span>мониторинг биржи</span></div>
+              <div class="kpi"><b><span class="count" data-to="8">8</span></b><span>диспетчеров в системе</span></div>
+              <div class="kpi"><b><span class="count" data-to="40">40</span></b><span>водителей получают грузы</span></div>
+            </div>
+            <ul class="results">
+              <li>Система ловит грузы, пока диспетчеры не на смене.</li>
+              <li>Главное — время: диспетчеры не сидят на бирже с ручным обновлением, а работают только с уже подобранными грузами.</li>
+              <li>В ежедневной работе у всей команды, клиент на платном сопровождении.</li>
+              <li>На базе проекта вырос отдельный продукт — <a class="link" href="https://fastload.app" target="_blank" rel="noopener">fastload.app ↗</a></li>
+            </ul>
+          </div>
+
+          <footer class="case-foot reveal">
+            <p class="stack"><span>Стек</span>Node.js · Express · PostgreSQL (Supabase) · Puppeteer · Telegram Bot API · Gmail API · OpenPhone API · Claude API</p>
+            <!-- details/summary — встроенный в браузер «раскрывающийся блок», работает без JS -->
+            <details class="shots">
+              <summary class="btn">Смотреть скриншоты <span class="arrow" aria-hidden="true">↓</span></summary>
+              <!-- ВАЖНО: скриншоты публикуются ТОЛЬКО на демо-данных —
+                   без реальных госномеров, имён сотрудников и телефонов клиентов.
+                   Картинки кладите в assets/cases/fastload/ (например 01.webp) и замените
+                   <div class="shot"> на <img src="assets/cases/fastload/01.webp" alt="…" loading="lazy" width="1600" height="1000"> -->
+              <div class="shots-grid">
+                <div class="shot">скриншот · assets/cases/fastload/01</div>
+                <div class="shot">скриншот · assets/cases/fastload/02</div>
+                <div class="shot">скриншот · assets/cases/fastload/03</div>
+              </div>
+            </details>
+          </footer>
+        </article>
+
+      </div>
+    </section>
     <!-- ===== УСЛУГИ ===== (шаг 3) -->
     <!-- ===== КАК РАБОТАЕМ ===== (шаг 3) -->
     <!-- ===== КОНТАКТ ===== (шаг 3) -->

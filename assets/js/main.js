@@ -202,28 +202,34 @@ function whileVisible(el, start, stop) {
   const labels = JSON.parse(car.dataset.labels);      // тексты статусов на языке страницы — лежат в HTML
   const updateCounts = () => $$('.col', board).forEach(c => { $('.cnt', c).textContent = $$('.car', c).length; });
   let timers = [];
+  const at = (ms, fn) => timers.push(setTimeout(fn, ms));   // «через ms миллисекунд сделать fn»
+
+  // Исходное состояние: машина в «Ждёт запчасти», статус «заказано»
+  const reset = () => {
+    car.classList.remove('is-hot', 'is-fading');
+    toast.classList.remove('is-on');
+    if (car.parentElement !== parts) parts.prepend(car);
+    status.textContent = labels[0];
+    updateCounts();
+  };
 
   const cycle = () => {
-    timers.push(setTimeout(() => { status.textContent = labels[1]; car.classList.add('is-hot'); }, 1200));     // деталь пришла
-    timers.push(setTimeout(() => {
-      flip($$('.car', board), () => { ready.prepend(car); updateCounts(); });                                  // переезд в «Готова»
+    at(1200, () => { status.textContent = labels[1]; car.classList.add('is-hot'); });          // деталь пришла на склад
+    at(2600, () => {
+      flip($$('.car', board), () => { ready.prepend(car); updateCounts(); });                  // переезд в «Готова»
       status.textContent = labels[2];
       toast.classList.add('is-on');
-    }, 2600));
-    timers.push(setTimeout(() => toast.classList.remove('is-on'), 5200));
-    timers.push(setTimeout(() => {
-      // Возврат: машина гаснет, возвращается в «Ждёт запчасти» и снова проявляется
-      car.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' }).onfinish = () => {
-        flip($$('.car', board).filter(c => c !== car), () => { parts.prepend(car); updateCounts(); });
-        status.textContent = labels[0];
-        car.classList.remove('is-hot');
-        car.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 400, fill: 'forwards' });
-      };
-    }, 7600));
+    });
+    at(5200, () => toast.classList.remove('is-on'));
+    at(7600, () => car.classList.add('is-fading'));                                             // машина гаснет (CSS-переход)
+    at(8000, () => {                                                                            // …и возвращается в начало цикла
+      flip($$('.car', board).filter(c => c !== car), reset);
+    });
   };
   let loop = null;
   const start = () => { if (!loop) { cycle(); loop = setInterval(cycle, 9000); } };
-  const stop = () => { clearInterval(loop); loop = null; timers.forEach(clearTimeout); timers = []; };
+  // Остановка (блок ушёл с экрана): чистим таймеры и возвращаем исходное состояние
+  const stop = () => { clearInterval(loop); loop = null; timers.forEach(clearTimeout); timers = []; reset(); };
   whileVisible(board, start, stop);
 })();
 
