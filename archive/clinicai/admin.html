@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmileCare — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --g:#1a6b4a;--gl:#f0f7f4;--gm:#e0f0e9;--gd:#134f37;
+  --blue:#2563eb;--blue-l:#dbeafe;
+  --tx:#1a1a1a;--tm:#6b7280;--th:#9ca3af;
+  --bd:#e5e7eb;--bg:#fff;--sf:#f9fafb;--s2:#f3f4f6;
+  --r:10px;
+}
+body{font-family:'Inter',sans-serif;background:var(--sf);color:var(--tx);min-height:100vh;display:flex;flex-direction:column;}
+
+/* NAV */
+.nav{background:#fff;border-bottom:1px solid var(--bd);padding:0 18px;display:flex;align-items:center;height:52px;position:sticky;top:0;z-index:100;gap:0;}
+.nav-logo{font-size:14px;font-weight:600;color:var(--g);margin-right:24px;white-space:nowrap;}
+.nav-logo span{color:var(--tm);font-weight:400;font-size:11.5px;margin-left:4px;}
+.nav-tabs{display:flex;gap:1px;flex:1;}
+.ntab{padding:5px 13px;border-radius:6px;font-size:12.5px;font-weight:500;color:var(--tm);cursor:pointer;border:none;background:transparent;transition:all .15s;display:flex;align-items:center;gap:5px;font-family:'Inter',sans-serif;white-space:nowrap;}
+.ntab:hover{background:var(--s2);color:var(--tx);}
+.ntab.active{background:var(--gl);color:var(--g);}
+.nbadge{background:var(--g);color:#fff;font-size:10px;font-weight:600;padding:1px 5px;border-radius:9px;min-width:16px;text-align:center;}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.refresh-btn{padding:4px 10px;border:1px solid var(--bd);border-radius:6px;font-size:11.5px;font-weight:500;background:#fff;color:var(--tm);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;}
+.refresh-btn:hover{background:var(--sf);}
+.lang-sw{display:flex;gap:2px;background:var(--s2);border-radius:6px;padding:2px;}
+.lang-sw button{padding:3px 9px;border-radius:5px;font-size:11px;font-weight:600;border:none;cursor:pointer;font-family:'Inter',sans-serif;background:transparent;color:var(--tm);transition:all .15s;}
+.lang-sw button.active{background:#fff;color:var(--g);box-shadow:0 1px 3px rgba(0,0,0,.08);}
+
+.view{display:none;flex:1;flex-direction:column;}
+.view.active{display:flex;}
+
+/* STATS BAR */
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:12px 18px;background:#fff;border-bottom:1px solid var(--bd);flex-shrink:0;}
+.stat-item{text-align:center;}
+.stat-val{font-size:20px;font-weight:600;}
+.stat-val.g{color:var(--g);}
+.stat-val.y{color:#f59e0b;}
+.stat-val.gr{color:#10b981;}
+.stat-val.m{color:var(--tm);}
+.stat-lbl{font-size:10.5px;color:var(--tm);margin-top:1px;}
+
+/* ADMIN LAYOUT */
+.admin-body{display:flex;flex:1;overflow:hidden;}
+.sidebar{width:240px;flex-shrink:0;background:#fff;border-right:1px solid var(--bd);display:flex;flex-direction:column;overflow:hidden;}
+.sb-hdr{padding:10px 12px 8px;border-bottom:1px solid var(--bd);}
+.sb-title{font-size:12px;font-weight:600;margin-bottom:7px;color:var(--tx);}
+.ftabs{display:flex;gap:3px;}
+.ftab{padding:3px 9px;border-radius:5px;font-size:11px;font-weight:500;cursor:pointer;border:none;background:var(--s2);color:var(--tm);transition:all .15s;font-family:'Inter',sans-serif;}
+.ftab.active{background:var(--g);color:#fff;}
+.sb-search{margin-top:7px;}
+.sb-search input{width:100%;border:1px solid var(--bd);border-radius:6px;padding:5px 9px;font-size:11.5px;font-family:'Inter',sans-serif;background:var(--sf);color:var(--tx);outline:none;}
+.sb-search input:focus{border-color:var(--g);}
+.blist{flex:1;overflow-y:auto;padding:5px;}
+.blist::-webkit-scrollbar{width:3px;}
+.blist::-webkit-scrollbar-thumb{background:var(--bd);border-radius:2px;}
+.bitem{padding:9px 10px;border-radius:8px;cursor:pointer;transition:all .15s;border:1px solid transparent;margin-bottom:2px;}
+.bitem:hover{background:var(--sf);}
+.bitem.active{background:var(--gl);border-color:rgba(26,107,74,.15);}
+.bitem-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px;}
+.bitem-name{font-size:12px;font-weight:600;color:var(--tx);}
+.bitem-time{font-size:10px;color:var(--th);white-space:nowrap;margin-left:4px;}
+.bitem-svc{font-size:11px;color:var(--tm);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bitem-bot{display:flex;align-items:center;gap:4px;}
+.sbadge{font-size:9px;font-weight:600;padding:2px 6px;border-radius:8px;}
+.s-new{background:#fef3c7;color:#92400e;}
+.s-conf{background:#d1fae5;color:#065f46;}
+.s-canc{background:#fee2e2;color:#991b1b;}
+.s-dlg{background:#f3f4f6;color:#374151;}
+.bitem-ch{font-size:10px;color:var(--th);margin-left:auto;}
+.main{flex:1;overflow-y:auto;background:var(--sf);}
+.main::-webkit-scrollbar{width:5px;}
+.main::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px;}
+.empty-state{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--th);gap:8px;}
+.empty-state svg{width:34px;height:34px;opacity:.2;}
+.empty-state p{font-size:12.5px;}
+.detail{padding:18px;display:flex;flex-direction:column;min-height:100%;}
+.d-header{background:#fff;border:1px solid var(--bd);border-radius:var(--r);padding:14px 16px;margin-bottom:12px;display:flex;align-items:center;gap:12px;}
+.d-av{width:40px;height:40px;border-radius:50%;background:var(--gl);color:var(--g);font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.d-name{font-size:15px;font-weight:600;margin-bottom:2px;}
+.d-meta{font-size:11px;color:var(--tm);display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.d-actions{margin-left:auto;display:flex;gap:6px;flex-shrink:0;}
+.abtn{padding:5px 12px;border-radius:6px;font-size:11.5px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;border:none;}
+.abtn.pri{background:var(--g);color:#fff;}
+.abtn.pri:hover{background:var(--gd);}
+.abtn.sec{background:#fff;color:var(--tm);border:1px solid var(--bd);}
+.abtn.sec:hover{background:var(--sf);}
+.abtn.dan{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;}
+.abtn.dan:hover{background:#fca5a5;}
+.d-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.dcard{background:#fff;border:1px solid var(--bd);border-radius:var(--r);padding:12px 14px;}
+.dcard-ttl{font-size:10px;font-weight:600;color:var(--th);text-transform:uppercase;letter-spacing:.5px;margin-bottom:9px;}
+.dfield{margin-bottom:7px;}
+.dfield:last-child{margin-bottom:0;}
+.dfield-lbl{font-size:10.5px;color:var(--tm);margin-bottom:2px;}
+.dfield-val{font-size:12.5px;font-weight:500;}
+.dfield-val.g{color:var(--g);}
+.conv-card{background:#fff;border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:12px;display:flex;flex-direction:column;flex:1;min-height:0;}
+.conv-hdr{padding:10px 14px;border-bottom:1px solid var(--bd);font-size:10px;font-weight:600;color:var(--th);text-transform:uppercase;letter-spacing:.5px;display:flex;justify-content:space-between;align-items:center;}
+.conv-hdr span{font-weight:400;color:var(--tm);text-transform:none;font-size:11px;}
+.conv-msgs{padding:12px;display:flex;flex-direction:column;gap:8px;overflow-y:auto;flex:1;min-height:0;}
+.conv-msgs::-webkit-scrollbar{width:3px;}
+.conv-msgs::-webkit-scrollbar-thumb{background:var(--bd);border-radius:2px;}
+.cmsg{display:flex;gap:6px;}
+.cmsg.umsg{flex-direction:row-reverse;}
+.cmsg-av{width:20px;height:20px;border-radius:50%;font-size:8px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.bav{background:var(--gl);color:var(--g);}
+.uav{background:var(--s2);color:var(--tm);}
+.cmsg-body{max-width:78%;}
+.cmsg-bbl{padding:7px 10px;font-size:12px;line-height:1.5;white-space:pre-wrap;word-break:break-word;}
+.bbbl{background:var(--sf);border:1px solid var(--bd);color:var(--tx);border-radius:3px 8px 8px 8px;}
+.ubbl{background:var(--g);color:#fff;border-radius:8px 3px 8px 8px;}
+.cmsg-time{font-size:9px;color:var(--th);margin-top:2px;padding:0 2px;}
+.umsg .cmsg-time{text-align:right;}
+
+/* ── PANELS ── */
+.panel-wrap{flex:1;overflow-y:auto;padding:18px;}
+.panel-wrap::-webkit-scrollbar{width:5px;}
+.panel-wrap::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px;}
+.ph{margin-bottom:16px;}
+.ph-title{font-size:17px;font-weight:600;margin-bottom:3px;}
+.ph-sub{font-size:12.5px;color:var(--tm);}
+.scards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;}
+.scard{background:#fff;border:1px solid var(--bd);border-radius:var(--r);padding:12px 14px;}
+.scard-lbl{font-size:10px;font-weight:600;color:var(--th);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;}
+.scard-val{font-size:20px;font-weight:600;color:var(--tx);}
+.scard-val.g{color:var(--g);}
+.scard-val.y{color:#f59e0b;}
+.scard-sub{font-size:11px;color:var(--tm);margin-top:2px;}
+
+/* RECALLS PANEL */
+.recalls-body{display:grid;grid-template-columns:1fr 320px;gap:14px;}
+.ptable-wrap{background:#fff;border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;}
+.ptable-hdr{padding:10px 14px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;}
+.ptable-title{font-size:12.5px;font-weight:600;}
+.ptable-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.pbtn{padding:5px 11px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid var(--bd);background:#fff;color:var(--tm);font-family:'Inter',sans-serif;transition:all .15s;}
+.pbtn:hover{background:var(--sf);}
+.pbtn.pri{background:var(--g);color:#fff;border-color:var(--g);}
+.pbtn.pri:hover{background:var(--gd);}
+.pbtn.active{background:var(--gl);color:var(--g);border-color:var(--g);}
+table{width:100%;border-collapse:collapse;}
+th{padding:8px 12px;font-size:10.5px;font-weight:600;color:var(--th);text-transform:uppercase;letter-spacing:.4px;text-align:left;background:var(--sf);border-bottom:1px solid var(--bd);}
+td{padding:9px 12px;font-size:12px;color:var(--tx);border-bottom:1px solid var(--bd);}
+tr:last-child td{border:none;}
+tr:hover td{background:var(--sf);}
+.chip{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:600;}
+.chip.y{background:#fef3c7;color:#92400e;}
+.chip.g{background:#d1fae5;color:#065f46;}
+.chip.b{background:var(--blue-l);color:#1e40af;}
+.chip.r{background:#fee2e2;color:#991b1b;}
+.chip.or{background:#fff7ed;color:#c2410c;}
+
+/* Preview panel */
+.preview-panel{background:#fff;border:1px solid var(--bd);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px;height:fit-content;position:sticky;top:18px;}
+.preview-panel h3{font-size:12.5px;font-weight:600;color:var(--tx);}
+.preview-patient-info{font-size:11.5px;color:var(--tm);line-height:1.6;}
+.preview-patient-info strong{color:var(--tx);}
+.preview-text-box{min-height:100px;background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:10px 12px;font-size:12.5px;line-height:1.6;color:var(--tx);white-space:pre-wrap;}
+.preview-hint{font-size:12px;color:var(--th);text-align:center;padding:20px 10px;}
+.preview-actions{display:flex;gap:6px;flex-direction:column;}
+.sent-log{margin-top:8px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;}
+.sent-log-hdr{padding:8px 12px;font-size:11px;font-weight:600;color:var(--tm);border-bottom:1px solid var(--bd);}
+.sent-log-item{padding:8px 12px;font-size:11.5px;border-bottom:1px solid var(--bd);}
+.sent-log-item:last-child{border:none;}
+.sent-log-name{font-weight:500;color:var(--tx);}
+.sent-log-sub{font-size:11px;color:var(--tm);margin-top:1px;}
+.sent-log-msg{font-size:11px;color:var(--tm);margin-top:4px;padding:5px 8px;background:#fff;border-radius:5px;border:1px solid var(--bd);}
+
+/* REVIEWS */
+.review-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+.rcard{background:#fff;border:1px solid var(--bd);border-radius:var(--r);padding:13px;}
+.rcard-top{display:flex;justify-content:space-between;margin-bottom:5px;}
+.rcard-name{font-size:12.5px;font-weight:600;}
+.rcard-src{font-size:10px;color:var(--th);}
+.rcard-stars{color:#f59e0b;font-size:12px;margin-bottom:5px;}
+.rcard-text{font-size:12px;color:var(--tm);line-height:1.5;margin-bottom:9px;}
+.rcard-reply{background:var(--gl);border-radius:7px;padding:9px 11px;font-size:12px;color:#1a1a1a;line-height:1.5;margin-bottom:8px;}
+.rcard-reply-lbl{font-size:10px;font-weight:600;color:var(--g);margin-bottom:3px;text-transform:uppercase;letter-spacing:.3px;}
+.rcard-actions{display:flex;gap:6px;}
+.gen-btn{padding:5px 11px;border-radius:6px;font-size:11px;font-weight:500;background:var(--gl);color:var(--g);border:1px solid rgba(26,107,74,.2);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;}
+.gen-btn:hover{background:var(--gm);}
+.pub-btn{padding:5px 11px;border-radius:6px;font-size:11px;font-weight:500;background:var(--g);color:#fff;border:none;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;}
+.pub-btn:hover{background:var(--gd);}
+.pending-reply{background:#fff9e6;border:1px dashed #f59e0b;border-radius:7px;padding:9px 11px;font-size:12px;line-height:1.5;margin-bottom:8px;color:var(--tx);}
+.pending-lbl{font-size:10px;font-weight:600;color:#92400e;margin-bottom:3px;}
+
+/* ANALYTICS */
+.analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.chart-card{background:#fff;border:1px solid var(--bd);border-radius:var(--r);padding:14px;}
+.chart-title{font-size:12.5px;font-weight:600;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
+.chart-title span{font-size:11px;font-weight:400;color:var(--tm);}
+/* Hour chart from dental-demo */
+#hour-chart{display:flex;align-items:flex-end;gap:2px;height:80px;padding-bottom:4px;}
+.hour-bar{width:100%;border-radius:2px 2px 0 0;cursor:default;transition:opacity .15s;flex:1;}
+.hour-bar:hover{opacity:.8;}
+/* Conv funnel */
+.conv-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:12px;}
+.conv-label{width:140px;color:var(--tm);flex-shrink:0;}
+.conv-track{flex:1;height:6px;background:var(--s2);border-radius:3px;overflow:hidden;}
+.conv-fill{height:100%;border-radius:3px;}
+.conv-pct{font-weight:600;font-size:12px;min-width:36px;text-align:right;}
+/* Top questions */
+.top-question{display:flex;align-items:center;gap:8px;margin-bottom:7px;font-size:12px;}
+.tq-rank{width:16px;color:var(--th);font-size:11px;flex-shrink:0;}
+.tq-text{flex:1;color:var(--tx);}
+.tq-bar-wrap{display:flex;align-items:center;gap:5px;width:120px;}
+.tq-bar{height:5px;background:var(--blue);border-radius:3px;}
+.tq-count{font-size:11px;color:var(--tm);white-space:nowrap;}
+/* Return chart */
+#return-chart{display:flex;align-items:flex-end;gap:4px;height:80px;}
+.chart-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.chart-bar{width:100%;border-radius:2px 2px 0 0;cursor:default;}
+.chart-bar-lbl{font-size:8.5px;color:var(--tm);}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo">SmileCare <span id="nl-sub">Admin</span></div>
+  <div class="nav-tabs">
+    <button class="ntab active" onclick="switchTab('admin',this)">
+      <span id="nt1">📋 Администратор</span>
+      <span class="nbadge" id="badge-admin">0</span>
+    </button>
+    <button class="ntab" onclick="switchTab('recalls',this)"><span id="nt2">🔔 Повторные визиты</span></button>
+    <button class="ntab" onclick="switchTab('reviews',this)"><span id="nt3">⭐ Репутация</span></button>
+    <button class="ntab" onclick="switchTab('analytics',this)"><span id="nt4">📊 Аналитика</span></button>
+  </div>
+  <div class="nav-right">
+    <button class="refresh-btn" onclick="loadBookings()" id="refresh-btn">↻ Обновить</button>
+    <div class="lang-sw">
+      <button class="active" onclick="setLang('ru',this)">RU</button>
+      <button onclick="setLang('ro',this)">RO</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ ADMIN VIEW ═══ -->
+<div class="view active" id="v-admin">
+  <div class="stats-bar">
+    <div class="stat-item"><div class="stat-val g" id="st-total">0</div><div class="stat-lbl" id="stl-total">Всего записей</div></div>
+    <div class="stat-item"><div class="stat-val y" id="st-new">0</div><div class="stat-lbl" id="stl-new">Новых</div></div>
+    <div class="stat-item"><div class="stat-val gr" id="st-conf">0</div><div class="stat-lbl" id="stl-conf">Подтверждённых</div></div>
+    <div class="stat-item"><div class="stat-val m" id="st-today">0</div><div class="stat-lbl" id="stl-today">Сегодня</div></div>
+  </div>
+  <div class="admin-body">
+    <div class="sidebar">
+      <div class="sb-hdr">
+        <div class="sb-title" id="sb-title">Записи на приём</div>
+        <div class="ftabs">
+          <button class="ftab active" onclick="filterB('all',this)" id="ft-all">Все</button>
+          <button class="ftab" onclick="filterB('new',this)" id="ft-new">Новые</button>
+          <button class="ftab" onclick="filterB('confirmed',this)" id="ft-conf">Подтв.</button>
+        </div>
+        <div class="sb-search"><input type="text" id="sb-search-inp" placeholder="Поиск..." oninput="renderList()"/></div>
+      </div>
+      <div class="blist" id="blist"></div>
+    </div>
+    <div class="main" id="main">
+      <div class="empty-state" id="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <p id="es-txt">Выберите запись</p>
+      </div>
+      <div class="detail" id="detail" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ RECALLS VIEW ═══ -->
+<div class="view" id="v-recalls">
+  <div class="panel-wrap">
+    <div class="ph"><div class="ph-title" id="ph-recalls">Система повторных визитов</div><div class="ph-sub" id="phs-recalls">Автоматически находит пациентов, которые не возвращались 6+ месяцев</div></div>
+    <div class="scards">
+      <div class="scard"><div class="scard-lbl" id="rc1l">Без визита 6м+</div><div class="scard-val y" id="stat-queue">0</div><div class="scard-sub" id="rc1s">потенциальная выручка</div></div>
+      <div class="scard"><div class="scard-lbl" id="rc2l">Отправлено сегодня</div><div class="scard-val g" id="stat-sent">0</div><div class="scard-sub" id="stat-sent-sub" id="rc2s">нажмите «Запустить всех»</div></div>
+      <div class="scard"><div class="scard-lbl" id="rc3l">Вернулись и записались</div><div class="scard-val g">31</div><div class="scard-sub" id="rc3s">↑ конверсия 16.7%</div></div>
+      <div class="scard"><div class="scard-lbl" id="rc4l">Доп. выручка в месяц</div><div class="scard-val g">3 800 MDL</div><div class="scard-sub" id="rc4s">↑ на автопилоте</div></div>
+    </div>
+    <div class="recalls-body">
+      <div>
+        <div class="ptable-wrap">
+          <div class="ptable-hdr">
+            <div class="ptable-title" id="rc-queue-lbl">Очередь напоминаний</div>
+            <div class="ptable-actions">
+              <button class="pbtn active" onclick="setProcFilter('all',this)" id="pf-all">Все</button>
+              <button class="pbtn" onclick="setProcFilter('Чистка',this)" id="pf-clean">Чистка</button>
+              <button class="pbtn" onclick="setProcFilter('Имплант',this)" id="pf-impl">Имплант</button>
+              <button class="pbtn" onclick="setProcFilter('Пломба',this)" id="pf-fill">Пломба</button>
+              <button class="pbtn" onclick="setProcFilter('Камень',this)" id="pf-stone">Камень</button>
+              <button class="pbtn" onclick="setProcFilter('Отбеливание',this)" id="pf-white">Отбеливание</button>
+              <button class="pbtn" onclick="setProcFilter('Удаление',this)" id="pf-remove">Удаление</button>
+              <button class="pbtn pri" id="launch-all-btn" onclick="launchAll()">
+                <span id="launch-lbl">Запустить всех</span>
+              </button>
+            </div>
+          </div>
+          <table>
+            <thead><tr>
+              <th id="th-pat">Пациент</th>
+              <th id="th-last">Последний визит</th>
+              <th id="th-proc">Процедура</th>
+              <th id="th-urg">Статус</th>
+              <th id="th-act">Действие</th>
+            </tr></thead>
+            <tbody id="patients-tbody"></tbody>
+          </table>
+        </div>
+        <div class="sent-log" id="sent-log-container" style="display:none;margin-top:14px;">
+          <div class="sent-log-hdr" id="sent-log-hdr">Отправленные сообщения</div>
+          <div id="sent-log-list"></div>
+        </div>
+      </div>
+      <!-- Preview Panel -->
+      <div class="preview-panel" id="preview-panel">
+        <h3 id="preview-header">Предпросмотр сообщения</h3>
+        <div class="preview-patient-info" id="preview-patient-info" style="display:none;"></div>
+        <div id="preview-hint" class="preview-hint" id="preview-hint-txt">Нажмите «Отправить» — AI сгенерирует персональное сообщение</div>
+        <div id="preview-text" class="preview-text-box" style="display:none;"></div>
+        <div id="preview-actions" style="display:none;" class="preview-actions">
+          <button class="abtn pri" onclick="confirmSend()" id="confirm-btn">✓ Подтвердить и отправить</button>
+          <button class="abtn sec" onclick="regenerateMsg()" id="regen-btn">↻ Перегенерировать</button>
+          <button class="abtn sec" onclick="resetPreview()" id="back-btn">← Выбрать другого</button>
+        </div>
+        <div id="send-success" style="display:none;text-align:center;padding:10px;">
+          <div style="font-size:22px;">✅</div>
+          <div style="font-size:13px;font-weight:600;margin-top:4px;" id="success-title">Сообщение отправлено!</div>
+          <div style="font-size:11px;color:var(--tm);margin-top:2px;" id="success-pre">Отправлено на</div>
+          <div style="font-size:12px;font-weight:500;margin-top:2px;" id="success-phone"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ REVIEWS VIEW ═══ -->
+<div class="view" id="v-reviews">
+  <div class="panel-wrap">
+    <div class="ph"><div class="ph-title" id="ph-reviews">Репутация</div><div class="ph-sub" id="phs-reviews">AI мониторит отзывы Google и генерирует ответы в стиле клиники</div></div>
+    <div class="scards">
+      <div class="scard"><div class="scard-lbl" id="rv1l">Рейтинг Google</div><div class="scard-val g">4.8 ⭐</div><div class="scard-sub" id="rv1s">↑ +0.2 за 3 месяца</div></div>
+      <div class="scard"><div class="scard-lbl" id="rv2l">Обработано</div><div class="scard-val g">156</div><div class="scard-sub" id="rv2s">за всё время</div></div>
+      <div class="scard"><div class="scard-lbl" id="rv3l">Ответов AI</div><div class="scard-val g">142</div><div class="scard-sub" id="rv3s">91% охват</div></div>
+      <div class="scard"><div class="scard-lbl" id="rv4l">Новых (неделя)</div><div class="scard-val y">4</div><div class="scard-sub" id="rv4s">ждут ответа</div></div>
+    </div>
+    <div class="review-grid" id="review-grid"></div>
+  </div>
+</div>
+
+<!-- ═══ ANALYTICS VIEW ═══ -->
+<div class="view" id="v-analytics">
+  <div class="panel-wrap">
+    <div class="ph"><div class="ph-title" id="ph-analytics">Аналитика</div><div class="ph-sub" id="phs-analytics">Статистика AI-администратора за 30 дней</div></div>
+    <div class="scards">
+      <div class="scard"><div class="scard-lbl" id="an1l">Диалогов</div><div class="scard-val g">284</div><div class="scard-sub" id="an1s">↑ +23% к прошлому месяцу</div></div>
+      <div class="scard"><div class="scard-lbl" id="an2l">Решено AI</div><div class="scard-val g">91%</div><div class="scard-sub" id="an2s">без участия оператора</div></div>
+      <div class="scard"><div class="scard-lbl" id="an3l">Записей создано</div><div class="scard-val g">67</div><div class="scard-sub" id="an3s">конверсия 23.6%</div></div>
+      <div class="scard"><div class="scard-lbl" id="an4l">Время ответа</div><div class="scard-val g">2.3с</div><div class="scard-sub" id="an4s">24/7 без выходных</div></div>
+    </div>
+    <div class="analytics-grid">
+      <div class="chart-card">
+        <div class="chart-title"><span id="ch1t">Обращения по часам</span><span id="ch1s">сегодня</span></div>
+        <div id="hour-chart"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title"><span id="ch2t">Конверсия по шагам</span></div>
+        <div id="conv-funnel" style="margin-top:8px;"></div>
+      </div>
+    </div>
+    <div class="analytics-grid">
+      <div class="chart-card">
+        <div class="chart-title"><span id="ch3t">Топ вопросов пациентов</span></div>
+        <div id="top-questions" style="margin-top:8px;"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title"><span id="ch4t">Источники диалогов</span><span id="ch4s">30 дней</span></div>
+        <div style="display:flex;flex-direction:column;gap:9px;margin-top:6px;" id="src-chart"></div>
+      </div>
+    </div>
+    <div class="chart-card" style="margin-bottom:12px;">
+      <div class="chart-title"><span id="ch5t">Возврат пациентов по месяцам</span><span id="ch5s">после AI-рассылки</span></div>
+      <div id="return-chart" style="height:80px;display:flex;align-items:flex-end;gap:4px;"></div>
+    </div>
+    <div class="ptable-wrap">
+      <div class="ptable-hdr"><div class="ptable-title" id="pt-top">Топ услуг</div></div>
+      <table><thead><tr>
+        <th id="th-svc2">Услуга</th><th id="th-cnt">Запросов</th>
+        <th id="th-conv2">Конверсия</th><th id="th-rev">Выручка</th>
+      </tr></thead>
+      <tbody id="an-tbody"></tbody></table>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══ DATA ═══
+const ANALYTICS_DATA = {
+  hours:[2,1,0,1,3,2,4,8,12,15,18,14,16,19,13,10,8,11,14,17,12,9,6,4],
+  topQru:[{q:'Записаться на приём',n:47},{q:'Стоимость лечения',n:38},{q:'Часы работы',n:31},{q:'Болит зуб — срочно',n:24},{q:'Перенести запись',n:19}],
+  topQro:[{q:'Programare vizită',n:47},{q:'Prețuri tratament',n:38},{q:'Program lucru',n:31},{q:'Durere acută — urgent',n:24},{q:'Reprogramare vizită',n:19}],
+  convRu:[{l:'Написали боту',v:100,c:'#2563eb'},{l:'Вступили в диалог',v:87,c:'#3b82f6'},{l:'Запросили время',v:72,c:'#60a5fa'},{l:'Записались',v:68,c:'#22c55e'}],
+  convRo:[{l:'Au scris botului',v:100,c:'#2563eb'},{l:'Au intrat în dialog',v:87,c:'#3b82f6'},{l:'Au cerut orar',v:72,c:'#60a5fa'},{l:'S-au programat',v:68,c:'#22c55e'}],
+  monthsRu:[{m:'Янв',v:8},{m:'Фев',v:11},{m:'Мар',v:14},{m:'Апр',v:18},{m:'Май',v:23},{m:'Июн',v:27},{m:'Июл',v:24},{m:'Авг',v:31},{m:'Сен',v:29},{m:'Окт',v:35},{m:'Ноя',v:38},{m:'Дек',v:42}],
+  monthsRo:[{m:'Ian',v:8},{m:'Feb',v:11},{m:'Mar',v:14},{m:'Apr',v:18},{m:'Mai',v:23},{m:'Iun',v:27},{m:'Iul',v:24},{m:'Aug',v:31},{m:'Sep',v:29},{m:'Oct',v:35},{m:'Nov',v:38},{m:'Dec',v:42}],
+};
+
+// ═══ TRANSLATIONS ═══
+const TR = {
+  ru:{
+    nlSub:'Admin',
+    nt:['📋 Администратор','🔔 Повторные визиты','⭐ Репутация','📊 Аналитика'],
+    refresh:'↻ Обновить',
+    sbTitle:'Записи на приём', ftAll:'Все', ftNew:'Новые', ftConf:'Подтв.',
+    stLbls:['Всего записей','Новых','Подтверждённых','Сегодня'],
+    esTxt:'Выберите запись', search:'Поиск...',
+    dBook:'Данные записи', dPat:'Пациент',
+    fldSvc:'Услуга', fldTime:'Дата и время', fldStatus:'Статус',
+    fldName:'Имя', fldPhone:'Телефон', fldLang:'Язык', fldCh:'Канал',
+    sNew:'Новый', sConf:'Подтверждён', sCanc:'Отменён',
+    btnConf:'✓ Подтвердить', btnCanc:'Отменить', btnRestore:'↩ Восстановить',
+    convHdr:'История разговора', msgs:'сообщений',
+    chWidget:'💬 Виджет', chWA:'📱 WhatsApp', exportBtn:'Экспорт чата',
+    // Recalls
+    phRecalls:'Система повторных визитов',
+    phsRecalls:'Автоматически находит пациентов, которые не возвращались 6+ месяцев',
+    rc1:'Без визита 6м+', rc1s:'потенциальная выручка',
+    rc2:'Отправлено сегодня', rc2init:'нажмите «Запустить всех»',
+    rc3:'Вернулись и записались', rc3s:'↑ конверсия 16.7%',
+    rc4:'Доп. выручка в месяц', rc4s:'↑ на автопилоте',
+    rcQueueLbl:'Очередь напоминаний',
+    pfAll:'Все', pfClean:'Чистка', pfImpl:'Имплант', pfFill:'Пломба', pfStone:'Камень', pfWhite:'Отбеливание', pfRemove:'Удаление',
+    launchLbl:'Запустить всех', launchDone:'✓ Все отправлены',
+    thPat:'Пациент', thLast:'Последний визит', thProc:'Процедура', thUrg:'Статус', thAct:'Действие',
+    monthsAgo:'мес. назад',
+    btnSend:'Отправить', btnOpen:'Открыть',
+    statusU:'Срочно', statusP:'Ожидает', statusS:'Отправлено', statusB:'Записался',
+    previewHdr:'Предпросмотр сообщения',
+    previewHint:'Нажмите «Отправить» — AI сгенерирует персональное сообщение',
+    lblPhone:'Телефон:', lblLast:'Последний визит:', lblProc:'Процедура:',
+    generating:'⏳ AI генерирует сообщение...',
+    confirmBtn:'✓ Подтвердить и отправить', regenBtn:'↻ Перегенерировать', backBtn:'← Выбрать другого',
+    successTitle:'Сообщение отправлено!', successPre:'Отправлено на',
+    sentLogHdr:'Отправленные сообщения',
+    launchingAll:'Отправляю сообщения...',
+    launchResult:'Готово! Отправлено', launchSuffix:'сообщений',
+    sentToday:'отправлено сегодня',
+    // Reviews
+    phReviews:'Репутация',
+    phsReviews:'AI мониторит отзывы Google и генерирует ответы в стиле клиники',
+    rv1:'Рейтинг Google', rv1s:'↑ +0.2 за 3 месяца',
+    rv2:'Обработано', rv2s:'за всё время',
+    rv3:'Ответов AI', rv3s:'91% охват',
+    rv4:'Новых (неделя)', rv4s:'ждут ответа',
+    btnGen:'✨ Сгенерировать ответ', btnRegen:'↻ Перегенерировать', btnPub:'✓ Опубликовать',
+    genLbl:'Ответ клиники · AI (черновик)', pubLbl:'Ответ клиники · AI',
+    genLoading:'⏳ Генерирую...', genRetry:'✨ Попробовать снова',
+    // Analytics
+    phAnalytics:'Аналитика', phsAnalytics:'Статистика AI-администратора за 30 дней',
+    an1:'Диалогов', an1s:'↑ +23% к прошлому месяцу',
+    an2:'Решено AI', an2s:'без участия оператора',
+    an3:'Записей создано', an3s:'конверсия 23.6%',
+    an4:'Время ответа', an4s:'24/7 без выходных',
+    ch1t:'Обращения по часам', ch1s:'сегодня',
+    ch2t:'Конверсия по шагам',
+    ch3t:'Топ вопросов пациентов',
+    ch4t:'Источники диалогов', ch4s:'30 дней',
+    ch5t:'Возврат пациентов по месяцам', ch5s:'после AI-рассылки',
+    ptTop:'Топ услуг',
+    thSvc2:'Услуга', thCnt:'Запросов', thConv:'Конверсия', thRev:'Выручка',
+    anS:['Профессиональная чистка','Лечение кариеса','Имплант','Консультация','Отбеливание'],
+    srcLabels:['💬 Виджет сайта','📱 WhatsApp','📞 Телефон','📧 Email'],
+    patients:[
+      {id:'popescu_ion',   name:'Попеску Ион',      phone:'+373 69 123 456', months:11, proc:'Лечение кариеса',  urgency:'urgent'},
+      {id:'ciobanu_maria', name:'Чобану Мария',     phone:'+373 79 234 567', months:9,  proc:'Проф. чистка',    urgency:'pending'},
+      {id:'lungu_andrei',  name:'Лунгу Андрей',     phone:'+373 68 345 678', months:8,  proc:'Пломба',          urgency:'pending'},
+      {id:'rusu_elena',    name:'Русу Елена',        phone:'+373 78 456 789', months:14, proc:'Имплант (конс.)', urgency:'urgent'},
+      {id:'munteanu_vlad', name:'Мунтяну Влад',     phone:'+373 69 567 890', months:7,  proc:'Камень',          urgency:'pending'},
+      {id:'ionescu_ana',   name:'Ионеску Анна',     phone:'+373 79 678 901', months:6,  proc:'Консультация',    urgency:'pending'},
+      {id:'botnaru_s',     name:'Ботнару Сергей',   phone:'+373 68 789 012', months:10, proc:'Удаление зуба',   urgency:'urgent'},
+      {id:'cojocaru_nina', name:'Кожокару Нина',    phone:'+373 78 890 123', months:8,  proc:'Отбеливание',     urgency:'pending'},
+      {id:'popa_victor',   name:'Попа Виктор',      phone:'+373 69 901 234', months:6,  proc:'Проф. чистка',    urgency:'sent'},
+      {id:'mihai_crist',   name:'Михай Кристина',   phone:'+373 79 012 345', months:7,  proc:'Пломба',          urgency:'booked'},
+    ],
+    reminderPrompt(p,prev){
+      const regen=prev?`Предыдущий вариант: "${prev}". Напиши другой тон. `:'';
+      return `Напиши короткое персональное WhatsApp-сообщение пациенту клиники SmileCare (Кишинёв). Пациент: ${p.name}, не приходил ${p.months} месяцев, последняя процедура: ${p.proc}. ${regen}Пиши на русском. Обязательно упомяни конкретную процедуру. Требования: тепло, лично, коротко (3-4 предложения), предложи записаться, первичная консультация бесплатна. Только текст без кавычек.`;
+    },
+  },
+  ro:{
+    nlSub:'Admin',
+    nt:['📋 Administrator','🔔 Vizite repetate','⭐ Reputație','📊 Analitica'],
+    refresh:'↻ Actualizare',
+    sbTitle:'Programări', ftAll:'Toate', ftNew:'Noi', ftConf:'Conf.',
+    stLbls:['Total programări','Noi','Confirmate','Astăzi'],
+    esTxt:'Selectați o programare', search:'Căutare...',
+    dBook:'Detalii programare', dPat:'Pacient',
+    fldSvc:'Serviciu', fldTime:'Data și ora', fldStatus:'Status',
+    fldName:'Nume', fldPhone:'Telefon', fldLang:'Limbă', fldCh:'Canal',
+    sNew:'Nou', sConf:'Confirmat', sCanc:'Anulat',
+    btnConf:'✓ Confirmă', btnCanc:'Anulează', btnRestore:'↩ Restaurează',
+    convHdr:'Istoricul conversației', msgs:'mesaje',
+    chWidget:'💬 Widget', chWA:'📱 WhatsApp', exportBtn:'Export chat',
+    // Recalls
+    phRecalls:'Sistem vizite repetate',
+    phsRecalls:'Găsește automat pacienții care nu au revenit 6+ luni',
+    rc1:'Fără vizită 6l+', rc1s:'venit potențial',
+    rc2:'Trimise astăzi', rc2init:'apăsați «Lansează toți»',
+    rc3:'Reveniți și programați', rc3s:'↑ conversie 16.7%',
+    rc4:'Venit suplimentar/lună', rc4s:'↑ pe pilot automat',
+    rcQueueLbl:'Coada de memento-uri',
+    pfAll:'Toți', pfClean:'Curățare', pfImpl:'Implant', pfFill:'Plombă', pfStone:'Detartraj', pfWhite:'Albire', pfRemove:'Extracție',
+    launchLbl:'Lansează toți', launchDone:'✓ Toți trimiși',
+    thPat:'Pacient', thLast:'Ultima vizită', thProc:'Procedură', thUrg:'Status', thAct:'Acțiune',
+    monthsAgo:'luni în urmă',
+    btnSend:'Trimite', btnOpen:'Deschide',
+    statusU:'Urgent', statusP:'În așteptare', statusS:'Trimis', statusB:'Programat',
+    previewHdr:'Previzualizare mesaj',
+    previewHint:'Apăsați «Trimite» — AI va genera un mesaj personalizat',
+    lblPhone:'Telefon:', lblLast:'Ultima vizită:', lblProc:'Procedură:',
+    generating:'⏳ AI generează mesajul...',
+    confirmBtn:'✓ Confirmă și trimite', regenBtn:'↻ Regenerează', backBtn:'← Alege alt pacient',
+    successTitle:'Mesaj trimis!', successPre:'Trimis la',
+    sentLogHdr:'Mesaje trimise',
+    launchingAll:'Trimit mesajele...',
+    launchResult:'Gata! Trimise', launchSuffix:'mesaje',
+    sentToday:'trimise astăzi',
+    // Reviews
+    phReviews:'Reputație',
+    phsReviews:'AI monitorizează recenziile Google și generează răspunsuri',
+    rv1:'Rating Google', rv1s:'↑ +0.2 în 3 luni',
+    rv2:'Procesate', rv2s:'total',
+    rv3:'Răspunsuri AI', rv3s:'91% acoperire',
+    rv4:'Noi (săptămână)', rv4s:'așteaptă răspuns',
+    btnGen:'✨ Generează răspuns', btnRegen:'↻ Regenerează', btnPub:'✓ Publică',
+    genLbl:'Răspuns clinică · AI (ciornă)', pubLbl:'Răspuns clinică · AI',
+    genLoading:'⏳ Generez...', genRetry:'✨ Încearcă din nou',
+    // Analytics
+    phAnalytics:'Analitica', phsAnalytics:'Statistici administrator AI — 30 zile',
+    an1:'Dialoguri', an1s:'↑ +23% față de luna trecută',
+    an2:'Rezolvate AI', an2s:'fără operator',
+    an3:'Programări create', an3s:'conversie 23.6%',
+    an4:'Timp răspuns', an4s:'24/7 fără pauze',
+    ch1t:'Solicitări pe ore', ch1s:'astăzi',
+    ch2t:'Conversie pe etape',
+    ch3t:'Top întrebări pacienți',
+    ch4t:'Surse dialoguri', ch4s:'30 zile',
+    ch5t:'Revenirea pacienților pe luni', ch5s:'după mesaje AI',
+    ptTop:'Top servicii',
+    thSvc2:'Serviciu', thCnt:'Solicitări', thConv:'Conversie', thRev:'Venit',
+    anS:['Igienizare profesională','Tratament carie','Implant','Consultație','Albire'],
+    srcLabels:['💬 Widget site','📱 WhatsApp','📞 Telefon','📧 Email'],
+    patients:[
+      {id:'popescu_ion',   name:'Popescu Ion',    phone:'+373 69 123 456', months:11, proc:'Tratament carie',       urgency:'urgent'},
+      {id:'ciobanu_maria', name:'Ciobanu Maria',  phone:'+373 79 234 567', months:9,  proc:'Curățare profesională', urgency:'pending'},
+      {id:'lungu_andrei',  name:'Lungu Andrei',   phone:'+373 68 345 678', months:8,  proc:'Plombă',                urgency:'pending'},
+      {id:'rusu_elena',    name:'Rusu Elena',     phone:'+373 78 456 789', months:14, proc:'Implant consult',       urgency:'urgent'},
+      {id:'munteanu_vlad', name:'Munteanu Vlad',  phone:'+373 69 567 890', months:7,  proc:'Detartraj',             urgency:'pending'},
+      {id:'ionescu_ana',   name:'Ionescu Ana',    phone:'+373 79 678 901', months:6,  proc:'Consultație',           urgency:'pending'},
+      {id:'botnaru_s',     name:'Botnaru Sergiu', phone:'+373 68 789 012', months:10, proc:'Extracție',             urgency:'urgent'},
+      {id:'cojocaru_nina', name:'Cojocaru Nina',  phone:'+373 78 890 123', months:8,  proc:'Albire',                urgency:'pending'},
+      {id:'popa_victor',   name:'Popa Victor',    phone:'+373 69 901 234', months:6,  proc:'Curățare profesională', urgency:'sent'},
+      {id:'mihai_crist',   name:'Mihai Cristina', phone:'+373 79 012 345', months:7,  proc:'Plombă',                urgency:'booked'},
+    ],
+    reminderPrompt(p,prev){
+      const regen=prev?`Varianta anterioară: "${prev}". Scrie altfel. `:'';
+      return `Scrie un scurt mesaj WhatsApp personalizat pacientului clinicii SmileCare (Chișinău). Pacient: ${p.name}, nu a venit de ${p.months} luni, ultima procedură: ${p.proc}. ${regen}Scrie în română. Menționează neapărat procedura specifică. Cerințe: cald, personal, scurt (3-4 propoziții), propune programare, prima consultație e gratuită. Doar textul fără ghilimele.`;
+    },
+  }
+};
+
+let uiLang = 'ru';
+let patients = [];
+let currentPatient = null;
+let currentMsg = null;
+let sentCount = 0;
+let procFilter = 'all';
+let chartsRendered = false;
+
+function T(key) { return TR[uiLang][key] || TR.ru[key] || key; }
+
+// ═══ LANG ═══
+function setLang(l, btn) {
+  uiLang = l;
+  document.querySelectorAll('.lang-sw button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  resetPatients();
+  applyTr();
+  renderList();
+  if (currentId) showDetail(currentId);
+  renderReviews();
+  chartsRendered = false;
+  if (document.getElementById('v-analytics').classList.contains('active')) renderAnalytics();
+}
+
+function applyTr() {
+  const tr = TR[uiLang];
+  const map = {
+    'nl-sub':tr.nlSub, 'refresh-btn':tr.refresh,
+    'sb-title':tr.sbTitle, 'ft-all':tr.ftAll, 'ft-new':tr.ftNew, 'ft-conf':tr.ftConf,
+    'stl-total':tr.stLbls[0],'stl-new':tr.stLbls[1],'stl-conf':tr.stLbls[2],'stl-today':tr.stLbls[3],
+    'es-txt':tr.esTxt,
+    'ph-recalls':tr.phRecalls,'phs-recalls':tr.phsRecalls,
+    'rc1l':tr.rc1,'rc1s':tr.rc1s,'rc2l':tr.rc2,'rc3l':tr.rc3,'rc3s':tr.rc3s,'rc4l':tr.rc4,'rc4s':tr.rc4s,
+    'rc-queue-lbl':tr.rcQueueLbl,
+    'pf-all':tr.pfAll,'pf-clean':tr.pfClean,'pf-impl':tr.pfImpl,'pf-fill':tr.pfFill,
+    'pf-stone':tr.pfStone,'pf-white':tr.pfWhite,'pf-remove':tr.pfRemove,
+    'launch-lbl':tr.launchLbl,
+    'th-pat':tr.thPat,'th-last':tr.thLast,'th-proc':tr.thProc,'th-urg':tr.thUrg,'th-act':tr.thAct,
+    'preview-header':tr.previewHdr,
+    'confirm-btn':tr.confirmBtn,'regen-btn':tr.regenBtn,'back-btn':tr.backBtn,
+    'success-title':tr.successTitle,'success-pre':tr.successPre,
+    'sent-log-hdr':tr.sentLogHdr,
+    'ph-reviews':tr.phReviews,'phs-reviews':tr.phsReviews,
+    'rv1l':tr.rv1,'rv1s':tr.rv1s,'rv2l':tr.rv2,'rv2s':tr.rv2s,
+    'rv3l':tr.rv3,'rv3s':tr.rv3s,'rv4l':tr.rv4,'rv4s':tr.rv4s,
+    'ph-analytics':tr.phAnalytics,'phs-analytics':tr.phsAnalytics,
+    'an1l':tr.an1,'an1s':tr.an1s,'an2l':tr.an2,'an2s':tr.an2s,
+    'an3l':tr.an3,'an3s':tr.an3s,'an4l':tr.an4,'an4s':tr.an4s,
+    'ch1t':tr.ch1t,'ch1s':tr.ch1s,'ch2t':tr.ch2t,
+    'ch3t':tr.ch3t,'ch4t':tr.ch4t,'ch4s':tr.ch4s,
+    'ch5t':tr.ch5t,'ch5s':tr.ch5s,'pt-top':tr.ptTop,
+    'th-svc2':tr.thSvc2,'th-cnt':tr.thCnt,'th-conv2':tr.thConv,'th-rev':tr.thRev,
+  };
+  Object.entries(map).forEach(([id,val]) => { const el=document.getElementById(id); if(el) el.textContent=val; });
+  ['nt1','nt2','nt3','nt4'].forEach((id,i) => { const el=document.getElementById(id); if(el) el.textContent=tr.nt[i]; });
+  document.getElementById('sb-search-inp').placeholder = tr.search;
+  // Analytics table
+  const tb = document.getElementById('an-tbody');
+  if (tb) {
+    tb.innerHTML = '';
+    const svcs = [[89,'31%','22 400 MDL'],[67,'28%','37 800 MDL'],[34,'18%','74 400 MDL'],[28,'42%','6 300 MDL'],[19,'21%','9 975 MDL']];
+    const cls = ['g','g','y','g','y'];
+    svcs.forEach(([cnt,conv,rev],i) => {
+      const tr2 = document.createElement('tr');
+      tr2.innerHTML = `<td>${tr.anS[i]}</td><td>${cnt}</td><td><span class="chip ${cls[i]}">${conv}</span></td><td>${rev}</td>`;
+      tb.appendChild(tr2);
+    });
+  }
+  // Preview hint
+  const hint = document.getElementById('preview-hint');
+  if (hint) hint.textContent = tr.previewHint;
+}
+
+// ═══ TAB ═══
+function switchTab(name, el) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.ntab').forEach(t => t.classList.remove('active'));
+  document.getElementById('v-'+name).classList.add('active');
+  el.classList.add('active');
+  if (name === 'analytics') renderAnalytics();
+  if (name === 'reviews') renderReviews();
+  if (name === 'recalls') renderRecallsTable();
+}
+
+// ═══ BOOKINGS ═══
+const DEMO = [
+  {id:'d1',name:'Мария Иванова',phone:'+373 69 123 456',service:'Профессиональная чистка',time:'Пятница 16:00',status:'new',channel:'widget',lang:'ru',createdAt:new Date(Date.now()-8*60000),
+   conversation:[
+    {role:'bot',text:'Добрый день! Я Diana, ассистент SmileCare 🦷\nЧем могу помочь?',time:'14:52'},
+    {role:'usr',text:'Хочу записаться на чистку зубов',time:'14:53'},
+    {role:'bot',text:'**Профессиональная чистка** стоит **800 MDL**. Принимает Dr. Marina Cebotari.\n\nКакой день удобен?',time:'14:53'},
+    {role:'usr',text:'Пятница в 16:00',time:'14:54'},
+    {role:'bot',text:'Скажите ваше имя и номер телефона.',time:'14:54'},
+    {role:'usr',text:'Мария Иванова, +373 69 123 456',time:'14:55'},
+    {role:'bot',text:'Мария, **пятница 16:00**. До встречи в SmileCare! 🦷',time:'14:55'}
+  ]},
+  {id:'d2',name:'Alexandru Popescu',phone:'+373 79 234 567',service:'Consultație implant',time:'Joi 11:00',status:'confirmed',channel:'whatsapp',lang:'ro',createdAt:new Date(Date.now()-35*60000),
+   conversation:[
+    {role:'bot',text:'Bună ziua! Sunt Diana, asistentul SmileCare 🦷',time:'14:20'},
+    {role:'usr',text:'Vreau informații despre implant dentar',time:'14:21'},
+    {role:'bot',text:'**Implantul dentar** de la **12 000 MDL**. Dr. Andrei Lungu — mar/joi 10-19.\n\nVă convine joi la 11:00?',time:'14:21'},
+    {role:'usr',text:'Da. Alexandru Popescu, 079234567',time:'14:22'},
+    {role:'bot',text:'Alexandru, **joi la 11:00**. Ne vedem la SmileCare! 🦷',time:'14:23'}
+  ]},
+  {id:'d3',name:'Елена Константинова',phone:'+373 60 345 678',service:'Лечение кариеса',time:'Среда 10:30',status:'new',channel:'widget',lang:'ru',createdAt:new Date(Date.now()-2*3600000),
+   conversation:[
+    {role:'bot',text:'Добрый день! Я Diana, ассистент SmileCare.',time:'12:55'},
+    {role:'usr',text:'Болит зуб уже 3 дня',time:'12:56'},
+    {role:'bot',text:'Dr. Marina Cebotari — среда 10:30.\n\n- Кариес: **600-1200 MDL**\n\nПодходит?',time:'12:56'},
+    {role:'usr',text:'Да! Елена Константинова, +373 60 345 678',time:'12:57'},
+    {role:'bot',text:'Елена, **среда 10:30**. Держитесь! 🦷',time:'12:57'}
+  ]}
+];
+
+let allBookings = [];
+let currentFilter = 'all';
+let currentId = null;
+
+function loadBookings() {
+  let stored = [];
+  try {
+    stored = JSON.parse(localStorage.getItem('smilecare_bookings')||'[]').map(b=>({...b,createdAt:new Date(b.createdAt)}));
+  } catch(e){}
+  // Also load dialogs without bookings
+  let dialogs = [];
+  try {
+    const raw = JSON.parse(localStorage.getItem('smilecare_dialogs')||'[]');
+    // Only include dialogs not already in bookings (by sessionId)
+    const bookedSessions = new Set(stored.map(b=>b.sessionId).filter(Boolean));
+    dialogs = raw
+      .filter(d => !bookedSessions.has(d.sessionId) && d.conversation && d.conversation.length > 1)
+      .map(d => ({
+        id: 'dlg_' + d.sessionId,
+        sessionId: d.sessionId,
+        name: extractName(d.conversation) || (uiLang==='ro'?'Vizitator':' Посетитель'),
+        phone: extractPhone(d.conversation) || '—',
+        service: extractIntent(d.conversation) || (uiLang==='ro'?'Dialog fără programare':'Диалог без записи'),
+        time: '—',
+        status: 'dialog',
+        channel: d.channel || 'widget',
+        lang: d.lang || 'ru',
+        createdAt: new Date(d.updatedAt || Date.now()),
+        conversation: d.conversation
+      }));
+  } catch(e){}
+  const storedIds = new Set(stored.map(b=>b.id));
+  allBookings = [...stored, ...dialogs, ...DEMO.filter(b=>!storedIds.has(b.id))];
+  updateStats(); renderList();
+}
+
+function extractName(conv) {
+  // Try to find name mentioned in conversation
+  for (const m of conv.filter(x=>x.role==='usr'||x.role==='user')) {
+    const text = m.text || '';
+    // Simple heuristic: look for capitalized words that could be names
+    const match = text.match(/(?:меня зовут|зовут|я |my name is|sunt|mă numesc)\s+([А-ЯA-ZÎȘȚa-zA-ZĂîșț][a-zа-яіїєА-ЯîșțăA-Z]{2,})/i);
+    if (match) return match[1];
+  }
+  return null;
+}
+
+function extractPhone(conv) {
+  for (const m of conv) {
+    const text = m.text || '';
+    const match = text.match(/(\+?373[\s\-]?\d{2}[\s\-]?\d{3}[\s\-]?\d{3}|0\d{8,9})/);
+    if (match) return match[1];
+  }
+  return null;
+}
+
+function extractIntent(conv) {
+  // Find first user message topic
+  const firstUser = conv.find(m=>m.role==='usr'||m.role==='user');
+  if (!firstUser) return null;
+  const text = (firstUser.text||'').slice(0,60);
+  return text.length > 40 ? text.slice(0,40)+'...' : text;
+}
+
+function updateStats() {
+  const tr = TR[uiLang];
+  document.getElementById('st-total').textContent = allBookings.length;
+  document.getElementById('st-new').textContent   = allBookings.filter(b=>b.status==='new').length;
+  document.getElementById('st-conf').textContent  = allBookings.filter(b=>b.status==='confirmed').length;
+  const today = new Date().toDateString();
+  document.getElementById('st-today').textContent = allBookings.filter(b=>new Date(b.createdAt).toDateString()===today).length;
+  document.getElementById('badge-admin').textContent = allBookings.filter(b=>b.status==='new').length;
+}
+
+function filterB(f,el) {
+  currentFilter=f;
+  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active'); renderList();
+}
+
+function timeAgo(date) {
+  const tr = TR[uiLang];
+  const mins = Math.round((Date.now()-new Date(date))/60000);
+  if (uiLang==='ro') {
+    if (mins<60) return `${mins} min`;
+    if (mins<1440) return `${Math.round(mins/60)} h`;
+    return `${Math.round(mins/1440)} z`;
+  }
+  if (mins<60) return `${mins} мин`;
+  if (mins<1440) return `${Math.round(mins/60)} ч`;
+  return `${Math.round(mins/1440)} д`;
+}
+
+function renderList() {
+  const tr = TR[uiLang];
+  const q  = (document.getElementById('sb-search-inp').value||'').toLowerCase();
+  const list = document.getElementById('blist');
+  let filtered = currentFilter==='all' ? allBookings : allBookings.filter(b=>b.status===currentFilter);
+  if (q) filtered = filtered.filter(b=>b.name.toLowerCase().includes(q)||b.service.toLowerCase().includes(q));
+  if (!filtered.length) { list.innerHTML=`<div style="padding:24px 12px;text-align:center;color:var(--th);font-size:12px;">Нет записей</div>`; return; }
+  list.innerHTML='';
+  filtered.forEach(b=>{
+    const el=document.createElement('div');
+    el.className='bitem'+(b.id===currentId?' active':'');
+    const dialogLabel = uiLang==='ro'?'Dialog':'Диалог';
+    const sLabel={new:tr.sNew,confirmed:tr.sConf,cancelled:tr.sCanc,dialog:dialogLabel}[b.status]||b.status;
+    const sClass={new:'s-new',confirmed:'s-conf',cancelled:'s-canc',dialog:'s-dlg'}[b.status]||'s-dlg';
+    const chIcon=b.channel==='whatsapp'?tr.chWA:tr.chWidget;
+    el.innerHTML = '<div class="bitem-top"><span class="bitem-name">'+b.name+'</span><span class="bitem-time">'+timeAgo(b.createdAt)+'</span></div>'
+      +'<div class="bitem-svc">'+b.service+' · '+b.time+'</div>'
+      +'<div class="bitem-bot"><span class="sbadge '+sClass+'">'+sLabel+'</span><span class="bitem-ch">'+chIcon+' · '+(b.lang==='ro'?'🇷🇴':'🇷🇺')+'</span></div>';
+    el.onclick=()=>showDetail(b.id);
+    list.appendChild(el);
+  });
+}
+
+function renderMd(text){
+  if(!text)return'';
+  return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/^- (.+)/gm,'<li>$1</li>').replace(/(<li>.*<\/li>)/gs,s=>'<ul style="margin:4px 0 4px 14px">'+s+'</ul>')
+    .replace(/\n/g,'<br>');
+}
+
+function showDetail(id){
+  currentId=id; renderList();
+  const b=allBookings.find(x=>x.id===id); if(!b)return;
+  const tr=TR[uiLang];
+  document.getElementById('empty-state').style.display='none';
+  const det=document.getElementById('detail'); det.style.display='block';
+  const initials=b.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  const dialogLabel = uiLang==='ro'?'Dialog':'Диалог';
+  const sLabel={new:tr.sNew,confirmed:tr.sConf,cancelled:tr.sCanc,dialog:dialogLabel}[b.status]||b.status;
+  const sClass={new:'s-new',confirmed:'s-conf',cancelled:'s-canc',dialog:'s-dlg'}[b.status]||'s-dlg';
+  const chIcon=b.channel==='whatsapp'?tr.chWA:tr.chWidget;
+  const conv=b.conversation||[];
+  const convHtml=conv.length>0?conv.map(m=>{
+    const isBot=m.role==='bot';
+    return`<div class="cmsg ${!isBot?'umsg':''}"><div class="cmsg-av ${isBot?'bav':'uav'}">${isBot?'D':'П'}</div><div class="cmsg-body"><div class="cmsg-bbl ${isBot?'bbbl':'ubbl'}">${isBot?renderMd(m.text):m.text}</div><div class="cmsg-time">${m.time||''}</div></div></div>`;
+  }).join(''):`<div style="padding:16px;text-align:center;color:var(--th);font-size:12px;">Нет сообщений</div>`;
+  let actionBtns='';
+  if(b.status==='dialog'){ /* no actions for pure dialogs */ }
+  else if(b.status==='new'){
+    const cb=document.createElement('button'); cb.className='abtn pri'; cb.textContent=tr.btnConf; cb.onclick=()=>changeStatus(b.id,'confirmed');
+    const xb=document.createElement('button'); xb.className='abtn dan'; xb.textContent=tr.btnCanc; xb.onclick=()=>changeStatus(b.id,'cancelled');
+    actionBtns=cb.outerHTML+xb.outerHTML;
+    // Use setTimeout to bind after insertion
+    setTimeout(()=>{
+      const el=det.querySelector('.d-actions');
+      if(el){el.innerHTML='';[cb,xb].forEach(b=>el.appendChild(b));}
+    },0);
+  } else if(b.status==='confirmed'){
+    const xb=document.createElement('button'); xb.className='abtn dan'; xb.textContent=tr.btnCanc; xb.onclick=()=>changeStatus(b.id,'cancelled');
+    setTimeout(()=>{const el=det.querySelector('.d-actions');if(el){el.innerHTML='';el.appendChild(xb);}},0);
+  } else if(b.status==='cancelled'){
+    const rb=document.createElement('button'); rb.className='abtn pri'; rb.textContent=tr.btnConf; rb.onclick=()=>changeStatus(b.id,'confirmed');
+    const nb=document.createElement('button'); nb.className='abtn sec'; nb.textContent=tr.btnRestore; nb.onclick=()=>changeStatus(b.id,'new');
+    setTimeout(()=>{const el=det.querySelector('.d-actions');if(el){el.innerHTML='';[rb,nb].forEach(b=>el.appendChild(b));}},0);
+  }
+  det.innerHTML=`<div class="d-header"><div class="d-av">${initials}</div><div style="flex:1"><div class="d-name">${b.name}</div><div class="d-meta"><span>📞 ${b.phone}</span><span>🕐 ${timeAgo(b.createdAt)}</span><span>${chIcon}</span><span>${b.lang==='ro'?'🇷🇴 Română':'🇷🇺 Русский'}</span><span class="sbadge ${sClass}">${sLabel}</span></div></div><div class="d-actions">${actionBtns}</div></div>
+    <div class="d-grid"><div class="dcard"><div class="dcard-ttl">${tr.dBook}</div><div class="dfield"><div class="dfield-lbl">${tr.fldSvc}</div><div class="dfield-val g">${b.service}</div></div><div class="dfield"><div class="dfield-lbl">${tr.fldTime}</div><div class="dfield-val">${b.time}</div></div><div class="dfield"><div class="dfield-lbl">${tr.fldStatus}</div><div class="dfield-val"><span class="sbadge ${sClass}">${sLabel}</span></div></div><div class="dfield"><div class="dfield-lbl">${tr.fldCh}</div><div class="dfield-val">${chIcon}</div></div></div>
+    <div class="dcard"><div class="dcard-ttl">${tr.dPat}</div><div class="dfield"><div class="dfield-lbl">${tr.fldName}</div><div class="dfield-val">${b.name}</div></div><div class="dfield"><div class="dfield-lbl">${tr.fldPhone}</div><div class="dfield-val">${b.phone}</div></div><div class="dfield"><div class="dfield-lbl">${tr.fldLang}</div><div class="dfield-val">${b.lang==='ro'?'Română':'Русский'}</div></div></div></div>
+    <div class="conv-card"><div class="conv-hdr">${tr.convHdr} <span>${conv.length} ${tr.msgs}</span><button onclick="exportChat('${b.id}')" style="margin-left:auto;padding:3px 10px;font-size:11px;border:1px solid var(--bd);border-radius:6px;background:#fff;color:var(--tm);cursor:pointer;font-family:Inter,sans-serif;font-weight:500;">⬇ ${tr.exportBtn}</button></div><div class="conv-msgs" id="conv-msgs-${b.id}">${convHtml}</div></div>`;
+  // Scroll to bottom
+  setTimeout(()=>{ const cm=document.getElementById('conv-msgs-'+id); if(cm) cm.scrollTop=cm.scrollHeight; },60);
+}
+
+window.changeStatus=function(id,status){
+  const b=allBookings.find(x=>x.id===id); if(!b)return;
+  b.status=status;
+  try{const s=JSON.parse(localStorage.getItem('smilecare_bookings')||'[]');const i=s.findIndex(x=>x.id===id);if(i>=0){s[i].status=status;localStorage.setItem('smilecare_bookings',JSON.stringify(s));}}catch(e){}
+  updateStats();renderList();showDetail(id);
+};
+
+// ═══ RECALLS ═══
+function resetPatients(){
+  patients=TR[uiLang].patients.map(p=>({...p}));
+  sentCount=0;
+  const si=document.getElementById('stat-sent');if(si)si.textContent='0';
+  const sq=document.getElementById('stat-queue');if(sq)sq.textContent=patients.filter(p=>p.urgency==='urgent'||p.urgency==='pending').length;
+  const ss=document.getElementById('stat-sent-sub');if(ss)ss.textContent=TR[uiLang].rc2init;
+  const slc=document.getElementById('sent-log-container');if(slc)slc.style.display='none';
+  const sl=document.getElementById('sent-log-list');if(sl)sl.innerHTML='';
+  currentPatient=null;currentMsg=null;
+  resetPreview();
+  renderRecallsTable();
+}
+
+function renderRecallsTable(){
+  const tbody=document.getElementById('patients-tbody'); if(!tbody)return;
+  const tr=TR[uiLang];
+  const urgencyOrder={urgent:0,pending:1,sent:2,booked:3};
+  const sorted=[...patients].sort((a,b)=>(urgencyOrder[a.urgency]||0)-(urgencyOrder[b.urgency]||0));
+  // Filter map: button id -> keywords in both languages
+  const filterMap = {
+    'all': null,
+    'Чистка': ['чист','curăț','curat'],
+    'Имплант': ['имплант','implant'],
+    'Пломба': ['пломб','plomb'],
+    'Камень': ['камень','камн','detartraj','tartru'],
+    'Отбеливание': ['отбелив','albir'],
+    'Удаление': ['удален','extracț','extrac'],
+  };
+  const keywords = filterMap[procFilter];
+  const list = !keywords ? sorted : sorted.filter(p => {
+    const proc = p.proc.toLowerCase();
+    return keywords.some(kw => proc.includes(kw));
+  });
+  tbody.innerHTML='';
+  list.forEach(p=>{
+    const urgMap={urgent:{cls:'chip or',lbl:tr.statusU},pending:{cls:'chip y',lbl:tr.statusP},sent:{cls:'chip b',lbl:tr.statusS},booked:{cls:'chip g',lbl:tr.statusB}};
+    const urg=urgMap[p.urgency]||{cls:'chip y',lbl:p.urgency};
+    const canSend=p.urgency==='urgent'||p.urgency==='pending';
+    const row=document.createElement('tr');
+    const actionCell = canSend
+      ? '<button class="pbtn pri" style="padding:3px 10px;font-size:11px;" onclick="showPreview(\'' + p.id + '\')">' + tr.btnSend + '</button>'
+      : '<span style="font-size:11px;color:var(--tm)">' + (p.urgency==='booked' ? '✓ '+tr.statusB : tr.statusS) + '</span>';
+    row.innerHTML = '<td><strong>' + p.name + '</strong><br><span style="font-size:10.5px;color:var(--tm)">' + p.phone + '</span></td>'
+      + '<td>' + p.months + ' ' + tr.monthsAgo + '</td>'
+      + '<td>' + p.proc + '</td>'
+      + '<td><span class="' + urg.cls + '">' + urg.lbl + '</span></td>'
+      + '<td>' + actionCell + '</td>';
+    tbody.appendChild(row);
+  });
+}
+
+function setProcFilter(f,btn){
+  procFilter=f;
+  document.querySelectorAll('.ptable-actions .pbtn:not(.pri)').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderRecallsTable();
+}
+
+function showPreview(id){
+  currentPatient=id;
+  const p=patients.find(x=>x.id===id); if(!p)return;
+  const tr=TR[uiLang];
+  document.getElementById('preview-hint').style.display='none';
+  document.getElementById('send-success').style.display='none';
+  document.getElementById('preview-text').style.display='none';
+  document.getElementById('preview-actions').style.display='none';
+  document.getElementById('preview-header').textContent=p.name;
+  const info=document.getElementById('preview-patient-info');
+  info.style.display='block';
+  info.innerHTML = '<span style="color:var(--tm)">' + tr.lblPhone + '</span> <strong>' + p.phone + '</strong><br>'
+    + '<span style="color:var(--tm)">' + tr.lblLast + '</span> <strong>' + p.months + ' ' + tr.monthsAgo + '</strong><br>'
+    + '<span style="color:var(--tm)">' + tr.lblProc + '</span> <strong>' + p.proc + '</strong>';
+  const pt=document.getElementById('preview-text');
+  pt.textContent=tr.generating;
+  pt.style.display='block';
+  genMsg(id,null).then(msg=>{
+    currentMsg=msg;
+    pt.textContent=msg;
+    document.getElementById('preview-actions').style.display='flex';
+  });
+}
+
+async function genMsg(pid,prev){
+  const p=patients.find(x=>x.id===pid)||{};
+  const prompt=TR[uiLang].reminderPrompt(p,prev);
+  const resp=await fetch('https://smilecare-proxy.badmvx7.workers.dev',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:500,messages:[{role:'user',content:prompt}]})
+  });
+  const d=await resp.json();
+  return d.content?.[0]?.text||(uiLang==='ru'?'Ошибка генерации':'Eroare generare');
+}
+
+function regenerateMsg(){
+  const p=patients.find(x=>x.id===currentPatient); if(!p)return;
+  const tr=TR[uiLang];
+  const pt=document.getElementById('preview-text');
+  document.getElementById('preview-actions').style.display='none';
+  pt.textContent=tr.generating;
+  genMsg(currentPatient,currentMsg).then(msg=>{
+    currentMsg=msg; pt.textContent=msg;
+    document.getElementById('preview-actions').style.display='flex';
+  });
+}
+
+function confirmSend(){
+  const p=patients.find(x=>x.id===currentPatient); if(!p||!currentMsg)return;
+  const tr=TR[uiLang];
+  p.urgency='sent';
+  sentCount++;
+  document.getElementById('stat-sent').textContent=sentCount;
+  document.getElementById('stat-sent-sub').textContent=sentCount + ' ' + tr.sentToday;
+  document.getElementById('preview-actions').style.display='none';
+  document.getElementById('preview-text').style.display='none';
+  const suc=document.getElementById('send-success');
+  suc.style.display='block';
+  document.getElementById('success-title').textContent=tr.successTitle;
+  document.getElementById('success-pre').textContent=tr.successPre;
+  document.getElementById('success-phone').textContent=p.phone;
+  addToSentLog(p,currentMsg);
+  renderRecallsTable();
+  currentPatient=null;currentMsg=null;
+}
+
+function addToSentLog(p,msg){
+  const tr=TR[uiLang];
+  const container=document.getElementById('sent-log-container');
+  container.style.display='block';
+  document.getElementById('sent-log-hdr').textContent=tr.sentLogHdr;
+  const list=document.getElementById('sent-log-list');
+  const item=document.createElement('div');
+  item.className='sent-log-item';
+  item.innerHTML = '<div class="sent-log-name">' + p.name + ' <span style="font-size:10px;color:var(--th)">· ' + p.phone + '</span></div>'
+    + '<div class="sent-log-sub">' + p.proc + ' · ' + p.months + ' ' + tr.monthsAgo + '</div>'
+    + '<div class="sent-log-msg">' + msg + '</div>';
+  list.insertBefore(item,list.firstChild);
+}
+
+function resetPreview(){
+  currentPatient=null;currentMsg=null;
+  const tr=TR[uiLang];
+  document.getElementById('preview-header').textContent=tr.previewHdr;
+  document.getElementById('preview-patient-info').style.display='none';
+  document.getElementById('preview-hint').style.display='block';
+  document.getElementById('preview-hint').textContent=tr.previewHint;
+  document.getElementById('preview-text').style.display='none';
+  document.getElementById('preview-actions').style.display='none';
+  document.getElementById('send-success').style.display='none';
+}
+
+async function launchAll(){
+  const pending=patients.filter(p=>p.urgency==='urgent'||p.urgency==='pending');
+  if(!pending.length)return;
+  const btn=document.getElementById('launch-all-btn');
+  btn.disabled=true;
+  const lbl=document.getElementById('launch-lbl');
+  lbl.textContent=TR[uiLang].launchingAll;
+  for(const p of pending){
+    lbl.textContent=TR[uiLang].launchingAll + ' ' + p.name + '...';
+    const msg=await genMsg(p.id,null);
+    p.urgency='sent';
+    sentCount++;
+    addToSentLog(p,msg);
+    document.getElementById('stat-sent').textContent=sentCount;
+    document.getElementById('stat-sent-sub').textContent = sentCount + ' ' + TR[uiLang].sentToday;
+    renderRecallsTable();
+    await new Promise(r=>setTimeout(r,300));
+  }
+  lbl.textContent=TR[uiLang].launchResult + ' ' + sentCount + ' ' + TR[uiLang].launchSuffix;
+  btn.disabled=false;
+}
+
+
+// ═══ EXPORT CHAT ═══
+function exportChat(id){
+  const b=allBookings.find(x=>x.id===id); if(!b)return;
+  const tr=TR[uiLang];
+  const lines=[];
+  lines.push('=== SmileCare ClinicAI ===');
+  lines.push(b.name + ' | ' + b.phone + ' | ' + b.service + ' | ' + b.time);
+  lines.push(tr.fldStatus + ': ' + ({new:tr.sNew,confirmed:tr.sConf,cancelled:tr.sCanc}[b.status]||b.status));
+  lines.push(tr.fldCh + ': ' + (b.channel==='whatsapp'?tr.chWA:tr.chWidget));
+  lines.push('─'.repeat(40));
+  (b.conversation||[]).forEach(m=>{
+    const who=m.role==='bot'?'Diana AI':'Пациент / Pacient';
+    lines.push('[' + (m.time||'') + '] ' + who + ':');
+    lines.push(m.text||'');
+    lines.push('');
+  });
+  lines.push('─'.repeat(40));
+  lines.push('Export: ' + new Date().toLocaleString('ru'));
+  const blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='chat_' + b.name.replace(/\s+/g,'_') + '_' + b.id.slice(0,8) + '.txt';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+// ═══ REVIEWS ═══
+const REVIEWS = [
+  {id:'r1',name:'Татьяна Ф.',src:{ru:'Google Maps · 2 дня назад',ro:'Google Maps · acum 2 zile'},stars:5,
+   text:{ru:'Прекрасная клиника! Доктор Полеску — просто волшебник. Боялась лечить зуб мудрости, но всё прошло быстро и безболезненно. Персонал очень приятный!',ro:'Clinică excelentă! Totul a decurs perfect.'},
+   reply:'Татьяна, большое спасибо за тёплый отзыв! Рады, что всё прошло комфортно. Ждём вас снова!',published:true},
+  {id:'r2',name:'Elena R.',src:{ru:'Google Maps · сегодня',ro:'Google Maps · astăzi'},stars:5,
+   text:{ru:'Prima dată la ClinicAI — impresii foarte bune. Echipament modern, spațiu curat, personal prietenos.',ro:'Prima dată la ClinicAI — impresii foarte bune. Echipament modern, spațiu curat, personal prietenos.'},
+   reply:null,published:false},
+  {id:'r3',name:'Андрей В.',src:{ru:'Google Maps · 5 дней назад',ro:'Google Maps · acum 5 zile'},stars:4,
+   text:{ru:'Хорошая клиника, современное оборудование. Единственный минус — пришлось подождать 15 минут сверх назначенного времени.',ro:'Clinică bună, echipament modern. Singurul minus — am așteptat 15 minute extra.'},
+   reply:null,published:false},
+  {id:'r4',name:'Maria C.',src:{ru:'Google Maps · неделю назад',ro:'Google Maps · acum o săptămână'},stars:5,
+   text:{ru:'Recomand cu căldură! Dr. Munteanu este foarte profesionistă și atentă.',ro:'Recomand cu căldură! Dr. Munteanu este foarte profesionistă și atentă.'},
+   reply:null,published:false},
+];
+
+function renderReviews(){
+  const tr=TR[uiLang];
+  const grid=document.getElementById('review-grid'); if(!grid)return;
+  grid.innerHTML='';
+  REVIEWS.forEach(r=>{
+    const stars='★'.repeat(r.stars)+'☆'.repeat(5-r.stars);
+    const text=typeof r.text==='object'?(r.text[uiLang]||r.text.ru):r.text;
+    const src=typeof r.src==='object'?(r.src[uiLang]||r.src.ru):r.src;
+    const card=document.createElement('div');
+    card.className='rcard'; card.id='rcard-'+r.id;
+
+    const top=document.createElement('div'); top.className='rcard-top';
+    top.innerHTML='<div><div class="rcard-name">'+r.name+'</div><div class="rcard-src">'+src+'</div></div>';
+    card.appendChild(top);
+
+    const starsEl=document.createElement('div'); starsEl.className='rcard-stars'; starsEl.textContent=stars;
+    card.appendChild(starsEl);
+
+    const textEl=document.createElement('div'); textEl.className='rcard-text'; textEl.textContent=text;
+    card.appendChild(textEl);
+
+    if(r.published&&r.reply){
+      const replyEl=document.createElement('div'); replyEl.className='rcard-reply';
+      replyEl.innerHTML='<div class="rcard-reply-lbl">'+tr.pubLbl+'</div>';
+      replyEl.appendChild(document.createTextNode(r.reply));
+      card.appendChild(replyEl);
+      const acts=document.createElement('div'); acts.className='rcard-actions';
+      const rb=document.createElement('button'); rb.className='gen-btn'; rb.textContent=tr.btnRegen;
+      rb.onclick=function(){regenReply(r.id,rb);}; acts.appendChild(rb);
+      card.appendChild(acts);
+    } else if(!r.published&&r.reply){
+      const pendEl=document.createElement('div'); pendEl.className='pending-reply';
+      pendEl.innerHTML='<div class="pending-lbl">'+tr.genLbl+'</div>';
+      pendEl.appendChild(document.createTextNode(r.reply));
+      card.appendChild(pendEl);
+      const acts=document.createElement('div'); acts.className='rcard-actions';
+      const pb=document.createElement('button'); pb.className='pub-btn'; pb.textContent=tr.btnPub;
+      pb.onclick=function(){publishReply(r.id);}; acts.appendChild(pb);
+      const rb=document.createElement('button'); rb.className='gen-btn'; rb.textContent=tr.btnRegen;
+      rb.onclick=function(){regenReply(r.id,rb);}; acts.appendChild(rb);
+      card.appendChild(acts);
+    } else {
+      const acts=document.createElement('div'); acts.className='rcard-actions';
+      const gb=document.createElement('button'); gb.className='gen-btn'; gb.textContent=tr.btnGen;
+      gb.onclick=function(){genReplyFn(r.id,gb);}; acts.appendChild(gb);
+      card.appendChild(acts);
+    }
+    grid.appendChild(card);
+  });
+}
+
+async function callAI(prompt){
+  const res=await fetch('https://smilecare-proxy.badmvx7.workers.dev',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:300,messages:[{role:'user',content:prompt}]})
+  });
+  const data=await res.json();
+  return data.content?.[0]?.text||'';
+}
+
+async function genReplyFn(id,btn){
+  const tr=TR[uiLang];
+  const r=REVIEWS.find(x=>x.id===id); if(!r)return;
+  btn.textContent=tr.genLoading; btn.disabled=true;
+  const text=typeof r.text==='object'?(r.text[uiLang]||r.text.ru):r.text;
+  try{
+    const reply=await callAI('Ты — управляющий стоматологической клиники SmileCare в Кишинёве. Напиши короткий (2-3 предложения) профессиональный и тёплый ответ на отзыв пациента на Google Maps. Отвечай на том же языке что и отзыв.\n\nОтзыв: "' + text + '"');
+    r.reply=reply; r.published=false; renderReviews();
+  }catch(e){btn.textContent=tr.genRetry; btn.disabled=false;}
+}
+
+async function regenReply(id,btn){
+  const r=REVIEWS.find(x=>x.id===id); if(!r)return;
+  r.reply=null; r.published=false; renderReviews();
+  const newBtn=document.querySelector('#rcard-'+id+' .gen-btn');
+  if(newBtn) await genReplyFn(id,newBtn);
+}
+
+function publishReply(id){
+  const r=REVIEWS.find(x=>x.id===id); if(r){r.published=true;renderReviews();}
+}
+
+// ═══ ANALYTICS ═══
+function renderAnalytics(){
+  if(chartsRendered)return;
+  chartsRendered=true;
+  renderHourChart();
+  renderConvFunnel();
+  renderTopQuestions();
+  renderSrcChart();
+  renderReturnChart();
+}
+
+function renderHourChart(){
+  const el=document.getElementById('hour-chart'); if(!el||el.dataset.rendered)return;
+  el.dataset.rendered='1';
+  const d=ANALYTICS_DATA.hours;
+  const max=Math.max(...d);
+  el.innerHTML=d.map((v,i)=>{
+    const h=Math.round((v/max)*60)||2;
+    const tip=String(i).padStart(2,'0')+':00 — '+v;
+    const color=i>=22||i<=5?'#f59e0b':i>=9&&i<=19?'#2563eb':'#60a5fa';
+    return '<div class="hour-bar" style="height:'+h+'px;background:'+color+'" title="'+tip+'"></div>';
+  }).join('');
+}
+
+function renderConvFunnel(){
+  const el=document.getElementById('conv-funnel'); if(!el)return;
+  const data=uiLang==='ro'?ANALYTICS_DATA.convRo:ANALYTICS_DATA.convRu;
+  el.innerHTML=data.map(item=>'<div class="conv-row">'
+    +'<span class="conv-label">'+item.l+'</span>'
+    +'<div class="conv-track"><div class="conv-fill" style="width:'+item.v+'%;background:'+item.c+'"></div></div>'
+    +'<span class="conv-pct">'+item.v+'%</span>'
+    +'</div>').join('');
+}
+
+function renderTopQuestions(){
+  const el=document.getElementById('top-questions'); if(!el)return;
+  const data=uiLang==='ro'?ANALYTICS_DATA.topQro:ANALYTICS_DATA.topQru;
+  const max=data[0].n;
+  el.innerHTML=data.map((item,i)=>'<div class="top-question">'
+    +'<span class="tq-rank">'+(i+1)+'</span>'
+    +'<span class="tq-text">'+item.q+'</span>'
+    +'<div class="tq-bar-wrap"><div class="tq-bar" style="width:'+Math.round((item.n/max)*100)+'%"></div><div class="tq-count">'+item.n+'</div></div>'
+    +'</div>').join('');
+}
+
+function renderSrcChart(){
+  const el=document.getElementById('src-chart'); if(!el||el.dataset.rendered)return;
+  el.dataset.rendered='1';
+  const srcs=[['148','52%'],['89','31%'],['32','11%'],['15','5%']];
+  const labels=TR[uiLang].srcLabels;
+  srcs.forEach(([cnt,pct],i)=>{
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:8px;font-size:11.5px;';
+    row.innerHTML='<span style="width:120px;color:var(--tx)">'+labels[i]+'</span>'
+      +'<div style="flex:1;height:5px;background:var(--s2);border-radius:3px;overflow:hidden;">'
+      +'<div style="width:'+pct+';height:100%;background:var(--g);border-radius:3px;"></div></div>'
+      +'<span style="color:var(--tm);min-width:50px;text-align:right">'+cnt+' ('+pct+')</span>';
+    el.appendChild(row);
+  });
+}
+
+function renderReturnChart(){
+  const el=document.getElementById('return-chart'); if(!el||el.dataset.rendered)return;
+  el.dataset.rendered='1';
+  const d=uiLang==='ro'?ANALYTICS_DATA.monthsRo:ANALYTICS_DATA.monthsRu;
+  const max=Math.max(...d.map(x=>x.v));
+  el.innerHTML=d.map((item,i)=>{
+    const h=Math.round((item.v/max)*80);
+    const color=i>=4?'#2563eb':'#93c5fd';
+    return '<div class="chart-bar-wrap"><div class="chart-bar" style="height:'+h+'px;background:'+color+'"></div><span class="chart-bar-lbl">'+item.m+'</span></div>';
+  }).join('');
+}
+
+// ═══ INIT ═══
+applyTr();
+resetPatients();
+loadBookings();
+setInterval(loadBookings,30000);
+</script>
+</body>
+</html>

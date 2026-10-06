@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ClinicAI — WhatsApp</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --wa-bg:#efeae2;
+  --wa-header:#075e54;
+  --wa-header2:#128c7e;
+  --wa-bot:#ffffff;
+  --wa-user:#d9fdd3;
+  --wa-input:#f0f2f5;
+  --wa-text:#111b21;
+  --wa-muted:#667781;
+  --wa-time:#667781;
+  --wa-tick:#53bdeb;
+  --wa-green:#25d366;
+  --wa-light-green:#dcf8c6;
+}
+html,body{height:100%;background:#111b21;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif}
+
+/* Phone frame */
+.phone{
+  width:390px;height:844px;
+  background:var(--wa-bg);
+  border-radius:44px;
+  overflow:hidden;
+  box-shadow:0 0 0 12px #1c1c1e,0 0 0 14px #2c2c2e,0 30px 80px rgba(0,0,0,.8);
+  display:flex;flex-direction:column;
+  position:relative;
+}
+.phone::before{
+  content:'';position:absolute;top:12px;left:50%;transform:translateX(-50%);
+  width:120px;height:34px;background:#1c1c1e;border-radius:20px;z-index:100;
+}
+
+/* Status bar */
+.status-bar{
+  height:50px;background:var(--wa-header);
+  display:flex;align-items:flex-end;justify-content:space-between;
+  padding:0 20px 6px;font-size:12px;font-weight:600;color:#fff;
+  flex-shrink:0;padding-top:16px;
+}
+.status-time{font-size:15px;font-weight:600}
+.status-icons{display:flex;gap:5px;align-items:center;font-size:12px}
+
+/* Chat header */
+.chat-header{
+  background:var(--wa-header);
+  padding:8px 16px 12px;
+  display:flex;align-items:center;gap:10px;
+  flex-shrink:0;
+}
+.back-arrow{color:rgba(255,255,255,.8);font-size:20px;cursor:pointer;padding-right:2px}
+.clinic-avatar{
+  width:40px;height:40px;border-radius:50%;
+  background:var(--wa-header2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:700;color:#fff;flex-shrink:0;
+}
+.clinic-info{flex:1}
+.clinic-name{font-size:15px;font-weight:600;color:#fff}
+.clinic-status{font-size:12px;color:rgba(255,255,255,.7);margin-top:1px}
+.header-icons{display:flex;gap:16px;color:rgba(255,255,255,.8);font-size:18px}
+
+/* Messages area */
+.messages{
+  flex:1;overflow-y:auto;padding:8px 12px 4px;
+  background:var(--wa-bg);
+  background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23b3a99e' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  scroll-behavior:smooth;
+}
+.messages::-webkit-scrollbar{width:0}
+
+/* Date badge */
+.date-badge{
+  text-align:center;margin:8px 0;
+}
+.date-badge span{
+  background:rgba(225,221,216,.9);
+  font-size:12px;color:var(--wa-muted);
+  padding:4px 10px;border-radius:8px;
+  backdrop-filter:blur(4px);
+}
+
+/* Message bubbles */
+.msg-wrap{display:flex;margin-bottom:2px;align-items:flex-end;gap:4px}
+.msg-wrap.user{justify-content:flex-end}
+.msg-wrap.bot{justify-content:flex-start}
+
+.msg-wrap.bot+.msg-wrap.user,.msg-wrap.user+.msg-wrap.bot{margin-top:6px}
+
+.bot-icon{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--wa-header2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:#fff;flex-shrink:0;align-self:flex-end;
+}
+.bot-icon.hidden{visibility:hidden}
+
+.bubble{
+  max-width:78%;padding:6px 10px 6px 10px;
+  border-radius:8px;font-size:14.5px;line-height:1.5;
+  word-break:break-word;position:relative;
+}
+.bubble.bot{
+  background:var(--wa-bot);
+  border-radius:0 8px 8px 8px;
+  box-shadow:0 1px 2px rgba(0,0,0,.1);
+}
+.bubble.user{
+  background:var(--wa-user);
+  border-radius:8px 0 8px 8px;
+  box-shadow:0 1px 2px rgba(0,0,0,.1);
+}
+.bubble-tail-bot{position:absolute;top:0;left:-8px;width:0;height:0;border-style:solid;border-width:0 8px 8px 0;border-color:transparent var(--wa-bot) transparent transparent}
+.bubble-tail-user{position:absolute;top:0;right:-8px;width:0;height:0;border-style:solid;border-width:0 0 8px 8px;border-color:transparent transparent transparent var(--wa-user)}
+.bubble-meta{display:flex;align-items:center;justify-content:flex-end;gap:4px;margin-top:2px;margin-bottom:-2px}
+.bubble-time{font-size:11px;color:var(--wa-time)}
+.bubble-ticks{font-size:13px;color:var(--wa-tick)}
+.bubble strong{font-weight:600}
+
+/* Typing */
+.typing-bubble{
+  background:var(--wa-bot);border-radius:0 8px 8px 8px;
+  padding:10px 14px;display:inline-flex;gap:4px;align-items:center;
+  box-shadow:0 1px 2px rgba(0,0,0,.1);position:relative;
+}
+.typing-dot{width:8px;height:8px;border-radius:50%;background:#90908e;animation:tdot 1.2s infinite}
+.typing-dot:nth-child(2){animation-delay:.2s}
+.typing-dot:nth-child(3){animation-delay:.4s}
+@keyframes tdot{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
+
+/* Input area */
+.input-area{
+  background:var(--wa-input);
+  padding:8px 10px;
+  display:flex;align-items:flex-end;gap:8px;
+  flex-shrink:0;
+  padding-bottom:calc(8px + env(safe-area-inset-bottom,0px));
+}
+.emoji-btn{
+  width:40px;height:40px;border-radius:50%;border:none;background:transparent;
+  color:var(--wa-muted);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.text-input{
+  flex:1;background:#fff;border:none;border-radius:22px;
+  padding:9px 16px;font-size:15px;font-family:'Inter',sans-serif;
+  outline:none;resize:none;max-height:120px;line-height:1.4;color:var(--wa-text);
+  box-shadow:0 1px 2px rgba(0,0,0,.1);
+}
+.text-input::placeholder{color:var(--wa-muted)}
+.send-btn{
+  width:40px;height:40px;border-radius:50%;
+  background:var(--wa-header);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:background .2s;
+}
+.send-btn:hover{background:var(--wa-header2)}
+.send-btn svg{fill:#fff;width:20px;height:20px}
+
+/* Quick suggestions */
+.suggestions{
+  display:flex;gap:6px;padding:6px 12px 4px;overflow-x:auto;flex-shrink:0;
+  background:var(--wa-bg);
+}
+.suggestions::-webkit-scrollbar{height:0}
+.suggestion{
+  white-space:nowrap;font-size:12.5px;padding:5px 12px;
+  border-radius:16px;background:#fff;border:1px solid #d1d7db;
+  color:#111b21;cursor:pointer;flex-shrink:0;transition:background .15s;
+}
+.suggestion:hover{background:#f0f2f5}
+
+/* Lang toggle */
+.lang-toggle{
+  display:flex;gap:0;background:rgba(255,255,255,.15);border-radius:6px;overflow:hidden;
+  margin-left:auto;
+}
+.lang-toggle button{
+  padding:3px 8px;border:none;background:transparent;color:rgba(255,255,255,.7);
+  font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;
+}
+.lang-toggle button.active{background:rgba(255,255,255,.25);color:#fff}
+
+/* Notification style header messages */
+.system-msg{text-align:center;margin:6px 0}
+.system-msg span{background:rgba(225,221,216,.9);font-size:12px;color:var(--wa-muted);padding:4px 12px;border-radius:8px}
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="status-bar">
+    <span class="status-time" id="clock">9:41</span>
+    <div class="status-icons">
+      <span>●●●●</span>
+      <span>WiFi</span>
+      <span>🔋</span>
+    </div>
+  </div>
+
+  <div class="chat-header">
+    <span class="back-arrow">‹</span>
+    <div class="clinic-avatar">SC</div>
+    <div class="clinic-info">
+      <div class="clinic-name">ClinicAI</div>
+      <div class="clinic-status" id="bot-status">● online</div>
+    </div>
+    <div class="lang-toggle">
+      <button class="active" onclick="setLang('ru',this)">RU</button>
+      <button onclick="setLang('ro',this)">RO</button>
+    </div>
+  </div>
+
+  <div class="suggestions" id="suggestions"></div>
+
+  <div class="messages" id="messages">
+    <div class="date-badge"><span id="date-lbl">Сегодня</span></div>
+    <div class="system-msg"><span id="sys-msg">Сообщения зашифрованы. Никто, кроме участников, не может их читать.</span></div>
+  </div>
+
+  <div class="input-area">
+    <button class="emoji-btn">😊</button>
+    <textarea class="text-input" id="msg-input" rows="1" placeholder="Сообщение..." onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+    <button class="send-btn" onclick="sendMsg()">
+      <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+const SYSTEM_PROMPT_RU = `Ты — AI-ассистент стоматологической клиники ClinicAI, Кишинёв. Отвечаешь пациенту в WhatsApp.
+
+Клиника:
+- Адрес: ул. Садовая, 14 (рядом с Центральным парком)
+- Режим: ежедневно 9:00–20:00, включая субботу
+- Телефон: +373 22 123 456
+- Врачи: д-р Попеску В. (имплантология), д-р Лунгу Е. (терапевт), д-р Русу М. (ортодонт)
+- Цены: осмотр бесплатно, чистка от 500 лей, пломба от 800 лей, имплант от 8000 лей, брекеты от 15000 лей, отбеливание от 2000 лей
+- Свободные записи: сегодня 17:00, завтра 9:00 / 11:30 / 14:00 / 17:30
+
+СТИЛЬ: Ты — живой дружелюбный администратор. Пиши коротко (2-3 предложения), тепло, без официоза. Используй эмодзи умеренно. При записи — подтверди дату, время и имя врача. При боли — предложи срочный слот сегодня.`;
+
+const SYSTEM_PROMPT_RO = `Ești asistentul AI al clinicii stomatologice ClinicAI, Chișinău. Răspunzi pacientului pe WhatsApp.
+
+Clinică:
+- Adresa: str. Grădina Publică 14 (lângă Parcul Central)
+- Program: zilnic 9:00–20:00, inclusiv sâmbăta
+- Telefon: +373 22 123 456
+- Medici: Dr. Popescu V. (implantologie), Dr. Lungu E. (terapeutică), Dr. Rusu M. (ortodonție)
+- Prețuri: consultație gratuită, detartraj de la 500 lei, plombă de la 800 lei, implant de la 8000 lei, aparat de la 15000 lei, albire de la 2000 lei
+- Programări disponibile: azi 17:00, mâine 9:00 / 11:30 / 14:00 / 17:30
+
+STIL: Ești un administrator prietenos și viu. Scrie scurt (2-3 propoziții), cald, fără formalisme. Folosește emoji cu moderație. La programare — confirmă data, ora și medicul. La durere — propune slot urgent azi.`;
+
+const SUGGESTIONS = {
+  ru: ['Болит зуб 😣', 'Хочу записаться', 'Сколько стоит?', 'Ваш адрес?', 'Часы работы'],
+  ro: ['Mă doare un dinte 😣', 'Vreau programare', 'Cât costă?', 'Adresa dvs?', 'Program lucru'],
+};
+
+let lang = 'ru';
+let history = [];
+let botTyping = false;
+
+function setLang(l, btn) {
+  lang = l;
+  document.querySelectorAll('.lang-toggle button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('msg-input').placeholder = l === 'ru' ? 'Сообщение...' : 'Mesaj...';
+  document.getElementById('date-lbl').textContent = l === 'ru' ? 'Сегодня' : 'Astăzi';
+  document.getElementById('sys-msg').textContent = l === 'ru'
+    ? 'Сообщения зашифрованы. Никто, кроме участников, не может их читать.'
+    : 'Mesajele sunt criptate. Nimeni în afara participanților nu le poate citi.';
+  document.getElementById('bot-status').textContent = '● online';
+  renderSuggestions();
+}
+
+function renderSuggestions() {
+  const el = document.getElementById('suggestions');
+  el.innerHTML = SUGGESTIONS[lang].map(s =>
+    `<span class="suggestion" onclick="useSuggestion('${s}')">${s}</span>`
+  ).join('');
+}
+
+function useSuggestion(text) {
+  document.getElementById('msg-input').value = text;
+  sendMsg();
+}
+
+function getTime() {
+  return new Date().toLocaleTimeString('ru', {hour:'2-digit', minute:'2-digit'});
+}
+
+function mdToHtml(txt) {
+  return txt.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+}
+
+function addUserMsg(text) {
+  const msgs = document.getElementById('messages');
+  const t = getTime();
+  const div = document.createElement('div');
+  div.className = 'msg-wrap user';
+  div.innerHTML = `<div class="bubble user">
+    <div class="bubble-tail-user"></div>
+    ${text.replace(/\n/g,'<br>')}
+    <div class="bubble-meta">
+      <span class="bubble-time">${t}</span>
+      <span class="bubble-ticks">✓✓</span>
+    </div>
+  </div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addBotMsg(text, showIcon = true) {
+  const msgs = document.getElementById('messages');
+  const t = getTime();
+  const div = document.createElement('div');
+  div.className = 'msg-wrap bot';
+  div.innerHTML = `
+    <div class="bot-icon ${showIcon ? '' : 'hidden'}">SC</div>
+    <div class="bubble bot">
+      <div class="bubble-tail-bot"></div>
+      ${mdToHtml(text)}
+      <div class="bubble-meta">
+        <span class="bubble-time">${t}</span>
+      </div>
+    </div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showTyping() {
+  const msgs = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'msg-wrap bot';
+  div.id = 'typing-row';
+  div.innerHTML = `
+    <div class="bot-icon">SC</div>
+    <div class="typing-bubble">
+      <div class="bubble-tail-bot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+    </div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  botTyping = true;
+}
+
+function hideTyping() {
+  document.getElementById('typing-row')?.remove();
+  botTyping = false;
+}
+
+async function callClaude(userText) {
+  history.push({role:'user', content: userText});
+  const sys = lang === 'ru' ? SYSTEM_PROMPT_RU : SYSTEM_PROMPT_RO;
+  const resp = await fetch('https://smilecare-proxy.badmvx7.workers.dev', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      model: 'claude-opus-4-5',
+      max_tokens: 1000,
+      system: sys,
+      messages: history
+    })
+  });
+  const d = await resp.json();
+  const reply = d.content?.[0]?.text || (lang==='ru' ? 'Извините, ошибка 😔 Позвоните: +373 22 123 456' : 'Scuze, eroare 😔 Sunați: +373 22 123 456');
+  history.push({role:'assistant', content: reply});
+  return reply;
+}
+
+async function sendMsg() {
+  const inp = document.getElementById('msg-input');
+  const text = inp.value.trim();
+  if(!text || botTyping) return;
+  inp.value = '';
+  autoResize(inp);
+  addUserMsg(text);
+  showTyping();
+  try {
+    const reply = await callClaude(text);
+    hideTyping();
+    addBotMsg(reply);
+  } catch(e) {
+    hideTyping();
+    addBotMsg(lang==='ru' ? 'Ошибка соединения 😔' : 'Eroare de conexiune 😔');
+  }
+}
+
+function handleKey(e) {
+  if(e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMsg();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// Clock
+function updateClock() {
+  const el = document.getElementById('clock');
+  if(el) el.textContent = new Date().toLocaleTimeString('ru', {hour:'2-digit', minute:'2-digit'});
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// Init — bot sends first message
+renderSuggestions();
+setTimeout(() => {
+  showTyping();
+  setTimeout(() => {
+    hideTyping();
+    addBotMsg('Здравствуйте! 👋 Я AI-ассистент клиники ClinicAI.\nBună ziua! Sunt asistentul AI al clinicii ClinicAI.\n\nСпросите на русском или română — отвечу на вашем языке 😊');
+  }, 1200);
+}, 600);
+</script>
+</body>
+</html>
