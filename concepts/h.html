@@ -1,0 +1,257 @@
+<!doctype html>
+<!--
+  КОНЦЕПТ H — «Прибор, чёрная версия»
+  Концепт F в тёмной гамме: корпус из чёрного анодированного алюминия, серебристая ручка,
+  оранжевые индикаторы. Эстетика промышленного дизайна (Braun, Teenage Engineering).
+  Справа — «блок управления»: экран-дисплей с живым логом событий и коммутационная
+  панель, где сервисы соединены с системой «кабелями», как в модульном синтезаторе.
+  Когда в логе появляется событие, на панели мигает индикатор нужного выхода.
+  Только hero, только десктоп — для утверждения стиля.
+-->
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <!-- viewport — ширина страницы = ширина экрана телефона -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Концепт H — Прибор, чёрный · MX Systems</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Tektur — «приборный» шрифт для заголовка и маркировки; Onest — текст;
+       JetBrains Mono — дисплей. Все с cyrillic и latin-ext. -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tektur:wght@500;600;700&family=Onest:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+  <style>
+    :root {
+      --bg: #0b0b0c;          /* фон страницы — глубокий чёрный */
+      --body: #18191b;        /* «корпус» прибора: чёрный анодированный алюминий, чуть светлее фона */
+      --ink: #ebe9e4;         /* текст светлый, тёплого оттенка */
+      --muted: #85837e;
+      --rule: #ffffff14;
+      --accent: #ff5f1f;
+      --lcd: #070807;         /* дисплей: почти чёрное стекло, темнее корпуса */
+      --lcd-text: #ff7a3d;    /* «светящиеся» символы дисплея — тёплый оранжевый */
+      --ok: #2fb36a;
+      --f-dev: "Tektur", system-ui, sans-serif;
+      --f-body: "Onest", system-ui, sans-serif;
+      --f-mono: "JetBrains Mono", ui-monospace, monospace;
+      --pad: clamp(16px, 4vw, 56px);
+      --max: 1440px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; overflow-x: hidden; background: var(--bg); color: var(--ink); font: 400 17px/1.55 var(--f-body); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    body::after { content: ""; position: fixed; inset: 0; z-index: 100; pointer-events: none; opacity: .05;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--pad); }
+
+    /* ===== Шапка ===== */
+    .header .wrap { display: flex; align-items: center; gap: 28px; height: 72px; }
+    .logo { display: flex; align-items: center; gap: 10px; font: 700 18px/1 var(--f-dev); letter-spacing: .02em; text-transform: uppercase; }
+    /* Монограмма как шильдик: тёмная плашка со скруглением */
+    .logo-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; background: var(--accent); color: #111; font: 600 12px/1 var(--f-dev); }
+    .nav { display: flex; gap: 6px; margin-left: auto; font: 500 13px/1 var(--f-dev); text-transform: uppercase; letter-spacing: .06em; }
+    .nav a { padding: 10px 14px; border-radius: 999px; transition: background-color .25s; }
+    .nav a:hover { background: #ffffff0f; }
+    /* Переключатель языков как трёхпозиционный тумблер */
+    .lang { display: flex; padding: 3px; border-radius: 999px; background: #ffffff0d; font: 500 11px/1 var(--f-dev); }
+    .lang a { padding: 7px 10px; border-radius: 999px; color: var(--muted); }
+    .lang a[aria-current] { background: #2a2b2f; color: var(--ink); box-shadow: inset 0 1px 0 #ffffff14; }
+
+    /* ===== Кнопки как физические клавиши: «тень-толщина» снизу, при нажатии клавиша утапливается ===== */
+    .key { position: relative; display: inline-flex; align-items: center; gap: 14px; height: 56px; padding: 0 24px; border-radius: 14px; font: 600 14px/1 var(--f-dev); letter-spacing: .04em; text-transform: uppercase; white-space: nowrap;
+      background: #222326; box-shadow: 0 3px 0 #000, inset 0 1px 0 #ffffff1a; transition: transform .12s, box-shadow .12s; }
+    .key:hover .arrow { transform: translateX(4px); }
+    .key .arrow { transition: transform .3s; }
+    .key:active { transform: translateY(3px); box-shadow: 0 0 0 #000, inset 0 1px 0 #ffffff1a; }
+    .key--primary { background: var(--accent); color: #111; box-shadow: 0 3px 0 #b83e0c, inset 0 1px 0 #ffffff55; }
+    .key--primary:active { box-shadow: 0 0 0 #b83e0c; }
+    .key--small { height: 40px; padding: 0 16px; font-size: 12px; border-radius: 11px; }
+    .key svg { width: 16px; height: 16px; }
+
+    /* ===== Hero ===== */
+    .hero { padding: 40px 0 72px; }
+    .grid { display: grid; grid-template-columns: 1fr 1.02fr; gap: 56px; align-items: center; }
+    /* Маркировка над заголовком, как надпись на передней панели */
+    .mark { display: flex; gap: 18px; margin: 0 0 28px; font: 500 12px/1 var(--f-dev); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+    .mark b { color: var(--ink); font-weight: 600; }
+    .h1 { margin: 0 0 28px; font: 600 min(5.4vw, 84px)/.98 var(--f-dev); letter-spacing: -.035em; }
+    .h1 span { color: var(--accent); }
+    .lead { margin: 0 0 32px; max-width: 46ch; font-size: 18px; color: #bdbab3; }
+    .actions { display: flex; gap: 14px; }
+    .trust { display: flex; align-items: center; gap: 10px; margin-top: 30px; font: 400 12.5px/1.5 var(--f-mono); color: var(--muted); }
+    .led { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: inset 0 -1px 1px #0003; flex: none; }
+
+    /* ===== Прибор ===== */
+    .unit { position: relative; padding: 22px; border-radius: 28px; background: var(--body);
+      box-shadow: inset 0 1px 0 #ffffff17, inset 0 0 0 1px #ffffff08, 0 50px 80px -40px #000; }
+    /* Винты по углам — круг с прорезью; мелочь, но именно она делает «вещь» */
+    .screw { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: #2c2d31; box-shadow: inset 0 1px 0 #ffffff1f, 0 1px 1px #000; }
+    .screw::after { content: ""; position: absolute; left: 2px; right: 2px; top: 4.5px; height: 1px; background: #000; transform: rotate(35deg); }
+    .screw.tl { top: 10px; left: 10px; } .screw.tr { top: 10px; right: 10px; } .screw.bl { bottom: 10px; left: 10px; } .screw.br { bottom: 10px; right: 10px; }
+    .unit-top { display: flex; align-items: center; gap: 12px; padding: 0 8px 14px; font: 600 11px/1 var(--f-dev); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+    .unit-top .r { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+
+    /* Дисплей: тёмное стекло с внутренней тенью и едва заметными строками развёртки */
+    .lcd { position: relative; border-radius: 14px; background: var(--lcd); padding: 14px 16px 10px; box-shadow: inset 0 2px 10px #000, 0 0 0 1px #ffffff0a; overflow: hidden; font: 400 13px/1 var(--f-mono); color: var(--lcd-text); }
+    .lcd::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(to bottom, #ffffff06 0 1px, transparent 1px 3px); }
+    .lcd-head { display: flex; justify-content: space-between; padding-bottom: 10px; margin-bottom: 4px; border-bottom: 1px dashed #ff7a3d40; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; opacity: .75; }
+    .lcd-view { height: 128px; overflow: hidden; }                 /* ровно 4 строки по 32px */
+    .lcd-list { margin: 0; padding: 0; list-style: none; }
+    .lcd-list li { display: grid; grid-template-columns: 72px 1fr; height: 32px; align-items: center; white-space: nowrap; transition: opacity 1s; opacity: .62; }
+    .lcd-list li span { overflow: hidden; text-overflow: ellipsis; }
+    .lcd-list li.is-new { opacity: 1; transition: none; }        /* новая строка ярче, потом «остывает» */
+    .lcd-list time { opacity: .6; font-variant-numeric: tabular-nums; }
+
+    /* Коммутационная панель (SVG) */
+    .patch { margin-top: 16px; border-radius: 14px; background: #111214; box-shadow: inset 0 1px 3px #000, 0 1px 0 #ffffff0d; }
+    .patch svg { display: block; width: 100%; height: auto; }
+    .p-lbl { font: 600 11px var(--f-dev); letter-spacing: .12em; fill: var(--muted); text-transform: uppercase; }
+    .p-led { fill: #34353a; transition: fill .15s; }
+    .p-led.on { fill: var(--accent); transition: none; }
+    .cable { fill: none; stroke-width: 6; stroke-linecap: round; }
+
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+    .concept-tag { position: fixed; right: 12px; bottom: 12px; z-index: 50; font: 400 11px/1 var(--f-mono); padding: 8px 10px; background: var(--ink); color: var(--body); }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="wrap">
+      <a class="logo" href="#"><span class="logo-mark">MX</span>MX Systems</a>
+      <nav class="nav" aria-label="Разделы"><a href="#cases">Кейсы</a><a href="#services">Услуги</a><a href="#process">Как работаем</a><a href="#contact">Контакт</a></nav>
+      <div class="lang"><a href="#" aria-current="true">RU</a><a href="#">RO</a><a href="#">EN</a></div>
+      <a class="key key--small key--primary" href="https://t.me/mvxev?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%A3%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D1%81%D0%B0%D0%B9%D1%82%20MX%20Systems%2C%20%D1%85%D0%BE%D1%87%D1%83%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D0%B7%D0%B0%D0%B4%D0%B0%D1%87%D1%83." target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.4 3.6 2.9 10.8c-.9.4-.9 1.6.1 1.9l4.6 1.4 1.7 5.4c.2.7 1.1.9 1.6.4l2.5-2.3 4.7 3.4c.6.4 1.4.1 1.6-.6l3-15.2c.2-1-.6-1.9-1.3-1.6ZM9.6 14.5l-.4 3.6-1.3-4.2 10-6.4-8.3 7Z"/></svg>Telegram
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap grid">
+        <div>
+          <p class="mark"><b>MX-01</b><span>Студия автоматизации</span><span>Кишинёв</span></p>
+          <h1 class="h1">Автоматизация и AI-системы для бизнеса, <span>которые реально работают</span></h1>
+          <p class="lead">Находим, где ваш бизнес теряет время и деньги на ручной работе, и собираем систему под вашу задачу: встраиваем в 1С, мессенджеры, почту и ваши текущие сервисы. Сопровождаем после запуска.</p>
+          <div class="actions">
+            <a class="key key--primary" href="https://t.me/mvxev?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%A3%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D1%81%D0%B0%D0%B9%D1%82%20MX%20Systems%2C%20%D1%85%D0%BE%D1%87%D1%83%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D0%B7%D0%B0%D0%B4%D0%B0%D1%87%D1%83." target="_blank" rel="noopener">Обсудить задачу <span class="arrow">→</span></a>
+            <a class="key" href="#cases">Посмотреть кейсы <span class="arrow">↓</span></a>
+          </div>
+          <p class="trust"><i class="led"></i>Системы в ежедневной работе: логистика (США) · автосервис (Кишинёв)</p>
+        </div>
+
+        <!-- Блок управления: дисплей + коммутационная панель. Данные демонстрационные. -->
+        <div class="unit" aria-label="Демонстрация: блок управления системой">
+          <i class="screw tl"></i><i class="screw tr"></i><i class="screw bl"></i><i class="screw br"></i>
+          <div class="unit-top"><span>MX-01 · Operations unit</span><span class="r"><i class="led"></i>Online</span></div>
+
+          <div class="lcd">
+            <div class="lcd-head"><span>Журнал событий</span><span>демо</span></div>
+            <div class="lcd-view"><ul class="lcd-list" id="lcd"></ul></div>
+          </div>
+
+          <!-- Коммутация: слева входы, в центре ручка «MX», справа выходы с индикаторами.
+               «Кабели» — толстые кривые Безье с провисанием, как у настоящих проводов. -->
+          <div class="patch">
+            <svg viewBox="0 0 600 250" aria-hidden="true">
+              <!-- Кабели рисуем первыми, чтобы гнёзда были поверх -->
+              <path class="cable" stroke="#d9d5cc" d="M92 52 C 170 52, 190 150, 262 122"/>
+              <path class="cable" stroke="#ff5f1f" d="M92 125 C 170 125, 190 190, 256 140"/>
+              <path class="cable" stroke="#4a4b50" d="M92 198 C 170 198, 200 210, 268 154"/>
+              <path class="cable" stroke="#ff5f1f" d="M338 122 C 410 150, 430 52, 494 52"/>
+              <path class="cable" stroke="#d9d5cc" d="M344 140 C 410 190, 430 125, 494 125"/>
+              <path class="cable" stroke="#4a4b50" d="M332 154 C 400 210, 430 198, 494 198"/>
+
+              <!-- Гнёзда входов -->
+              <g id="jacks"></g>
+
+              <!-- Центральная ручка: шкала-риски вокруг и указатель -->
+              <g transform="translate(300 135)">
+                <g id="ticks"></g>
+                <!-- radialGradient — плавный переход цвета от центра к краю: даёт «металлический» объём -->
+                <defs>
+                  <radialGradient id="alu" cx="40%" cy="30%" r="75%"><stop offset="0" stop-color="#f1efea"/><stop offset=".6" stop-color="#b9b6b0"/><stop offset="1" stop-color="#7d7b77"/></radialGradient>
+                </defs>
+                <circle r="46" fill="#000" opacity=".6" transform="translate(0 4)"/>
+                <circle r="46" fill="url(#alu)"/>
+                <circle r="38" fill="none" stroke="#00000026"/>
+                <rect x="-2" y="-36" width="4" height="16" rx="2" fill="#ff5f1f"/>
+                <text y="8" text-anchor="middle" fill="#1a1a1a" style="font:700 18px Tektur, sans-serif">MX</text>
+              </g>
+              <text class="p-lbl" x="300" y="226" text-anchor="middle">Режим · 24/7</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div class="concept-tag">Концепт H · Прибор, чёрный</div>
+
+  <script>
+    const NS = 'http://www.w3.org/2000/svg';
+    const el = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+
+    /* ===== Гнёзда: [x, y, подпись, id индикатора или null] ===== */
+    const jacks = document.getElementById('jacks');
+    [[70, 52, 'Заявки'], [70, 125, 'Учёт'], [70, 198, 'Почта'],
+     [516, 52, 'Команда', 'tg'], [516, 125, 'Клиенты', 'wa'], [516, 198, 'Владелец', 'owner']].forEach(([x, y, label, led]) => {
+      el('circle', { cx: x, cy: y, r: 20, fill: '#2a2b2f', stroke: '#ffffff14' }, jacks);   // гайка гнезда
+      el('circle', { cx: x, cy: y, r: 9, fill: '#050505' }, jacks);                           // отверстие
+      const left = x < 300;
+      // Подпись — снаружи от гнезда (слева для входов, справа для выходов не помещается — ставим под ним)
+      el('text', { class: 'p-lbl', x, y: y + 34, 'text-anchor': 'middle' }, jacks).textContent = label;
+      if (led) el('circle', { class: 'p-led', id: 'led-' + led, cx: x + 34, cy: y, r: 5 }, jacks);
+      if (left) el('circle', { cx: x - 34, cy: y, r: 3, fill: '#2fb36a' }, jacks);           // зелёная точка «вход активен»
+    });
+
+    /* ===== Риски шкалы вокруг ручки: 24 штуки, как часы ===== */
+    const ticks = document.getElementById('ticks');
+    for (let i = 0; i < 24; i++) {
+      const a = i / 24 * Math.PI * 2, r1 = 54, r2 = i % 6 ? 59 : 63;   // каждая шестая риска длиннее
+      el('line', { x1: Math.sin(a) * r1, y1: -Math.cos(a) * r1, x2: Math.sin(a) * r2, y2: -Math.cos(a) * r2, stroke: '#ffffff40', 'stroke-width': 1.5 }, ticks);
+    }
+
+    /* ===== Дисплей: живой журнал. [текст, какой индикатор мигнёт] — данные демонстрационные ===== */
+    const EVENTS = [
+      ['Груз Miami, FL → Dayton, NJ · водителю', 'tg'],
+      ['BMW M3 · деталь на складе · приёмщику', 'tg'],
+      ['Audi Q5 · готова · сообщение клиенту', 'wa'],
+      ['Ставка отправлена · Get Freight LLC', 'tg'],
+      ['Сводка · 4 в работе, 1 ждёт запчасти', 'owner'],
+      ['Приход на склад · 12 позиций', 'tg'],
+      ['Груз Atlanta, GA → Columbus, OH', 'tg'],
+      ['Toyota RAV4 · готова · клиенту', 'wa'],
+    ];
+    const list = document.getElementById('lcd');
+    let i = 0, t = Date.now() - 4 * 6000;
+    const fmt = x => new Date(x).toTimeString().slice(0, 8);      // «ЧЧ:ММ:СС»
+    function row(time) {
+      const [txt, led] = EVENTS[i++ % EVENTS.length];
+      const li = document.createElement('li');
+      const tm = document.createElement('time'); tm.textContent = fmt(time);
+      const sp = document.createElement('span'); sp.textContent = txt;
+      li.append(tm, sp);
+      return [li, led];
+    }
+    for (let k = 0; k < 4; k++) list.appendChild(row(t += 6000)[0]);
+
+    // Шаг ленты: та же техника, что в концепте A — сдвиг только через transform
+    function tick() {
+      const [li, led] = row(t += 3000 + Math.random() * 5000);
+      li.classList.add('is-new');
+      list.appendChild(li);
+      list.style.transition = 'transform .5s cubic-bezier(.22,.8,.24,1)';
+      list.style.transform = 'translateY(-32px)';
+      list.addEventListener('transitionend', () => { list.style.transition = 'none'; list.firstElementChild.remove(); list.style.transform = 'none'; }, { once: true });
+      setTimeout(() => li.classList.remove('is-new'), 900);
+      // Мигаем индикатором выхода, куда «ушло» событие
+      const l = document.getElementById('led-' + led);
+      l.classList.add('on'); setTimeout(() => l.classList.remove('on'), 500);
+    }
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      let timer = setInterval(tick, 2400);
+      document.addEventListener('visibilitychange', () => { clearInterval(timer); if (!document.hidden) timer = setInterval(tick, 2400); });
+    }
+  </script>
+</body>
+</html>
