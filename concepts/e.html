@@ -1,0 +1,289 @@
+<!doctype html>
+<!--
+  КОНЦЕПТ E — «Ночная схема»
+  Развитие схемы из концепта B: она становится главным героем первого экрана.
+  Широкая панель во всю ширину: слева — откуда берутся данные, в центре — система,
+  справа — кто получает результат. Наведите на узел (на телефоне — нажмите): подсветятся
+  его связи, а внизу появится объяснение, что именно он делает.
+  Пока посетитель ничего не трогает, схема сама «проводит экскурсию» по узлам.
+  Только hero, файл самодостаточный.
+-->
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <!-- viewport — ширина страницы = ширина экрана телефона -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Концепт E — Ночная схема · MX Systems</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Wix Madefor Display — плотные заголовки, Wix Madefor Text — текст (пара из одной семьи),
+       JetBrains Mono — подписи схемы. Все с cyrillic и latin-ext. -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@700;800&family=Wix+Madefor+Text:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+  <style>
+    :root {
+      --bg: #0b0c0e;
+      --panel: #101115;
+      --node: #15171b;
+      --line: #ffffff12;
+      --line-2: #ffffff24;
+      --text: #ecebe7;
+      --muted: #8d8f93;
+      --accent: #ff5f1f;
+      --ok: #3ccf7a;
+      --f-head: "Wix Madefor Display", system-ui, sans-serif;
+      --f-body: "Wix Madefor Text", system-ui, sans-serif;
+      --f-mono: "JetBrains Mono", ui-monospace, monospace;
+      --pad: clamp(16px, 4vw, 56px);
+      --max: 1440px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; overflow-x: hidden; background: var(--bg); color: var(--text); font: 400 17px/1.55 var(--f-body); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    body::after { content: ""; position: fixed; inset: 0; z-index: 100; pointer-events: none; opacity: .055;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--pad); }
+
+    /* ===== Шапка ===== */
+    .header { position: sticky; top: 0; z-index: 10; background: #0b0c0ee8; border-bottom: 1px solid var(--line); }
+    .header .wrap { display: flex; align-items: center; gap: 24px; height: 64px; }
+    .logo { display: flex; align-items: center; gap: 10px; white-space: nowrap; font: 800 17px/1 var(--f-head); letter-spacing: -.02em; }
+    /* Монограмма: «MX» в квадрате с оранжевым уголком — как узел схемы */
+    .logo-mark { position: relative; display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid var(--line-2); font: 500 11px/1 var(--f-mono); }
+    .logo-mark::after { content: ""; position: absolute; right: -1px; top: -1px; width: 8px; height: 8px; background: var(--accent); }
+    .nav { display: none; gap: 28px; margin-left: auto; font: 500 14px/1 var(--f-body); color: var(--muted); }
+    .nav a:hover { color: var(--text); }
+    .lang { display: flex; margin-left: auto; font: 400 12px/1 var(--f-mono); }
+    .lang a { padding: 6px 7px; color: var(--muted); }
+    .lang a[aria-current] { color: var(--text); }
+    @media (min-width: 1000px) { .nav { display: flex; } .lang { margin-left: 0; } }
+
+    /* ===== Кнопки (заливка слева направо через transform) ===== */
+    .btn { position: relative; isolation: isolate; overflow: hidden; display: inline-flex; align-items: center; justify-content: space-between; gap: 24px; height: 54px; padding: 0 22px; border: 1px solid var(--line-2); font: 500 15px/1 var(--f-body); white-space: nowrap; }
+    .btn::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform .45s cubic-bezier(.7,0,.2,1); }
+    .btn:hover::before, .btn:focus-visible::before { transform: scaleX(1); }
+    .btn .arrow { transition: transform .3s; }
+    .btn:hover .arrow { transform: translateX(4px); }
+    .btn--primary { background: var(--accent); border-color: var(--accent); color: #111; }
+    .btn--primary::before { background: var(--text); }
+    .btn--small { height: 38px; padding: 0 14px; gap: 8px; font-size: 13px; }
+    .btn svg { width: 16px; height: 16px; }
+    .header .btn--small span { display: none; }
+    @media (min-width: 560px) { .header .btn--small span { display: inline; } }
+
+    /* ===== Hero ===== */
+    .hero { padding: clamp(28px, 4vw, 56px) 0 clamp(40px, 5vw, 72px); }
+    .top { display: grid; gap: 28px; margin-bottom: clamp(28px, 3.5vw, 44px); }
+    @media (min-width: 1100px) { .top { grid-template-columns: 8fr 4fr; gap: 56px; align-items: end; } }
+    .h1 { margin: 0; font: 800 clamp(40px, 10.6vw, 96px)/.96 var(--f-head); letter-spacing: -.045em; }
+    .h1 .muted { color: #5c5e63; }
+    @media (min-width: 1100px) { .h1 { font-size: min(5.2vw, 80px); } }
+    /* Появление слов по одному: JS оборачивает каждое слово в <span class="w"> с задержкой */
+    .h1 .w { display: inline-block; animation: up .8s cubic-bezier(.2,.7,.2,1) both; }
+    @keyframes up { from { opacity: 0; transform: translateY(.35em); } }
+    .lead { margin: 0 0 24px; color: #c6c5c1; font-size: clamp(16.5px, 1.2vw, 18px); }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    @media (max-width: 480px) { .actions .btn { width: 100%; } }
+
+    /* ===== Панель схемы ===== */
+    .board { border: 1px solid var(--line-2); background: var(--panel); }
+    .bar { display: flex; align-items: center; gap: 10px; height: 42px; padding: 0 16px; border-bottom: 1px solid var(--line-2); font: 400 11.5px/1 var(--f-mono); letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+    .bar .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); }
+    .bar .r { margin-left: auto; }
+    /* Поле схемы — точечная сетка как на чертеже */
+    .field { padding: clamp(12px, 2.2vw, 28px); background-image: radial-gradient(circle at 1px 1px, #ffffff12 1px, transparent 1.3px); background-size: 20px 20px; }
+    .field svg { display: block; width: 100%; height: auto; overflow: visible; }
+    /* Две версии схемы: широкая для десктопа, вертикальная для телефона */
+    .s-wide { display: none; }
+    @media (min-width: 900px) { .s-wide { display: block; } .s-tall { display: none; } }
+
+    /* Элементы внутри SVG */
+    .node { cursor: pointer; }
+    .node rect { fill: var(--node); stroke: var(--line-2); transition: stroke .3s, fill .3s; }
+    .node .t { fill: var(--text); font: 500 16px var(--f-mono); letter-spacing: .04em; }
+    .node .s { fill: var(--muted); font: 400 13px var(--f-mono); }
+    .node.is-on rect { stroke: var(--accent); fill: #ff5f1f16; }
+    .node:focus { outline: none; }
+    .node:focus-visible rect { stroke: var(--text); }
+    .core rect { fill: #ff5f1f0d; stroke: #ff5f1f80; }
+    .core .big { fill: var(--text); font: 800 30px var(--f-head); letter-spacing: -.03em; }
+    .wire { fill: none; stroke: #ffffff45; stroke-width: 1.2; stroke-dasharray: 3 5; transition: stroke .3s, opacity .3s; }
+    .has-active .wire { opacity: .5; }                         /* когда что-то выбрано — остальные связи гаснут */
+    .wire.is-lit { stroke: var(--accent); stroke-dasharray: none; opacity: 1; }
+    .pulse { fill: var(--accent); }
+
+    /* Строка-объяснение под схемой: номер узла + что он делает */
+    .cap { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: center; min-height: 64px; padding: 12px 16px; border-top: 1px solid var(--line-2); }
+    .cap .n { font: 500 12px/1 var(--f-mono); color: var(--accent); font-variant-numeric: tabular-nums; }
+    .cap p { margin: 0; font-size: 15.5px; transition: opacity .25s; }
+    .cap p.fade { opacity: 0; }
+
+    .trust { display: flex; gap: 10px; align-items: baseline; margin: 18px 0 0; font: 400 12px/1.6 var(--f-mono); color: var(--muted); }
+    .trust i { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); flex: none; transform: translateY(-1px); }
+
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } .pulse { display: none; } }
+    .concept-tag { position: fixed; right: 12px; bottom: 12px; z-index: 50; font: 400 11px/1 var(--f-mono); padding: 8px 10px; background: var(--text); color: var(--bg); }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="wrap">
+      <a class="logo" href="#"><span class="logo-mark">MX</span>MX Systems</a>
+      <nav class="nav" aria-label="Разделы"><a href="#cases">Кейсы</a><a href="#services">Услуги</a><a href="#process">Как работаем</a><a href="#contact">Контакт</a></nav>
+      <div class="lang"><a href="#" aria-current="true">RU</a><a href="#">RO</a><a href="#">EN</a></div>
+      <a class="btn btn--small btn--primary" href="https://t.me/mvxev?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%A3%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D1%81%D0%B0%D0%B9%D1%82%20MX%20Systems%2C%20%D1%85%D0%BE%D1%87%D1%83%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D0%B7%D0%B0%D0%B4%D0%B0%D1%87%D1%83." target="_blank" rel="noopener" aria-label="Написать в Telegram">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.4 3.6 2.9 10.8c-.9.4-.9 1.6.1 1.9l4.6 1.4 1.7 5.4c.2.7 1.1.9 1.6.4l2.5-2.3 4.7 3.4c.6.4 1.4.1 1.6-.6l3-15.2c.2-1-.6-1.9-1.3-1.6ZM9.6 14.5l-.4 3.6-1.3-4.2 10-6.4-8.3 7Z"/></svg>
+        <span>Telegram</span>
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div class="top">
+          <h1 class="h1" id="h1">Автоматизация и AI-системы для бизнеса, <span class="muted">которые реально работают</span></h1>
+          <div>
+            <p class="lead">Находим, где ваш бизнес теряет время и деньги на ручной работе, и собираем систему под вашу задачу: встраиваем в 1С, мессенджеры, почту и ваши текущие сервисы. Сопровождаем после запуска.</p>
+            <div class="actions">
+              <a class="btn btn--primary" href="https://t.me/mvxev?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%A3%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D1%81%D0%B0%D0%B9%D1%82%20MX%20Systems%2C%20%D1%85%D0%BE%D1%87%D1%83%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D0%B7%D0%B0%D0%B4%D0%B0%D1%87%D1%83." target="_blank" rel="noopener">Обсудить задачу в Telegram <span class="arrow">→</span></a>
+              <a class="btn" href="#cases">Посмотреть кейсы <span class="arrow">↓</span></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Панель со схемой. Сами SVG-схемы собирает скрипт ниже из списка узлов. -->
+        <div class="board" id="board">
+          <div class="bar"><span class="dot"></span><span>Как устроена система</span><span class="r" id="hint">наведите на узел</span></div>
+          <div class="field">
+            <svg class="s-wide" id="wide" viewBox="0 0 1200 330" aria-hidden="true"></svg>
+            <svg class="s-tall" id="tall" viewBox="0 0 480 470" aria-hidden="true"></svg>
+          </div>
+          <!-- aria-live="polite" — скринридер зачитает новое объяснение, когда посетитель выберет узел -->
+          <div class="cap"><span class="n" id="capN">00</span><p id="capT" aria-live="polite">Данные идут сами: система забирает их из ваших сервисов и отдаёт людям готовый результат.</p></div>
+        </div>
+        <p class="trust"><i></i><span>Системы в ежедневной работе: логистика (США) · автосервис (Кишинёв)</span></p>
+      </div>
+    </section>
+  </main>
+  <div class="concept-tag">Концепт E · Ночная схема</div>
+
+  <script>
+    /* ===== Узлы схемы: [id, название, подпись, объяснение] ===== */
+    const IN = [
+      ['sylectus', 'SYLECTUS', 'биржа грузов', 'Новые грузы забираются с биржи круглосуточно и сразу подбираются под каждого водителя.'],
+      ['c1', '1С', 'склад, приходы', 'Приходы на склад подтягиваются из 1С автоматически — без двойного ввода.'],
+      ['gmail', 'GMAIL', 'почта водителей', 'Ставка брокеру уходит с Gmail водителя в один клик, с готовой подписью.'],
+      ['staff', 'ПРИЁМЩИКИ', 'статусы машин', 'Приёмщик меняет статус машины — вся команда видит его сразу, без звонков.'],
+    ];
+    const OUT = [
+      ['tg', 'TELEGRAM', 'водители, команда', 'Подходящий груз или пришедшая деталь — уведомление в Telegram сразу.'],
+      ['wa', 'WHATSAPP', 'клиентам: «готова»', 'Клиент получает сообщение о готовности авто без звонка приёмщика.'],
+      ['shop', 'ЭКРАН ЦЕХА', 'монитор механиков', 'Общий монитор для механиков: что в работе, что срочно, что ждёт запчасть.'],
+      ['owner', 'ВЛАДЕЛЕЦ', 'сводка в 08:00', 'Каждое утро — короткая сводка: сколько машин в работе и что застряло.'],
+    ];
+    const CORE = ['core', 'MX · система', 'подбор · статусы · пороги · 24/7', 'Ядро держит всё в одном месте: подбор, статусы, пороги и напоминания.'];
+    const ALL = [...IN, CORE, ...OUT];                  // порядок «экскурсии» и нумерация 01…09
+    const NS = 'http://www.w3.org/2000/svg';            // SVG-элементы создаются в своём «пространстве имён»
+
+    // Маленький помощник: создать SVG-элемент с атрибутами
+    const el = (tag, attrs = {}, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent && parent.appendChild(e); return e; };
+
+    // Узел = прямоугольник + две строки текста. tabindex=0 — до узла можно дойти клавишей Tab.
+    function node(svg, [id, t, s], x, y, w, h) {
+      const g = el('g', { class: 'node', 'data-id': id, tabindex: 0 }, svg);
+      el('rect', { x: x + .5, y: y + .5, width: w - 1, height: h - 1 }, g);
+      el('text', { class: 't', x: x + 16, y: y + 28 }, g).textContent = t;
+      el('text', { class: 's', x: x + 16, y: y + 48 }, g).textContent = s;
+      return g;
+    }
+    // Провод + бегущий по нему импульс (animateMotion — встроенная анимация SVG)
+    let wireN = 0;
+    function wire(svg, d, id, delay) {
+      const pid = 'p' + (wireN++);
+      el('path', { id: pid, class: 'wire', d, 'data-id': id }, svg);
+      const c = el('circle', { class: 'pulse', r: 3.5 }, svg);
+      const a = el('animateMotion', { dur: '2.6s', begin: delay + 's', repeatCount: 'indefinite' }, c);
+      el('mpath', { href: '#' + pid }, a);
+    }
+    function core(svg, x, y, w, h, big) {
+      const g = el('g', { class: 'node core', 'data-id': 'core', tabindex: 0 }, svg);
+      el('rect', { x, y, width: w, height: h }, g);
+      el('text', { class: 'big', x: x + 22, y: y + (big ? 52 : 44), style: big ? '' : 'font-size:26px' }, g).textContent = CORE[1];
+      el('text', { class: 's', x: x + 22, y: y + (big ? 80 : 70) }, g).textContent = CORE[2];
+      el('circle', { cx: x + w - 18, cy: y + 18, r: 4, fill: '#3ccf7a' }, g);
+    }
+
+    /* --- Широкая схема (десктоп): 4 входа слева → ядро → 4 выхода справа --- */
+    const W = document.getElementById('wide');
+    const ys = [8, 88, 168, 248], H = 66, entry = [138, 158, 178, 198];
+    // Кривые Безье (C) делают плавные «провода» от каждого узла к ядру
+    IN.forEach((n, i) => wire(W, `M220 ${ys[i] + 33} C 350 ${ys[i] + 33}, 350 ${entry[i]}, 480 ${entry[i]}`, n[0], i * .45));
+    OUT.forEach((n, i) => wire(W, `M720 ${entry[i]} C 850 ${entry[i]}, 850 ${ys[i] + 33}, 980 ${ys[i] + 33}`, n[0], 1.3 + i * .45));
+    IN.forEach((n, i) => node(W, n, 0, ys[i], 220, H));
+    OUT.forEach((n, i) => node(W, n, 980, ys[i], 220, H));
+    core(W, 480, 108, 240, 120, true);
+
+    /* --- Вертикальная схема (телефон): 3 входа сверху → ядро → 3 выхода снизу --- */
+    const T = document.getElementById('tall');
+    const xs = [0, 170, 340];
+    [IN[0], IN[1], IN[2]].forEach((n, i) => wire(T, [`M70 76 V140 Q70 172 130 176 L190 180 V206`, `M240 76 V206`, `M410 76 V140 Q410 172 350 176 L290 180 V206`][i], n[0], i * .5));
+    [OUT[0], OUT[1], OUT[3]].forEach((n, i) => wire(T, [`M190 296 V312 L130 316 Q70 320 70 352 V394`, `M240 296 V394`, `M290 296 V312 L350 316 Q410 320 410 352 V394`][i], n[0], 1.2 + i * .5));
+    [IN[0], IN[1], IN[2]].forEach((n, i) => node(T, n, xs[i], 16, 140, 60));
+    [OUT[0], OUT[1], OUT[3]].forEach((n, i) => node(T, [n[0], n[1], n[2].split(',')[0].replace(': «готова»', '')], xs[i], 394, 140, 60));
+    core(T, 70, 206, 340, 90, false);
+
+    /* ===== Выбор узла: подсветка связей + объяснение ===== */
+    const board = document.getElementById('board');
+    const capN = document.getElementById('capN'), capT = document.getElementById('capT');
+    function select(id) {
+      const i = ALL.findIndex(n => n[0] === id);
+      board.classList.add('has-active');
+      // Подсвечиваем узел и его провода (у ядра — все провода)
+      board.querySelectorAll('.node').forEach(g => g.classList.toggle('is-on', g.dataset.id === id));
+      board.querySelectorAll('.wire').forEach(p => p.classList.toggle('is-lit', id === 'core' || p.dataset.id === id));
+      // Текст меняем через короткое затухание, чтобы смена не была резкой
+      capT.classList.add('fade');
+      setTimeout(() => { capN.textContent = String(i + 1).padStart(2, '0') + ' / 09'; capT.textContent = ALL[i][3]; capT.classList.remove('fade'); }, 180);
+    }
+
+    /* ===== Автоэкскурсия: пока посетитель не трогает схему, узлы выбираются по очереди ===== */
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let step = 0, tour = null;
+    const startTour = () => { if (!reduce && !tour) tour = setInterval(() => select(ALL[step++ % ALL.length][0]), 3200); };
+    const stopTour = () => { clearInterval(tour); tour = null; };
+
+    board.querySelectorAll('.node').forEach(g => {
+      const go = () => { stopTour(); select(g.dataset.id); };
+      g.addEventListener('pointerenter', go);       // наведение мышью
+      g.addEventListener('click', go);              // нажатие пальцем на телефоне
+      g.addEventListener('focus', go);              // переход клавишей Tab
+    });
+    // Ушли со схемы — через 4 сек экскурсия продолжится
+    board.addEventListener('pointerleave', () => setTimeout(startTour, 4000));
+    if (matchMedia('(hover: none)').matches) document.getElementById('hint').textContent = 'нажмите на узел';
+    startTour();
+    if (reduce) document.querySelectorAll('svg').forEach(s => s.pauseAnimations && s.pauseAnimations());
+
+    /* ===== Заголовок: слова появляются по очереди ===== */
+    if (!reduce) {
+      let k = 0;
+      // Проходим по текстовым кусочкам заголовка и оборачиваем каждое слово в <span class="w">
+      const wrapWords = parent => [...parent.childNodes].forEach(n => {
+        if (n.nodeType === 3) {          // 3 = текстовый узел
+          const frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach(part => {
+            if (!part.trim()) { frag.appendChild(document.createTextNode(part)); return; }
+            const s = document.createElement('span'); s.className = 'w'; s.textContent = part;
+            s.style.animationDelay = (k++ * 55) + 'ms';
+            frag.appendChild(s);
+          });
+          n.replaceWith(frag);
+        } else wrapWords(n);
+      });
+      wrapWords(document.getElementById('h1'));
+    }
+  </script>
+</body>
+</html>
