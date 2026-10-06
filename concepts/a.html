@@ -1,0 +1,415 @@
+<!doctype html>
+<!--
+  КОНЦЕПТ A — «Пульт управления»
+  Только первый экран (hero). Файл самодостаточный: стили и скрипт внутри,
+  чтобы концепты не зависели друг от друга. После выбора направления
+  всё переедет в assets/css/style.css и assets/js/main.js.
+-->
+<html lang="ru">
+<head>
+  <!-- charset — кодировка страницы; UTF-8 нужна для кириллицы и румынских букв -->
+  <meta charset="utf-8">
+  <!-- viewport — говорит телефону: ширина страницы = ширина экрана, без «уменьшенной копии» десктопа -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Концепт A — Пульт управления · MX Systems</title>
+  <!-- Концепты не должны попадать в поиск -->
+  <meta name="robots" content="noindex">
+
+  <!-- preconnect — заранее открываем соединение с серверами шрифтов, чтобы они грузились быстрее -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!--
+    Шрифты: Unbounded — широкие заголовки, Onest — основной текст, JetBrains Mono — данные и метки.
+    Все три содержат наборы cyrillic и latin-ext (в latin-ext есть ă â î ș ț) — проверено.
+    display=swap — пока шрифт грузится, текст показывается системным шрифтом (не пустое место).
+  -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Onest:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+
+  <style>
+    /* ========== Токены: все цвета и размеры в одном месте ========== */
+    :root {
+      --bg: #0c0d10;            /* фон: почти чёрный с тёплым оттенком */
+      --bg-2: #121317;          /* панели чуть светлее фона */
+      --line: #ffffff10;        /* тонкие линии сетки (10 из 255 по прозрачности) */
+      --line-2: #ffffff1c;      /* линии рамок, чуть заметнее */
+      --text: #eceae6;          /* основной текст — не чисто белый, мягче для глаз */
+      --muted: #8b8a86;         /* второстепенный текст */
+      --accent: #ff5f1f;        /* сигнальный оранжевый — используем скупо */
+      --ok: #3ccf7a;            /* приглушённый зелёный — только для статуса «онлайн» */
+      --f-head: "Unbounded", system-ui, sans-serif;
+      --f-body: "Onest", system-ui, sans-serif;
+      --f-mono: "JetBrains Mono", ui-monospace, monospace;
+      --pad: clamp(16px, 4vw, 56px);   /* боковые поля: 16px на телефоне, до 56px на десктопе */
+      --max: 1440px;                    /* максимальная ширина контента */
+    }
+
+    /* box-sizing: border-box — ширина элемента включает рамку и отступы (проще считать) */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }   /* iOS не будет сам увеличивать шрифт при повороте */
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 400 17px/1.55 var(--f-body);
+      -webkit-font-smoothing: antialiased;     /* более тонкая отрисовка шрифта на macOS */
+      overflow-x: hidden;                        /* страховка от горизонтальной прокрутки */
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ========== Зерно: лёгкий шум поверх всего, убирает «пластиковость» ==========
+       SVG-фильтр feTurbulence генерирует случайный шум прямо в браузере — без картинок.
+       pointer-events: none — слой не мешает кликам. */
+    body::after {
+      content: "";
+      position: fixed; inset: 0;
+      z-index: 100;
+      pointer-events: none;
+      opacity: .06;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ========== Модульная сетка: вертикальные линии 1px, как на табло ==========
+       Фиксированный слой во всю высоту; 4 колонки на телефоне, 12 на десктопе. */
+    .grid-lines {
+      position: fixed; inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 var(--pad);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .grid-lines span { border-left: 1px solid var(--line); }
+    .grid-lines span:last-child { border-right: 1px solid var(--line); }
+    .grid-lines span:nth-child(n+5) { display: none; }   /* на телефоне лишние колонки прячем */
+    @media (min-width: 900px) {
+      .grid-lines { grid-template-columns: repeat(12, 1fr); }
+      .grid-lines span:nth-child(n+5) { display: block; }
+    }
+
+    .wrap { position: relative; z-index: 1; max-width: var(--max); margin: 0 auto; padding: 0 var(--pad); }
+
+    /* ========== Шапка ========== */
+    .header {
+      position: sticky; top: 0; z-index: 10;
+      border-bottom: 1px solid var(--line);
+      transition: background-color .3s, backdrop-filter .3s;
+    }
+    /* После прокрутки JS добавит класс — шапка станет полупрозрачной с размытием */
+    .header.is-scrolled { background: #0c0d10b8; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .header .wrap { display: flex; align-items: center; gap: 24px; height: 64px; }
+
+    .logo { display: flex; align-items: center; gap: 10px; font: 700 15px/1 var(--f-head); letter-spacing: -.01em; }
+    /* Монограмма: квадрат с «MX», без картинок */
+    .logo-mark {
+      display: grid; place-items: center;
+      width: 30px; height: 30px;
+      background: var(--accent); color: var(--bg);
+      font: 700 11px/1 var(--f-head); letter-spacing: -.04em;
+    }
+    .nav { display: none; gap: 28px; margin-left: auto; font: 400 13px/1 var(--f-mono); color: var(--muted); }
+    .nav a:hover { color: var(--text); }
+    .lang { display: flex; margin-left: auto; font: 400 12px/1 var(--f-mono); }
+    .lang a { padding: 6px 7px; color: var(--muted); }
+    .lang a[aria-current] { color: var(--text); }
+    @media (min-width: 1000px) {
+      .nav { display: flex; }
+      .lang { margin-left: 0; }
+    }
+
+    /* ========== Кнопки ==========
+       Заливка слева направо: псевдоэлемент ::before растягивается по X (transform: scaleX).
+       Анимируем только transform — это дешёво для браузера, без дёрганья. */
+    .btn {
+      position: relative; isolation: isolate; overflow: hidden;
+      display: inline-flex; align-items: center; gap: 12px;
+      height: 54px; padding: 0 24px;
+      border: 1px solid var(--line-2);
+      font: 500 15px/1 var(--f-body);
+      white-space: nowrap;
+    }
+    .btn::before {
+      content: ""; position: absolute; inset: 0; z-index: -1;
+      background: var(--accent);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform .45s cubic-bezier(.7,0,.2,1);
+    }
+    .btn:hover::before, .btn:focus-visible::before { transform: scaleX(1); }
+    .btn .arrow { transition: transform .3s; }
+    .btn:hover .arrow { transform: translateX(4px); }
+    /* Основная кнопка: уже оранжевая, при наведении заливается светлым */
+    .btn--primary { background: var(--accent); border-color: var(--accent); color: #111; }
+    .btn--primary::before { background: var(--text); }
+    .btn--small { height: 38px; padding: 0 14px; font-size: 13px; gap: 8px; }
+    .btn svg { width: 18px; height: 18px; flex: none; }
+    .header .btn--small span { display: none; }   /* на телефоне в шапке — только иконка */
+    @media (min-width: 560px) { .header .btn--small span { display: inline; } }
+
+    /* ========== Hero ========== */
+    .hero { padding: clamp(32px, 5vw, 64px) 0 clamp(48px, 6vw, 80px); }
+
+    /* Мелкая метка секции капсом в моноширинном */
+    .label {
+      display: flex; align-items: center; gap: 10px;
+      font: 400 12px/1.2 var(--f-mono); letter-spacing: .08em; text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: clamp(24px, 4vw, 40px);
+    }
+    /* Зелёная точка-индикатор «онлайн» с мягкой пульсацией (кольцо через box-shadow на ::after) */
+    .dot { position: relative; width: 8px; height: 8px; border-radius: 50%; background: var(--ok); flex: none; }
+    .dot::after {
+      content: ""; position: absolute; inset: -4px; border-radius: 50%;
+      border: 1px solid var(--ok); opacity: 0;
+      animation: ping 2.4s ease-out infinite;
+    }
+    @keyframes ping { 0% { transform: scale(.5); opacity: .8; } 100% { transform: scale(1.6); opacity: 0; } }
+
+    /* Огромный заголовок. Unbounded очень широкий: слово «Автоматизация» ≈ 10 em,
+       поэтому на телефоне 375px заголовок ~32px (иначе слово не влезет в строку). */
+    .h1 {
+      margin: 0;
+      font: 700 clamp(30px, 8.6vw, 80px)/.98 var(--f-head);
+      letter-spacing: -.035em;          /* отрицательный трекинг — буквы плотнее */
+    }
+    .h1 em { font-style: normal; color: var(--muted); }
+
+    /* Hero: на телефоне всё в колонку; на широком экране 12 колонок —
+       текст слева шире ленты справа (асимметрия 1.2 : 1). */
+    .hero-grid { display: grid; gap: 48px; }
+    .hero-copy .h1 { margin-bottom: clamp(24px, 3vw, 36px); }
+    @media (min-width: 1100px) {
+      .hero-grid { grid-template-columns: 1.2fr 1fr; gap: 0; align-items: center; }
+      .hero-copy { padding-right: 56px; }
+      .hero .h1 { font-size: min(4.6vw, 68px); }
+    }
+    .lead { margin: 0 0 32px; color: #c9c7c2; font-size: clamp(17px, 1.35vw, 19px); max-width: 46ch; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    @media (max-width: 480px) { .actions .btn { width: 100%; justify-content: space-between; } }
+    .trust {
+      display: flex; gap: 10px; align-items: baseline;
+      margin-top: 28px;
+      font: 400 12.5px/1.6 var(--f-mono); color: var(--muted);
+    }
+    .trust .dot { transform: translateY(-1px); }
+
+    /* ========== Лента событий (сигнатурный элемент) ========== */
+    .feed { border: 1px solid var(--line-2); background: var(--bg-2); font-family: var(--f-mono); min-width: 0; }
+    .feed-bar {
+      display: flex; align-items: center; gap: 10px;
+      height: 40px; padding: 0 16px;
+      border-bottom: 1px solid var(--line-2);
+      font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
+    }
+    .feed-bar .live { color: var(--text); }
+    .feed-bar .right { margin-left: auto; }
+
+    /* Высота строки фиксирована — так прокрутка ровная, без дёрганья.
+       Видимая область = 6 строк. Сверху маска-градиент: старые строки «растворяются». */
+    .feed { --row: 50px; }
+    @media (max-width: 640px) { .feed { --row: 66px; } }
+    .feed-view {
+      position: relative;
+      height: calc(var(--row) * 6);
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 30%);
+              mask-image: linear-gradient(to bottom, transparent 0, #000 30%);
+    }
+    /* will-change не ставим: на некоторых устройствах слой с маской переставал отрисовываться.
+       Браузер и так переносит ленту на видеокарту на время анимации transform. */
+    .feed-list { margin: 0; padding: 0; list-style: none; }
+
+    .ev {
+      position: relative;
+      display: grid;
+      grid-template-columns: 74px 34px 1fr auto;   /* время | система | событие | метка */
+      align-items: center; column-gap: 12px;
+      height: var(--row); padding: 0 16px;
+      border-bottom: 1px solid var(--line);
+      font-size: 13px; white-space: nowrap;
+    }
+    .ev time { color: var(--muted); font-variant-numeric: tabular-nums; }  /* цифры одинаковой ширины */
+    .ev .src { font-size: 10.5px; color: var(--muted); border: 1px solid var(--line-2); text-align: center; padding: 2px 0; }
+    .ev .txt { overflow: hidden; text-overflow: ellipsis; transition: color 1.2s; }
+    .ev .meta { color: var(--muted); font-size: 12px; }
+    /* Подсветка новой строки: полоса акцента слева + фон; гаснет через opacity */
+    .ev::before {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(90deg, #ff5f1f2e, transparent 70%);
+      box-shadow: inset 2px 0 0 var(--accent);
+      opacity: 0; transition: opacity 1.4s ease-out;
+    }
+    .ev.is-new::before { opacity: 1; transition: none; }
+    .ev.is-new .txt { color: var(--accent); transition: none; }
+
+    /* Телефон: событие переносится на вторую строку (максимум 2 строки текста) */
+    @media (max-width: 640px) {
+      .ev { grid-template-columns: auto auto 1fr; grid-template-rows: auto auto; row-gap: 4px; align-content: center; }
+      .ev .meta { justify-self: end; }
+      /* Текст события переносится, но не больше двух строк (line-clamp обрезает третью) */
+      .ev .txt { grid-column: 1 / -1; grid-row: 2; white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.35; font-size: 12.5px; }
+      .ev .src { padding: 1px 5px; }
+      .feed-foot { gap: 6px 16px; }
+    }
+    @media (max-width: 640px) { .feed { --row: 72px; } }
+
+    .feed-foot {
+      display: flex; gap: 24px; flex-wrap: wrap;
+      padding: 12px 16px; border-top: 1px solid var(--line-2);
+      font-size: 11.5px; color: var(--muted); letter-spacing: .04em;
+    }
+    .feed-foot b { color: var(--text); font-weight: 500; }
+
+    /* prefers-reduced-motion — системная настройка «уменьшить движение»: убираем анимации */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+
+    /* Плашка «концепт» — только для этого файла */
+    .concept-tag { position: fixed; right: 12px; bottom: 12px; z-index: 50; font: 400 11px/1 var(--f-mono); padding: 8px 10px; background: var(--text); color: var(--bg); }
+  </style>
+</head>
+<body>
+  <!-- Декоративная сетка: 12 вертикальных линий. aria-hidden — скринридеры её пропускают -->
+  <div class="grid-lines" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+
+  <!-- ===== ШАПКА ===== -->
+  <header class="header" id="header">
+    <div class="wrap">
+      <a class="logo" href="#"><span class="logo-mark">MX</span>MX Systems</a>
+      <nav class="nav" aria-label="Разделы">
+        <a href="#cases">Кейсы</a><a href="#services">Услуги</a><a href="#process">Как работаем</a><a href="#contact">Контакт</a>
+      </nav>
+      <!-- Переключатель языков; aria-current отмечает текущий язык -->
+      <div class="lang"><a href="#" aria-current="true">RU</a><a href="#">RO</a><a href="#">EN</a></div>
+      <a class="btn btn--small btn--primary" href="https://t.me/mvxev?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%A3%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D1%81%D0%B0%D0%B9%D1%82%20MX%20Systems%2C%20%D1%85%D0%BE%D1%87%D1%83%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D0%B7%D0%B0%D0%B4%D0%B0%D1%87%D1%83." target="_blank" rel="noopener" aria-label="Написать в Telegram">
+        <!-- Иконка Telegram — нарисована вручную в SVG (бумажный самолётик) -->
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.4 3.6 2.9 10.8c-.9.4-.9 1.6.1 1.9l4.6 1.4 1.7 5.4c.2.7 1.1.9 1.6.4l2.5-2.3 4.7 3.4c.6.4 1.4.1 1.6-.6l3-15.2c.2-1-.6-1.9-1.3-1.6ZM9.6 14.5l-.4 3.6-1.3-4.2 10-6.4-8.3 7Z"/></svg>
+        <span>Написать в Telegram</span>
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="label"><span class="dot"></span>MX Systems · студия автоматизации · Кишинёв</p>
+            <h1 class="h1">Автоматизация и AI-системы для бизнеса, <em>которые реально работают</em></h1>
+            <p class="lead">Находим, где ваш бизнес теряет время и деньги на ручной работе, и собираем систему под вашу задачу: встраиваем в 1С, мессенджеры, почту и ваши текущие сервисы. Сопровождаем после запуска.</p>
+            <div class="actions">
+              <a class="btn btn--primary" href="https://t.me/mvxev?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%A3%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D1%81%D0%B0%D0%B9%D1%82%20MX%20Systems%2C%20%D1%85%D0%BE%D1%87%D1%83%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D0%B7%D0%B0%D0%B4%D0%B0%D1%87%D1%83." target="_blank" rel="noopener">Обсудить задачу в Telegram <span class="arrow">→</span></a>
+              <a class="btn" href="#cases">Посмотреть кейсы <span class="arrow">↓</span></a>
+            </div>
+            <p class="trust"><span class="dot"></span><span>Системы в ежедневной работе: логистика (США) · автосервис (Кишинёв)</span></p>
+          </div>
+
+          <!-- Лента событий. aria-live="off" — скринридер не будет зачитывать каждую новую строку -->
+          <div class="feed" aria-label="Демонстрация: лента событий систем" aria-live="off">
+            <div class="feed-bar">
+              <span class="dot"></span><span class="live">Live</span><span>ops / events</span>
+              <span class="right">демо-данные</span>
+            </div>
+            <div class="feed-view"><ul class="feed-list" id="feed"></ul></div>
+            <div class="feed-foot">
+              <span>систем онлайн <b>2</b></span>
+              <span>FL — FastLoad</span>
+              <span>4P — 4Power Club</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="concept-tag">Концепт A · Пульт управления</div>
+
+  <script>
+    /* ===== Шапка: полупрозрачная с размытием после прокрутки ===== */
+    const header = document.getElementById('header');
+    // passive: true — обещаем браузеру не отменять прокрутку, он прокручивает плавнее
+    addEventListener('scroll', () => header.classList.toggle('is-scrolled', scrollY > 8), { passive: true });
+
+    /* ===== Лента событий =====
+       Демонстрационные события (не реальные данные клиентов).
+       Формат: [система, текст, метка справа] */
+    const EVENTS = [
+      ['FL', 'Груз Miami, FL → Dayton, NJ · подобран водителю', '4 сек'],
+      ['4P', 'BMW M3 · деталь пришла на склад · приёмщик уведомлён', 'TG'],
+      ['FL', 'Ставка отправлена брокеру · Get Freight LLC', 'Gmail'],
+      ['4P', 'Audi Q5 · готова · клиенту ушло сообщение', 'WA'],
+      ['4P', 'Сводка владельцу · 4 машины в работе, 1 ждёт запчасти', '08:00'],
+      ['FL', 'Груз Atlanta, GA → Columbus, OH · порожний пробег 38 mi', 'TG'],
+      ['4P', 'Приход из 1С · 12 позиций · без ручного ввода', '1С'],
+      ['FL', 'Ночная публикация · груз пойман вне смены', '03:14'],
+      ['4P', 'Toyota RAV4 · ждёт запчасть 9 дн · напоминание', 'TG'],
+      ['FL', 'Груз Dallas, TX → Memphis, TN · 2 водителя подходят', '6 сек'],
+      ['4P', 'Пост 3 освободился · экран цеха обновлён', 'live'],
+    ];
+
+    const list = document.getElementById('feed');
+    const VISIBLE = 6;                // сколько строк видно одновременно
+    let idx = 0;                      // какое событие показываем следующим
+    let clock = Date.now();           // «часы» ленты; сдвигаем на несколько секунд на каждое событие
+
+    // Время в формате ЧЧ:ММ:СС (padStart добавляет ведущий ноль: 7 → 07)
+    const fmt = t => { const d = new Date(t); return [d.getHours(), d.getMinutes(), d.getSeconds()].map(n => String(n).padStart(2, '0')).join(':'); };
+
+    // Собираем одну строку ленты. textContent (а не innerHTML) — безопасно и быстро.
+    function makeRow(time) {
+      const [src, txt, meta] = EVENTS[idx++ % EVENTS.length];
+      const li = document.createElement('li');
+      li.className = 'ev';
+      const cells = [['time', fmt(time)], ['span', src, 'src'], ['span', txt, 'txt'], ['span', meta, 'meta']];
+      for (const [tag, text, cls] of cells) {
+        const el = document.createElement(tag);
+        el.textContent = text;
+        if (cls) el.className = cls;
+        li.appendChild(el);
+      }
+      return li;
+    }
+
+    // Стартовое заполнение: 6 строк «из прошлого», с шагом 4–9 секунд
+    const start = clock - VISIBLE * 7000;
+    for (let i = 0; i < VISIBLE; i++) list.appendChild(makeRow(start + i * 7000));
+
+    // Один шаг: новая строка добавляется снизу, вся лента плавно сдвигается вверх на высоту строки,
+    // затем верхняя (уже невидимая) строка удаляется, а сдвиг сбрасывается без анимации.
+    // Двигаем только transform — браузер делает это на видеокарте, поэтому без рывков.
+    function tick() {
+      clock += 3000 + Math.random() * 6000;
+      const row = makeRow(clock);
+      row.classList.add('is-new');
+      list.appendChild(row);
+
+      const h = list.firstElementChild.offsetHeight;   // высоту меряем каждый раз — вдруг окно изменили
+      list.style.transition = 'transform .7s cubic-bezier(.22,.8,.24,1)';
+      list.style.transform = `translateY(-${h}px)`;
+
+      list.addEventListener('transitionend', () => {
+        list.style.transition = 'none';
+        list.firstElementChild.remove();
+        list.style.transform = 'none';
+      }, { once: true });
+
+      // Подсветка гаснет через 0.9 сек (CSS сам плавно уберёт её через transition)
+      setTimeout(() => row.classList.remove('is-new'), 900);
+    }
+
+    // matchMedia проверяет системную настройку «уменьшить движение»
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let timer = null;
+    const play = () => { if (!timer) timer = setInterval(tick, 2600); };
+    const stop = () => { clearInterval(timer); timer = null; };
+
+    if (!reduce) {
+      play();
+      // Вкладка скрыта — ленту ставим на паузу (не тратим батарею и не копим «пачку» анимаций)
+      document.addEventListener('visibilitychange', () => document.hidden ? stop() : play());
+    }
+  </script>
+</body>
+</html>
