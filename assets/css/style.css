@@ -102,7 +102,7 @@ ul, ol { padding: 0; list-style: none; }
 .btn:hover::before, .btn:focus-visible::before { transform: scaleX(1); }
 .btn .arrow { transition: transform .3s; }
 .btn:hover .arrow { transform: translateX(4px); }
-.btn svg { width: 18px; height: 18px; flex: none; }
+.btn svg { width: 18px; height: 18px; max-width: none; flex: none; }   /* max-width: none — иначе иконка сжимается до нуля */
 .btn-icon { display: inline-flex; align-items: center; gap: 12px; }
 
 /* Основная кнопка — оранжевая, при наведении заливается «слоновой костью» */
@@ -111,6 +111,8 @@ ul, ol { padding: 0; list-style: none; }
 /* Вторая строка мелким текстом внутри кнопки: «в Telegram — без обязательств» */
 .btn-sub { display: block; margin-top: 3px; font: 400 11.5px/1.2 var(--f-mono); letter-spacing: .02em; opacity: .7; }
 .btn:has(.btn-sub) { padding-top: 10px; padding-bottom: 10px; }
+/* Длинной кнопке разрешаем перенос строки — иначе на телефоне она распирает колонку */
+.btn:has(.btn-sub), .calc-cta { white-space: normal; text-align: left; }
 
 /* --- Метка секции: «01 / Кейсы» моноширинным капсом --- */
 .eyebrow {
@@ -180,7 +182,7 @@ ul, ol { padding: 0; list-style: none; }
 
 /* Кнопка-«бургер» (три полоски) для меню на телефоне */
 .burger { display: none; width: 40px; height: 40px; position: relative; }
-.burger span { position: absolute; left: 10px; right: 10px; height: 1px; background: var(--ink); transition: transform .3s; }
+.burger span { position: absolute; left: 10px; right: 10px; height: 1.5px; background: var(--ink); transition: transform .3s; }
 .burger span:nth-child(1) { top: 16px; }
 .burger span:nth-child(2) { top: 23px; }
 /* Открытое меню: полоски складываются в крестик */
@@ -188,7 +190,9 @@ ul, ol { padding: 0; list-style: none; }
 .nav-open .burger span:nth-child(2) { transform: translateY(-3.5px) rotate(-45deg); }
 
 @media (max-width: 999px) {
-  .burger { display: block; order: 3; }
+  .header-in { gap: 12px; }
+  .burger { display: block; order: 3; flex: none; }   /* flex: none — бургер не сжимается */
+  .lang a { padding: 8px 5px; }
   .lang { margin-left: auto; }
   .header .btn--small .label { display: none; }   /* в шапке на телефоне у кнопки остаётся только иконка */
   /* Меню на телефоне — выпадающая панель под шапкой */
@@ -216,6 +220,7 @@ ul, ol { padding: 0; list-style: none; }
 
 .hero { padding: clamp(32px, 5vw, 64px) 0 clamp(56px, 7vw, 96px); }
 .cover { display: grid; gap: 40px; }
+.cover > * { min-width: 0; }   /* min-width: 0 — содержимое не может растянуть колонку сетки шире экрана */
 @media (min-width: 1100px) {
   /* Модульная сетка на 12 колонок: заголовок 1–8, схема 9–12, нижняя полоса во всю ширину */
   .cover { grid-template-columns: repeat(12, 1fr); column-gap: 24px; row-gap: 48px; }
@@ -297,6 +302,8 @@ ul, ol { padding: 0; list-style: none; }
 
 /* --- Тело кейса: текст и макет интерфейса рядом --- */
 .case-body { display: grid; gap: 40px; }
+/* На телефоне макет интерфейса идёт сразу под заголовком кейса — это самое наглядное */
+@media (max-width: 999px) { .case-ui { order: -1; } }
 @media (min-width: 1000px) {
   .case-body { grid-template-columns: 6fr 6fr; column-gap: 64px; align-items: start; }
   /* У второго кейса макет слева — чередуем ритм, чтобы кейсы не были близнецами */
@@ -536,7 +543,7 @@ ul, ol { padding: 0; list-style: none; }
 .contact { border-top: 1px solid var(--ink); }
 .contact-head { margin-bottom: clamp(40px, 6vw, 72px); }
 .contact-head .eyebrow { margin-bottom: 28px; }
-.contact-title { max-width: 18ch; font: 500 clamp(40px, 6.8vw, 92px)/.95 var(--f-serif); letter-spacing: -.028em; }
+.contact-title { max-width: 21ch; font: 500 clamp(40px, 6.8vw, 92px)/.95 var(--f-serif); letter-spacing: -.028em; }
 .contact-title em { font-style: italic; color: var(--accent); }
 .contact-sub { max-width: 52ch; margin-top: 24px; color: #bdb5a7; }
 
