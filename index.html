@@ -1,0 +1,162 @@
+<!doctype html>
+<!--
+  MX Systems — главная страница, русская версия (основная, лежит в корне сайта «/»).
+  Румынская и английская версии — ro/index.html и en/index.html, у них та же структура.
+  Каждая секция отмечена комментарием «===== НАЗВАНИЕ =====», чтобы версии было легко сверять.
+-->
+<html lang="ru">
+<head>
+  <!-- Кодировка UTF-8 — нужна для кириллицы и румынских букв -->
+  <meta charset="utf-8">
+  <!-- viewport — говорит телефону: ширина страницы = ширина экрана (без «уменьшенной копии» десктопа) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- title и description — то, что показывает Google в результатах поиска -->
+  <title>MX Systems — разработка, автоматизация и реклама для бизнеса · Кишинёв</title>
+  <meta name="description" content="Студия MX Systems: сайты и внутренние системы, автоматизация ручной работы, интеграция с 1С и мессенджерами, настройка рекламы и SEO. Кишинёв, Молдова.">
+
+  <!-- canonical — «главный» адрес этой страницы, чтобы поисковик не считал дублями адреса с параметрами -->
+  <link rel="canonical" href="https://mxsystems.ro/">
+  <!-- hreflang — подсказка поисковикам: это одна и та же страница на разных языках.
+       x-default — какую версию показывать, если язык посетителя не совпал ни с одной -->
+  <link rel="alternate" hreflang="ru" href="https://mxsystems.ro/">
+  <link rel="alternate" hreflang="ro" href="https://mxsystems.ro/ro/">
+  <link rel="alternate" hreflang="en" href="https://mxsystems.ro/en/">
+  <link rel="alternate" hreflang="x-default" href="https://mxsystems.ro/">
+
+  <!-- Open Graph — данные для превью ссылки в Telegram, WhatsApp, Facebook.
+       Адреса здесь полные (https://…): мессенджеры не понимают относительные пути -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="MX Systems">
+  <meta property="og:url" content="https://mxsystems.ro/">
+  <meta property="og:title" content="MX Systems — разработка, автоматизация и реклама">
+  <meta property="og:description" content="Сайты, внутренние системы и реклама для бизнеса. Встраиваем в 1С, мессенджеры и почту, сопровождаем после запуска.">
+  <meta property="og:image" content="https://mxsystems.ro/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:locale:alternate" content="ro_RO">
+  <meta property="og:locale:alternate" content="en_US">
+  <!-- summary_large_image — крупное превью с картинкой (используют X/Twitter и некоторые мессенджеры) -->
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Favicon — иконка во вкладке браузера -->
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <!-- theme-color — цвет панели браузера на телефоне (в тон фону сайта) -->
+  <meta name="theme-color" content="#0d0c0a">
+
+  <!-- Шрифты Google Fonts. preconnect заранее открывает соединение — шрифты приходят быстрее.
+       Cormorant Garamond — заголовки, Golos Text — текст, JetBrains Mono — цифры и метки.
+       Во всех трёх есть кириллица и latin-ext (румынские ă â î ș ț).
+       display=swap — пока шрифт грузится, текст виден системным шрифтом, а не пустым местом -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Golos+Text:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <!-- Ставим на <html> класс .js: стили анимаций появления включаются, только если JS работает -->
+  <script>document.documentElement.classList.add('js')</script>
+  <!-- defer — скрипт загрузится параллельно и выполнится после разбора HTML (не тормозит отрисовку) -->
+  <script src="assets/js/main.js" defer></script>
+</head>
+<body>
+
+  <!-- ===== ШАПКА ===== -->
+  <header class="header" id="header">
+    <div class="wrap header-in">
+      <a class="logo" href="./" aria-label="MX Systems — на главную"><span class="logo-mark" aria-hidden="true">MX</span>MX Systems</a>
+
+      <nav class="nav" id="nav" aria-label="Разделы">
+        <a href="#cases">Кейсы</a>
+        <a href="#services">Услуги</a>
+        <a href="#process">Как работаем</a>
+        <a href="#contact">Контакт</a>
+      </nav>
+
+      <!-- Переключатель языков. aria-current="page" — отмечает текущий язык (и для скринридеров).
+           data-lang — по нему main.js запоминает выбор посетителя -->
+      <div class="lang" aria-label="Язык">
+        <a href="./" hreflang="ru" lang="ru" data-lang="ru" aria-current="page">RU</a>
+        <a href="ro/" hreflang="ro" lang="ro" data-lang="ro">RO</a>
+        <a href="en/" hreflang="en" lang="en" data-lang="en">EN</a>
+      </div>
+
+      <a class="btn btn--small btn--primary" href="https://t.me/mvxev?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%A3%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D1%81%D0%B0%D0%B9%D1%82%20MX%20Systems%2C%20%D1%85%D0%BE%D1%87%D1%83%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D0%B7%D0%B0%D0%B4%D0%B0%D1%87%D1%83." target="_blank" rel="noopener" aria-label="Написать в Telegram">
+        <!-- Иконка Telegram (бумажный самолётик), нарисована в SVG -->
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.4 3.6 2.9 10.8c-.9.4-.9 1.6.1 1.9l4.6 1.4 1.7 5.4c.2.7 1.1.9 1.6.4l2.5-2.3 4.7 3.4c.6.4 1.4.1 1.6-.6l3-15.2c.2-1-.6-1.9-1.3-1.6ZM9.6 14.5l-.4 3.6-1.3-4.2 10-6.4-8.3 7Z"/></svg>
+        <span class="label">Написать в Telegram</span>
+      </a>
+
+      <!-- Кнопка меню для телефона. aria-expanded сообщает скринридеру, открыто ли меню -->
+      <button class="burger" id="burger" aria-label="Меню" aria-expanded="false" aria-controls="nav"><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== HERO (первый экран) ===== -->
+    <div class="wrap"><p class="masthead"><span>Разработка · автоматизация · реклама</span><span class="mid">Кишинёв · Молдова</span><span class="end">2026</span></p></div>
+
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap cover">
+        <h1 class="h1 rise" id="hero-title"><span class="no">MX Systems</span>Разработка, автоматизация и реклама, <em>которые реально работают</em></h1>
+
+        <!-- Рис. 1 — схема: откуда приходят данные, что делает система, кто получает результат.
+             viewBox — «холст» 480×470 условных единиц; SVG сам масштабируется под ширину блока -->
+        <figure class="fig rise d2" aria-label="Схема: заявки с рекламы, учёт и почта идут в систему, а результат получают команда, клиенты и владелец">
+          <svg viewBox="0 0 480 470" aria-hidden="true">
+            <!-- Провода. У каждого есть id — по нему бегут импульсы -->
+            <path id="w1" class="s-wire" d="M70 76 V140 Q70 172 130 176 L190 180 V206"/>
+            <path id="w2" class="s-wire" d="M240 76 V206"/>
+            <path id="w3" class="s-wire" d="M410 76 V140 Q410 172 350 176 L290 180 V206"/>
+            <path id="w4" class="s-wire" d="M190 296 V312 L130 316 Q70 320 70 352 V394"/>
+            <path id="w5" class="s-wire" d="M240 296 V394"/>
+            <path id="w6" class="s-wire" d="M290 296 V312 L350 316 Q410 320 410 352 V394"/>
+            <!-- Входы -->
+            <rect class="s-box" x=".5" y="16.5" width="139" height="60"/><text class="s-t" x="16" y="44">РЕКЛАМА</text><text class="s-s" x="16" y="63">заявки клиентов</text>
+            <rect class="s-box" x="170.5" y="16.5" width="139" height="60"/><text class="s-t" x="186" y="44">УЧЁТ</text><text class="s-s" x="186" y="63">склад, остатки</text>
+            <rect class="s-box" x="340.5" y="16.5" width="139" height="60"/><text class="s-t" x="356" y="44">ПОЧТА</text><text class="s-s" x="356" y="63">письма, заказы</text>
+            <!-- Ядро — светлый блок, главный элемент рисунка -->
+            <rect class="s-core" x="70" y="206" width="340" height="90"/>
+            <text class="s-big" x="92" y="250">MX · система</text>
+            <text class="s-sub" x="92" y="276">подбирает · следит · напоминает</text>
+            <circle cx="390" cy="226" r="4" fill="#ff5f1f"/>
+            <!-- Выходы -->
+            <rect class="s-box" x=".5" y="394.5" width="139" height="60"/><text class="s-t" x="16" y="422">КОМАНДА</text><text class="s-s" x="16" y="441">уведомления</text>
+            <rect class="s-box" x="170.5" y="394.5" width="139" height="60"/><text class="s-t" x="186" y="422">КЛИЕНТЫ</text><text class="s-s" x="186" y="441">«заказ готов»</text>
+            <rect class="s-box" x="340.5" y="394.5" width="139" height="60"/><text class="s-t" x="356" y="422">ВЛАДЕЛЕЦ</text><text class="s-s" x="356" y="441">сводка 08:00</text>
+            <!-- Импульсы: точки едут по проводам. animateMotion — встроенная анимация SVG (SMIL),
+                 работает без JS и очень дёшево. begin — задержка старта, чтобы шли вразнобой -->
+            <circle class="s-pulse" r="4"><animateMotion dur="2.6s" repeatCount="indefinite"><mpath href="#w1"/></animateMotion></circle>
+            <circle class="s-pulse" r="4"><animateMotion dur="2.2s" begin=".9s" repeatCount="indefinite"><mpath href="#w2"/></animateMotion></circle>
+            <circle class="s-pulse" r="4"><animateMotion dur="2.6s" begin="1.6s" repeatCount="indefinite"><mpath href="#w3"/></animateMotion></circle>
+            <circle class="s-pulse" r="4"><animateMotion dur="2.6s" begin="1.2s" repeatCount="indefinite"><mpath href="#w4"/></animateMotion></circle>
+            <circle class="s-pulse" r="4"><animateMotion dur="2.2s" begin="2s" repeatCount="indefinite"><mpath href="#w5"/></animateMotion></circle>
+            <circle class="s-pulse" r="4"><animateMotion dur="2.6s" begin=".4s" repeatCount="indefinite"><mpath href="#w6"/></animateMotion></circle>
+          </svg>
+          <figcaption><b>Рис. 1</b>Данные идут сами — люди получают готовый результат.</figcaption>
+        </figure>
+
+        <div class="row rise d3">
+          <p class="lead">Разрабатываем сайты и системы, автоматизируем ручную работу и настраиваем рекламу — чтобы клиенты приходили, а команда не тонула в рутине. Встраиваем в 1С, мессенджеры и почту, сопровождаем после запуска.</p>
+          <div class="actions">
+            <a class="btn btn--primary" href="https://t.me/mvxev?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%A3%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D1%81%D0%B0%D0%B9%D1%82%20MX%20Systems%2C%20%D1%85%D0%BE%D1%87%D1%83%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D0%B7%D0%B0%D0%B4%D0%B0%D1%87%D1%83." target="_blank" rel="noopener">Обсудить задачу в Telegram <span class="arrow" aria-hidden="true">→</span></a>
+            <a class="btn" href="#cases">Посмотреть кейсы <span class="arrow" aria-hidden="true">↓</span></a>
+          </div>
+          <!-- Строка доверия — в виде сносок, каждая ведёт к своему кейсу -->
+          <ul class="notes" aria-label="Системы в ежедневной работе">
+            <li><sup>¹</sup><a href="#case-fastload"><span class="k">Логистика · США</span><br>Система в ежедневной работе</a></li>
+            <li><sup>²</sup><a href="#case-4power"><span class="k">Автосервис · Кишинёв</span><br>Система в ежедневной работе</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== КЕЙСЫ ===== (шаг 2) -->
+    <!-- ===== УСЛУГИ ===== (шаг 3) -->
+    <!-- ===== КАК РАБОТАЕМ ===== (шаг 3) -->
+    <!-- ===== КОНТАКТ ===== (шаг 3) -->
+  </main>
+
+  <!-- ===== ФУТЕР ===== (шаг 3) -->
+</body>
+</html>

@@ -1,0 +1,8 @@
+<!-- Favicon (иконка во вкладке браузера): монограмма «MX» в круге, как логотип на сайте.
+     SVG — векторная, поэтому чёткая на любом экране. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#0d0c0a"/>
+  <circle cx="32" cy="32" r="22" fill="none" stroke="#ece5d8" stroke-width="2"/>
+  <text x="32" y="38.5" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="17" font-weight="600" fill="#ece5d8" letter-spacing="-.5">MX</text>
+  <circle cx="48" cy="16" r="5" fill="#ff5f1f"/>
+</svg>
