@@ -108,6 +108,9 @@ ul, ol { padding: 0; list-style: none; }
 /* Основная кнопка — оранжевая, при наведении заливается «слоновой костью» */
 .btn--primary { background: var(--accent); border-color: var(--accent); color: #111; }
 .btn--small { min-height: 38px; padding: 0 14px; gap: 8px; font-size: 13px; }
+/* Вторая строка мелким текстом внутри кнопки: «в Telegram — без обязательств» */
+.btn-sub { display: block; margin-top: 3px; font: 400 11.5px/1.2 var(--f-mono); letter-spacing: .02em; opacity: .7; }
+.btn:has(.btn-sub) { padding-top: 10px; padding-bottom: 10px; }
 
 /* --- Метка секции: «01 / Кейсы» моноширинным капсом --- */
 .eyebrow {
