@@ -1,0 +1,199 @@
+<!doctype html>
+<!--
+  КОНЦЕПТ D — «Обложка»
+  Развитие концепта C: светлая «бумага», но уже не газета, а обложка делового журнала.
+  Крупный изящный шрифт с засечками, схема из концепта B как «Рис. 1» в тонких чернильных
+  линиях, сноски ¹ ² ведут к кейсам. Только hero, файл самодостаточный.
+-->
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <!-- viewport — ширина страницы = ширина экрана телефона -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Концепт D — Обложка · MX Systems</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Cormorant Garamond — контрастная антиква (шрифт с засечками) для заголовка;
+       Golos Text — текст; JetBrains Mono — метки. Все с cyrillic и latin-ext. -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Golos+Text:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+  <style>
+    :root {
+      --paper: #f0ece4;
+      --paper-2: #e7e2d8;
+      --ink: #17150f;
+      --muted: #6f6b62;
+      --rule: #17150f2b;
+      --accent: #ff5f1f;
+      --f-serif: "Cormorant Garamond", Georgia, serif;
+      --f-sans: "Golos Text", system-ui, sans-serif;
+      --f-mono: "JetBrains Mono", ui-monospace, monospace;
+      --pad: clamp(16px, 4vw, 56px);
+      --max: 1440px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; overflow-x: hidden; background: var(--paper); color: var(--ink); font: 400 16.5px/1.6 var(--f-sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    /* Зерно бумаги: SVG-шум, режим multiply — «впитывается» в фон, как печать */
+    body::after { content: ""; position: fixed; inset: 0; z-index: 100; pointer-events: none; opacity: .1; mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--pad); }
+
+    /* ===== Шапка ===== */
+    .header { position: sticky; top: 0; z-index: 10; background: var(--paper); }
+    .header .wrap { display: flex; align-items: center; gap: 24px; height: 64px; border-bottom: 1px solid var(--ink); }
+    .logo { display: flex; align-items: center; gap: 10px; white-space: nowrap; font: 600 24px/1 var(--f-serif); letter-spacing: -.01em; }
+    /* Монограмма в круге — как печать издательства */
+    .logo-mark { display: grid; place-items: center; width: 34px; height: 34px; border: 1px solid var(--ink); border-radius: 50%; font: 500 11px/1 var(--f-mono); letter-spacing: -.02em; }
+    .nav { display: none; gap: 30px; margin-left: auto; font: italic 500 19px/1 var(--f-serif); }
+    .nav a { position: relative; }
+    .nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 1px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform .35s; }
+    .nav a:hover::after { transform: scaleX(1); }   /* подчёркивание вырастает слева направо */
+    .lang { display: flex; margin-left: auto; font: 400 12px/1 var(--f-mono); }
+    .lang a { padding: 6px 7px; color: var(--muted); }
+    .lang a[aria-current] { color: var(--ink); }
+    @media (min-width: 1000px) { .nav { display: flex; } .lang { margin-left: 0; } }
+
+    /* ===== Кнопки: тёмная заливка «чернилами» слева направо ===== */
+    .btn { position: relative; isolation: isolate; overflow: hidden; display: inline-flex; align-items: center; justify-content: space-between; gap: 28px; height: 56px; padding: 0 24px; border: 1px solid var(--ink); font: 500 15px/1 var(--f-sans); white-space: nowrap; transition: color .35s; }
+    .btn::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--ink); transform: scaleX(0); transform-origin: left; transition: transform .45s cubic-bezier(.7,0,.2,1); }
+    .btn:hover { color: var(--paper); }
+    .btn:hover::before, .btn:focus-visible::before { transform: scaleX(1); }
+    .btn .arrow { transition: transform .3s; }
+    .btn:hover .arrow { transform: translateX(4px); }
+    .btn--primary { background: var(--accent); border-color: var(--accent); }
+    .btn--small { height: 38px; padding: 0 14px; gap: 8px; font-size: 13px; }
+    .btn svg { width: 16px; height: 16px; }
+    .header .btn--small span { display: none; }
+    @media (min-width: 560px) { .header .btn--small span { display: inline; } }
+
+    /* ===== «Выходные данные» обложки ===== */
+    .masthead { display: grid; grid-template-columns: 1fr auto; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--rule); font: 400 11.5px/1.3 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .masthead .mid { display: none; }
+    @media (min-width: 900px) { .masthead { grid-template-columns: 1fr auto 1fr; } .masthead .mid { display: block; } .masthead .end { text-align: right; } }
+
+    /* ===== Hero: модульная сетка на 12 колонок ===== */
+    .hero { padding: clamp(24px, 4vw, 48px) 0 clamp(40px, 5vw, 72px); }
+    .cover { display: grid; gap: 32px; }
+    /* На телефоне сначала текст и кнопки, схема — после них (order меняет порядок без правки HTML) */
+    @media (max-width: 1099px) { .cover .fig { order: 3; } }
+    @media (min-width: 1100px) {
+      .cover { grid-template-columns: repeat(12, 1fr); column-gap: 24px; row-gap: 40px; }
+      .cover .h1 { grid-column: 1 / 9; grid-row: 1; }
+      .cover .fig { grid-column: 9 / 13; grid-row: 1; align-self: end; }
+      .cover .row { grid-column: 1 / 13; }
+    }
+
+    /* Заголовок: Cormorant узкий и контрастный — можно очень крупно даже на телефоне */
+    .h1 { margin: 0; font: 500 clamp(52px, 14.6vw, 132px)/.88 var(--f-serif); letter-spacing: -.03em; }
+    .h1 em { font-style: italic; color: var(--accent); }
+    /* Маленький номер выпуска внутри заголовка — журнальный приём */
+    .h1 .no { display: block; margin: 0 0 1.4em; font: 400 12px/1 var(--f-mono); letter-spacing: .08em; color: var(--muted); }
+    @media (min-width: 1100px) { .h1 { font-size: min(8.4vw, 132px); } }
+
+    /* «Рис. 1» — схема в тонких чернильных линиях */
+    .fig { margin: 0; }
+    .fig svg { display: block; width: 100%; height: auto; }
+    .fig figcaption { display: flex; gap: 10px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--ink); font: italic 500 17px/1.3 var(--f-serif); }
+    .fig figcaption b { white-space: nowrap; font: 400 11px/1.9 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .s-box { fill: var(--paper); stroke: var(--ink); }
+    .s-core { fill: var(--ink); }
+    .s-wire { fill: none; stroke: var(--ink); stroke-width: 1; }
+    .s-t { fill: var(--ink); font: 500 15px var(--f-mono); letter-spacing: .04em; }
+    .s-s { fill: var(--muted); font: 400 13px var(--f-mono); }
+    .s-big { fill: var(--paper); font: italic 600 34px var(--f-serif); }
+    .s-sub { fill: #f0ece4a6; font: 400 12.5px var(--f-mono); }
+    .s-pulse { fill: var(--accent); }
+
+    /* Нижняя полоса обложки: три колонки, разделённые линейками */
+    .row { display: grid; gap: 28px; padding-top: 24px; border-top: 1px solid var(--ink); }
+    @media (min-width: 900px) { .row { grid-template-columns: 5fr 4fr 3fr; gap: 0; } .row > * + * { border-left: 1px solid var(--rule); padding-left: 24px; } .row > * { padding-right: 24px; } }
+    .lead { margin: 0; max-width: 44ch; font-size: clamp(16.5px, 1.25vw, 18.5px); }
+    .actions { display: flex; flex-direction: column; gap: 10px; }
+    /* Сноски вместо строки доверия: ¹ ² — как в журнальной статье */
+    .notes { margin: 0; padding: 0; list-style: none; font-size: 14px; color: var(--muted); }
+    .notes li { display: flex; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--rule); }
+    .notes sup { font: 500 12px/1.6 var(--f-mono); color: var(--accent); }
+    .notes .k { font: 400 11px/1.9 var(--f-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--ink); }
+
+    /* Появление при загрузке: блоки по очереди поднимаются и проявляются (только transform/opacity) */
+    .rise { animation: rise .9s cubic-bezier(.2,.7,.2,1) both; }
+    .d1 { animation-delay: .08s; } .d2 { animation-delay: .22s; } .d3 { animation-delay: .36s; }
+    @keyframes rise { from { opacity: 0; transform: translateY(18px); } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } .s-pulse { display: none; } }
+    .concept-tag { position: fixed; right: 12px; bottom: 12px; z-index: 50; font: 400 11px/1 var(--f-mono); padding: 8px 10px; background: var(--ink); color: var(--paper); }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="wrap">
+      <a class="logo" href="#"><span class="logo-mark">MX</span>MX Systems</a>
+      <nav class="nav" aria-label="Разделы"><a href="#cases">Кейсы</a><a href="#services">Услуги</a><a href="#process">Как работаем</a><a href="#contact">Контакт</a></nav>
+      <div class="lang"><a href="#" aria-current="true">RU</a><a href="#">RO</a><a href="#">EN</a></div>
+      <a class="btn btn--small btn--primary" href="https://t.me/mvxev?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%A3%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D1%81%D0%B0%D0%B9%D1%82%20MX%20Systems%2C%20%D1%85%D0%BE%D1%87%D1%83%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D0%B7%D0%B0%D0%B4%D0%B0%D1%87%D1%83." target="_blank" rel="noopener" aria-label="Написать в Telegram">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.4 3.6 2.9 10.8c-.9.4-.9 1.6.1 1.9l4.6 1.4 1.7 5.4c.2.7 1.1.9 1.6.4l2.5-2.3 4.7 3.4c.6.4 1.4.1 1.6-.6l3-15.2c.2-1-.6-1.9-1.3-1.6ZM9.6 14.5l-.4 3.6-1.3-4.2 10-6.4-8.3 7Z"/></svg>
+        <span>Telegram</span>
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap"><p class="masthead"><span>Студия автоматизации</span><span class="mid">Кишинёв · Молдова</span><span class="end">Выпуск 2026</span></p></div>
+
+    <section class="hero">
+      <div class="wrap cover">
+        <h1 class="h1 rise"><span class="no">№ 01</span>Автоматизация и AI-системы для бизнеса, <em>которые реально работают</em></h1>
+
+        <!-- Рис. 1 — та же схема, что в концепте B, но в стиле книжной иллюстрации -->
+        <figure class="fig rise d2" aria-label="Схема: данные из биржи, 1С и почты идут в систему, а результат уходит в Telegram, WhatsApp и владельцу">
+          <svg viewBox="0 0 480 470" aria-hidden="true">
+            <path id="w1" class="s-wire" d="M70 76 V140 Q70 172 130 176 L190 180 V206"/>
+            <path id="w2" class="s-wire" d="M240 76 V206"/>
+            <path id="w3" class="s-wire" d="M410 76 V140 Q410 172 350 176 L290 180 V206"/>
+            <path id="w4" class="s-wire" d="M190 296 V312 L130 316 Q70 320 70 352 V394"/>
+            <path id="w5" class="s-wire" d="M240 296 V394"/>
+            <path id="w6" class="s-wire" d="M290 296 V312 L350 316 Q410 320 410 352 V394"/>
+            <rect class="s-box" x=".5" y="16.5" width="139" height="60"/><text class="s-t" x="16" y="44">SYLECTUS</text><text class="s-s" x="16" y="63">биржа грузов</text>
+            <rect class="s-box" x="170.5" y="16.5" width="139" height="60"/><text class="s-t" x="186" y="44">1С</text><text class="s-s" x="186" y="63">склад</text>
+            <rect class="s-box" x="340.5" y="16.5" width="139" height="60"/><text class="s-t" x="356" y="44">GMAIL</text><text class="s-s" x="356" y="63">ставки</text>
+            <!-- Ядро залито «чернилами» и подписано курсивом — главный элемент рисунка -->
+            <rect class="s-core" x="70" y="206" width="340" height="90"/>
+            <text class="s-big" x="92" y="250">MX · система</text>
+            <text class="s-sub" x="92" y="276">подбор · статусы · пороги · 24/7</text>
+            <circle cx="390" cy="226" r="4" fill="#ff5f1f"/>
+            <rect class="s-box" x=".5" y="394.5" width="139" height="60"/><text class="s-t" x="16" y="422">TELEGRAM</text><text class="s-s" x="16" y="441">команде</text>
+            <rect class="s-box" x="170.5" y="394.5" width="139" height="60"/><text class="s-t" x="186" y="422">WHATSAPP</text><text class="s-s" x="186" y="441">клиентам</text>
+            <rect class="s-box" x="340.5" y="394.5" width="139" height="60"/><text class="s-t" x="356" y="422">ВЛАДЕЛЕЦ</text><text class="s-s" x="356" y="441">сводка 08:00</text>
+            <!-- Импульсы бегут по линиям (SMIL — встроенная анимация SVG) -->
+            <circle class="s-pulse" r="4"><animateMotion dur="2.6s" repeatCount="indefinite"><mpath href="#w1"/></animateMotion></circle>
+            <circle class="s-pulse" r="4"><animateMotion dur="2.2s" begin=".9s" repeatCount="indefinite"><mpath href="#w2"/></animateMotion></circle>
+            <circle class="s-pulse" r="4"><animateMotion dur="2.6s" begin="1.6s" repeatCount="indefinite"><mpath href="#w3"/></animateMotion></circle>
+            <circle class="s-pulse" r="4"><animateMotion dur="2.6s" begin="1.2s" repeatCount="indefinite"><mpath href="#w4"/></animateMotion></circle>
+            <circle class="s-pulse" r="4"><animateMotion dur="2.2s" begin="2s" repeatCount="indefinite"><mpath href="#w5"/></animateMotion></circle>
+            <circle class="s-pulse" r="4"><animateMotion dur="2.6s" begin=".4s" repeatCount="indefinite"><mpath href="#w6"/></animateMotion></circle>
+          </svg>
+          <figcaption><b>Рис. 1</b>Данные идут сами — люди получают готовый результат.</figcaption>
+        </figure>
+
+        <div class="row rise d3">
+          <p class="lead">Находим, где ваш бизнес теряет время и деньги на ручной работе, и собираем систему под вашу задачу: встраиваем в 1С, мессенджеры, почту и ваши текущие сервисы. Сопровождаем после запуска.</p>
+          <div class="actions">
+            <a class="btn btn--primary" href="https://t.me/mvxev?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%A3%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D1%81%D0%B0%D0%B9%D1%82%20MX%20Systems%2C%20%D1%85%D0%BE%D1%87%D1%83%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D0%B7%D0%B0%D0%B4%D0%B0%D1%87%D1%83." target="_blank" rel="noopener">Обсудить задачу в Telegram <span class="arrow">→</span></a>
+            <a class="btn" href="#cases">Посмотреть кейсы <span class="arrow">↓</span></a>
+          </div>
+          <!-- Строка доверия в виде сносок -->
+          <ul class="notes" aria-label="Системы в ежедневной работе">
+            <li><sup>¹</sup><span><span class="k">Логистика · США</span><br>FastLoad — в ежедневной работе</span></li>
+            <li><sup>²</sup><span><span class="k">Автосервис · Кишинёв</span><br>4Power Club — в ежедневной работе</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div class="concept-tag">Концепт D · Обложка</div>
+  <script>
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.querySelectorAll('svg').forEach(s => s.pauseAnimations && s.pauseAnimations());
+  </script>
+</body>
+</html>
