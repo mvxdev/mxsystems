@@ -408,3 +408,36 @@ ul, ol { padding: 0; list-style: none; }
 /* Текст колонки: крупный курсив с засечками и буквица — первая буква больше остальных */
 .author-lead { max-width: 30ch; margin-bottom: 32px; font: italic 500 clamp(22px, 2.4vw, 30px)/1.3 var(--f-serif); color: #e2dbcd; }
 .author-lead::first-letter { float: left; margin: .08em .12em 0 0; font: normal 500 3.1em/.8 var(--f-serif); color: var(--accent); }
+
+
+/* ========== 8. УСЛУГИ (строки-таблица) ========== */
+/* Колонки таблицы: номер | название | описание | срок | цена | стрелка.
+   Одна и та же сетка у шапки и у строк — поэтому колонки ровные. */
+.svc-head, .svc { display: grid; grid-template-columns: 56px minmax(170px, 2.2fr) 5fr 1.3fr 1.2fr 32px; column-gap: 24px; align-items: baseline; }
+.svc-head { padding: 0 16px 12px; font: 400 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.svc-list { border-top: 1px solid var(--ink); }
+.svc-list li { border-bottom: 1px solid var(--rule-2); }
+.svc { position: relative; isolation: isolate; padding: 26px 16px; transition: color .3s; }
+/* Подсветка строки при наведении: фон заливается слева направо (как у кнопок) */
+.svc::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--bg-2); transform: scaleX(0); transform-origin: left; transition: transform .5s var(--ease); }
+.svc:hover::before, .svc:focus-visible::before { transform: scaleX(1); }
+.svc-n { font: 400 13px/1 var(--f-mono); color: var(--accent); }
+.svc-name { font: 500 clamp(26px, 2.6vw, 34px)/1.05 var(--f-serif); letter-spacing: -.01em; transition: transform .4s var(--ease); }
+.svc:hover .svc-name { transform: translateX(6px); }
+.svc-desc { color: #bdb5a7; font-size: 15px; }
+.svc-term, .svc-price { font: 400 13px/1.4 var(--f-mono); }
+.svc-term small, .svc-price small { display: none; }
+.svc-arrow { justify-self: end; font-family: var(--f-mono); color: var(--muted); transition: transform .3s, color .3s; }
+.svc:hover .svc-arrow { transform: translateX(4px); color: var(--accent); }
+
+/* Телефон и планшет: строка складывается в карточку */
+@media (max-width: 999px) {
+  .svc-head { display: none; }
+  .svc { grid-template-columns: 40px 1fr auto; row-gap: 10px; padding: 22px 0; }
+  .svc::before { display: none; }
+  .svc-desc { grid-column: 2 / -1; }
+  .svc-term { grid-column: 2; }
+  .svc-price { grid-column: 3; text-align: right; }
+  .svc-term small, .svc-price small { display: block; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .svc-arrow { grid-row: 1; grid-column: 3; }
+}

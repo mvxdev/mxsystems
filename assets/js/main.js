@@ -3,7 +3,7 @@
    Каждый блок ниже независим: если нужного элемента на странице нет,
    блок просто ничего не делает. Порядок:
      1. Настройки            2. Шапка и меню         3. Появление при прокрутке
-     4. Счётчики цифр        5. Услуги (раскрытие)   6. Макет FastLoad
+     4. Счётчики цифр        5. Калькулятор потерь   6. Макет FastLoad
      7. Макет 4Power         8. Язык                 9. Cookie и Google Analytics
    ===================================================================== */
 
@@ -104,16 +104,6 @@ if (REDUCE) $$('svg').forEach(svg => svg.pauseAnimations && svg.pauseAnimations(
   }), { threshold: .6 });                            // старт, когда видно 60% числа
   nums.forEach(el => { el.textContent = '0'; io.observe(el); });
 })();
-
-
-/* ===== 5. УСЛУГИ: раскрытие строк =====
-   Каждая строка — кнопка. Нажатие раскрывает описание (на десктопе оно раскрывается и при наведении —
-   это делает CSS). aria-expanded сообщает скринридеру, раскрыта ли строка. */
-$$('.svc-row').forEach(btn => btn.addEventListener('click', () => {
-  const open = btn.getAttribute('aria-expanded') !== 'true';
-  btn.setAttribute('aria-expanded', String(open));
-  btn.closest('.svc').classList.toggle('is-open', open);
-}));
 
 
 /* ===== ОБЩИЙ ПОМОЩНИК: FLIP-анимация =====
