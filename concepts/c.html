@@ -1,0 +1,202 @@
+<!doctype html>
+<!--
+  КОНЦЕПТ C — «Деловая газета / сводка»
+  Идея: светлая «бумажная» подача, как первая полоса делового издания.
+  Крупный антиквенный (с засечками) заголовок, а рядом «сводка» — таблица систем,
+  которые прямо сейчас работают у клиентов, с живыми часами.
+  Сознательно не тёмная тема — для сравнения. Только hero, файл самодостаточный.
+-->
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <!-- viewport — ширина страницы = ширина экрана телефона -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Концепт C — Сводка · MX Systems</title>
+  <meta name="robots" content="noindex">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Literata — шрифт с засечками для заголовка (есть курсив); Golos Text — текст;
+       JetBrains Mono — цифры и метки. Все с cyrillic и latin-ext. -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,500;1,7..72,400&family=Golos+Text:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+
+  <style>
+    :root {
+      --paper: #eeeae2;        /* тёплая «бумага» */
+      --paper-2: #e6e1d7;      /* чуть темнее — для плашек */
+      --ink: #16150f;          /* «типографская краска» — почти чёрный */
+      --muted: #6d6a62;
+      --rule: #16150f26;       /* тонкие линейки, как в газете */
+      --accent: #ff5f1f;
+      --ok: #1f9d55;           /* зелёный темнее, чтобы читался на светлом фоне */
+      --f-serif: "Literata", Georgia, serif;
+      --f-sans: "Golos Text", system-ui, sans-serif;
+      --f-mono: "JetBrains Mono", ui-monospace, monospace;
+      --pad: clamp(16px, 4vw, 56px);
+      --max: 1440px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; overflow-x: hidden; background: var(--paper); color: var(--ink); font: 400 17px/1.55 var(--f-sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    /* Зерно бумаги — тот же SVG-шум, но тёмный и чуть заметнее */
+    body::after {
+      content: ""; position: fixed; inset: 0; z-index: 100; pointer-events: none; opacity: .09; mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--pad); }
+
+    /* ===== Шапка: как «шапка» газеты — две линейки сверху и снизу ===== */
+    .header { position: sticky; top: 0; z-index: 10; background: var(--paper); border-bottom: 1px solid var(--ink); }
+    .header .wrap { display: flex; align-items: center; gap: 24px; height: 64px; }
+    .logo { font: 500 22px/1 var(--f-serif); letter-spacing: -.02em; white-space: nowrap; }
+    .logo i { color: var(--accent); }
+    .nav { display: none; gap: 28px; margin-left: auto; font: 500 14px/1 var(--f-sans); }
+    .nav a { background: linear-gradient(var(--ink), var(--ink)) left bottom / 0 1px no-repeat; transition: background-size .3s; padding-bottom: 3px; }
+    .nav a:hover { background-size: 100% 1px; }   /* подчёркивание вырастает слева направо */
+    .lang { display: flex; gap: 2px; margin-left: auto; font: 400 12px/1 var(--f-mono); }
+    .lang a { padding: 6px 7px; color: var(--muted); }
+    .lang a[aria-current] { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+    @media (min-width: 1000px) { .nav { display: flex; } .lang { margin-left: 0; } }
+
+    /* ===== Кнопки ===== */
+    .btn { position: relative; isolation: isolate; overflow: hidden; display: inline-flex; align-items: center; justify-content: space-between; gap: 24px; height: 56px; padding: 0 24px; border: 1px solid var(--ink); border-radius: 999px; font: 500 15px/1 var(--f-sans); white-space: nowrap; transition: color .3s; }
+    .btn::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--ink); transform: scaleX(0); transform-origin: left; transition: transform .45s cubic-bezier(.7,0,.2,1); }
+    .btn:hover { color: var(--paper); }
+    .btn:hover::before, .btn:focus-visible::before { transform: scaleX(1); }
+    .btn .arrow { transition: transform .3s; }
+    .btn:hover .arrow { transform: translateX(4px); }
+    .btn--primary { background: var(--accent); border-color: var(--accent); color: var(--ink); }
+    .btn--small { height: 38px; padding: 0 16px; gap: 8px; font-size: 13px; }
+    .btn svg { width: 16px; height: 16px; }
+    .header .btn--small span { display: none; }
+    @media (min-width: 560px) { .header .btn--small span { display: inline; } }
+
+    /* ===== «Выходные данные» под шапкой: номер, город, дата ===== */
+    .dateline { display: flex; justify-content: space-between; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--rule); font: 400 11.5px/1.3 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+    .dateline .hide-m { display: none; }
+    @media (min-width: 720px) { .dateline .hide-m { display: inline; } }
+
+    /* ===== Hero ===== */
+    .hero { padding: clamp(28px, 5vw, 64px) 0 clamp(48px, 6vw, 88px); }
+    .hero-grid { display: grid; gap: 40px; }
+    @media (min-width: 1100px) { .hero-grid { grid-template-columns: 1.45fr 1fr; gap: 56px; } }
+
+    /* Заголовок с засечками: прямое начертание + курсив для второй половины */
+    .h1 { margin: 0 0 clamp(24px, 3vw, 40px); font: 500 clamp(44px, 11.6vw, 112px)/.96 var(--f-serif); letter-spacing: -.035em; }
+    .h1 em { font-style: italic; font-weight: 400; color: var(--accent); }
+    @media (min-width: 1100px) { .h1 { font-size: min(6.6vw, 108px); } }
+
+    .lead-row { display: grid; gap: 28px; }
+    @media (min-width: 720px) { .lead-row { grid-template-columns: 1fr auto; align-items: end; } }
+    /* Буквица — первая буква абзаца крупнее, газетный приём */
+    .lead { margin: 0; max-width: 46ch; font-size: clamp(17px, 1.3vw, 19px); }
+    .lead::first-letter { float: left; font: 500 3.3em/.82 var(--f-serif); margin: .06em .1em 0 0; color: var(--accent); }
+    .actions { display: flex; flex-direction: column; gap: 10px; }
+    @media (max-width: 719px) { .actions .btn { width: 100%; } }
+
+    /* ===== Сводка: таблица работающих систем ===== */
+    .brief { border-top: 3px double var(--ink); align-self: start; }
+    .brief-head { display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0 12px; border-bottom: 1px solid var(--ink); }
+    .brief-head h2 { margin: 0; font: italic 400 24px/1.1 var(--f-serif); }
+    .clock { font: 500 13px/1 var(--f-mono); font-variant-numeric: tabular-nums; }   /* цифры одной ширины — часы не «прыгают» */
+    .sys { padding: 18px 0; border-bottom: 1px solid var(--rule); display: grid; grid-template-columns: 28px 1fr; gap: 0 12px; }
+    .sys .n { font: 400 12px/1.7 var(--f-mono); color: var(--muted); }
+    .sys h3 { margin: 0; font: 500 20px/1.25 var(--f-serif); letter-spacing: -.01em; }
+    .sys p { margin: 4px 0 12px; font-size: 14.5px; color: var(--muted); }
+    .status { display: inline-flex; align-items: center; gap: 8px; font: 500 11.5px/1 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ok); }
+    .status i { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); animation: blink 2s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: .25; } }
+    /* Показатели в строку, как биржевые котировки */
+    .kpis { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 12px; }
+    .kpi b { display: block; font: 500 22px/1 var(--f-mono); letter-spacing: -.02em; }
+    .kpi span { font: 400 10.5px/1.3 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .kpi--acc b { color: var(--accent); }
+    .brief-foot { padding-top: 12px; font: 400 11.5px/1.5 var(--f-mono); color: var(--muted); }
+
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+    .concept-tag { position: fixed; right: 12px; bottom: 12px; z-index: 50; font: 400 11px/1 var(--f-mono); padding: 8px 10px; background: var(--ink); color: var(--paper); }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="wrap">
+      <a class="logo" href="#">MX Systems<i>.</i></a>
+      <nav class="nav" aria-label="Разделы"><a href="#cases">Кейсы</a><a href="#services">Услуги</a><a href="#process">Как работаем</a><a href="#contact">Контакт</a></nav>
+      <div class="lang"><a href="#" aria-current="true">RU</a><a href="#">RO</a><a href="#">EN</a></div>
+      <a class="btn btn--small btn--primary" href="https://t.me/mvxev?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%A3%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D1%81%D0%B0%D0%B9%D1%82%20MX%20Systems%2C%20%D1%85%D0%BE%D1%87%D1%83%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D0%B7%D0%B0%D0%B4%D0%B0%D1%87%D1%83." target="_blank" rel="noopener" aria-label="Написать в Telegram">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.4 3.6 2.9 10.8c-.9.4-.9 1.6.1 1.9l4.6 1.4 1.7 5.4c.2.7 1.1.9 1.6.4l2.5-2.3 4.7 3.4c.6.4 1.4.1 1.6-.6l3-15.2c.2-1-.6-1.9-1.3-1.6ZM9.6 14.5l-.4 3.6-1.3-4.2 10-6.4-8.3 7Z"/></svg>
+        <span>Telegram</span>
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <p class="dateline"><span>Студия автоматизации<span class="hide-m"> и AI-систем</span></span><span class="hide-m">Кишинёв · Молдова</span><span id="today">2026</span></p>
+    </div>
+
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <h1 class="h1">Автоматизация и AI-системы для бизнеса, <em>которые реально работают</em></h1>
+          <div class="lead-row">
+            <p class="lead">Находим, где ваш бизнес теряет время и деньги на ручной работе, и собираем систему под вашу задачу: встраиваем в 1С, мессенджеры, почту и ваши текущие сервисы. Сопровождаем после запуска.</p>
+            <div class="actions">
+              <a class="btn btn--primary" href="https://t.me/mvxev?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%A3%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D1%81%D0%B0%D0%B9%D1%82%20MX%20Systems%2C%20%D1%85%D0%BE%D1%87%D1%83%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D0%B7%D0%B0%D0%B4%D0%B0%D1%87%D1%83." target="_blank" rel="noopener">Обсудить задачу в Telegram <span class="arrow">→</span></a>
+              <a class="btn" href="#cases">Посмотреть кейсы <span class="arrow">↓</span></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Сводка: строка доверия, развёрнутая в таблицу. Только факты из ТЗ. -->
+        <aside class="brief" aria-label="Системы в ежедневной работе">
+          <div class="brief-head"><h2>Сейчас в работе</h2><span class="clock" id="clock" aria-label="Время в Кишинёве">--:--:--</span></div>
+
+          <article class="sys">
+            <span class="n">01</span>
+            <div>
+              <h3>FastLoad — диспетчерская IS Logistics Solutions</h3>
+              <p>Логистика · США · 8 диспетчеров, 40 водителей</p>
+              <span class="status"><i></i>В эксплуатации</span>
+              <div class="kpis">
+                <div class="kpi kpi--acc"><b>+20–30%</b><span>грузов</span></div>
+                <div class="kpi"><b>24/7</b><span>мониторинг биржи</span></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="sys">
+            <span class="n">02</span>
+            <div>
+              <h3>4Power Club — система управления автосервисом</h3>
+              <p>Автосервис · Кишинёв · 6 постов, склад, 1С</p>
+              <span class="status"><i></i>В эксплуатации</span>
+              <div class="kpis">
+                <div class="kpi kpi--acc"><b>600+</b><span>автотестов</span></div>
+                <div class="kpi"><b>6</b><span>постов в одной системе</span></div>
+              </div>
+            </div>
+          </article>
+
+          <p class="brief-foot">Время в Кишинёве. Подробности — в разделе «Кейсы» ↓</p>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <div class="concept-tag">Концепт C · Сводка</div>
+
+  <script>
+    // Живые часы по Кишинёву. Intl.DateTimeFormat форматирует время для нужного часового пояса,
+    // поэтому часы верны, даже если посетитель из США.
+    const clock = document.getElementById('clock');
+    const f = new Intl.DateTimeFormat('ru-RU', { timeZone: 'Europe/Chisinau', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const tickClock = () => clock.textContent = f.format(new Date());
+    tickClock();
+    setInterval(tickClock, 1000);
+    // Дата в «выходных данных» — как на первой полосе газеты
+    document.getElementById('today').textContent = new Intl.DateTimeFormat('ru-RU', { timeZone: 'Europe/Chisinau', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date());
+  </script>
+</body>
+</html>
