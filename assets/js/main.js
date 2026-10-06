@@ -4,14 +4,16 @@
    блок просто ничего не делает. Порядок:
      1. Настройки            2. Шапка и меню         3. Появление при прокрутке
      4. Счётчики цифр        5. Калькулятор потерь   6. Макет FastLoad
-     7. Макет 4Power         8. Язык                 9. Cookie и Google Analytics
+     7. Макет 4Power         8. Язык                 9. Cookie, GA4 и Meta Pixel
    ===================================================================== */
 
 /* ===== 1. НАСТРОЙКИ ===== */
 
-// ID Google Analytics 4 (вида G-XXXXXXXXXX). Пока это заглушка — аналитика не загружается вообще.
-// Когда появится настоящий ID, впишите его сюда.
+// [ЗАПОЛНИТЬ] ID Google Analytics 4 — вида G-XXXXXXXXXX (analytics.google.com → Администратор → Потоки данных).
+// [ЗАПОЛНИТЬ] ID Meta Pixel — число из 15–16 цифр (business.facebook.com → Events Manager).
+// Пока стоят заглушки — ни GA, ни пиксель не загружаются, даже если посетитель согласился.
 const GA_ID = 'G-XXXXXXXXXX';
+const PIXEL_ID = '000000000000000';
 
 // Автоопределение языка браузера. Включим, когда будут готовы версии /ro/ и /en/,
 // иначе посетителя с румынским браузером отправит на несуществующую страницу.
@@ -286,36 +288,86 @@ function whileVisible(el, start, stop) {
 })();
 
 
-/* ===== 9. COOKIE И GOOGLE ANALYTICS =====
-   Аналитика загружается ТОЛЬКО после согласия посетителя (так требует GDPR — европейский закон
-   о персональных данных). До нажатия «Принять» на сайт не грузится ни один скрипт Google. */
+/* ===== 9. COOKIE, GOOGLE ANALYTICS И META PIXEL =====
+   Закон РМ № 195/2024 о защите персональных данных и европейский GDPR требуют согласия
+   на аналитику и рекламные cookie. Поэтому:
+   — до согласия не загружается ни один скрипт Google или Meta;
+   — посетитель выбирает категории отдельно: «Аналитика» (GA4) и «Реклама» (Meta Pixel);
+   — выбор хранится в localStorage (хранилище браузера) и его можно изменить
+     в любой момент кнопкой «Настройки cookie» в футере. */
 (() => {
-  const KEY = 'mx-consent';                      // 'yes' или 'no'
+  const KEY = 'mx-consent';                       // здесь хранится {a: аналитика, m: реклама, t: дата}
   const banner = $('#cookie');
-  const get = () => { try { return localStorage.getItem(KEY); } catch { return null; } };
-  const set = v => { try { localStorage.setItem(KEY, v); } catch { /* приватный режим */ } };
+  if (!banner) return;
+  const opts = $('#cookie-opts'), chkA = $('#c-analytics'), chkM = $('#c-marketing');
+  const btnCfg = $('#cookie-cfg'), btnSave = $('#cookie-save');
 
+  const read = () => { try { return JSON.parse(localStorage.getItem(KEY)); } catch { return null; } };
+  const write = v => { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch { /* приватный режим */ } };
+  const isReal = (id, fake) => id && id !== fake;  // заглушки не загружаем
+
+  // --- Google Analytics 4: загружаем скрипт gtag.js только после согласия ---
   function loadGA() {
-    if (!/^G-[A-Z0-9]+$/.test(GA_ID) || GA_ID === 'G-XXXXXXXXXX' || window.gtag) return;   // нет ID или уже загружено
+    if (!isReal(GA_ID, 'G-XXXXXXXXXX') || window.gtag) return;
     const s = document.createElement('script');
-    s.async = true;
+    s.async = true;                                // async — не блокирует отрисовку страницы
     s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
     document.head.appendChild(s);
-    window.dataLayer = window.dataLayer || [];
+    window.dataLayer = window.dataLayer || [];     // очередь событий, которую читает gtag.js
     window.gtag = function () { dataLayer.push(arguments); };
     gtag('js', new Date());
-    gtag('config', GA_ID, { anonymize_ip: true });   // анонимизация IP-адреса посетителя
+    gtag('config', GA_ID, { anonymize_ip: true }); // анонимизация IP-адреса
   }
 
-  const show = () => banner && (banner.hidden = false);
-  const hide = () => banner && (banner.hidden = true);
+  // --- Meta Pixel: официальный код Meta, переписанный читаемо ---
+  function loadPixel() {
+    if (!isReal(PIXEL_ID, '000000000000000') || window.fbq) return;
+    // fbq — функция-очередь: команды копятся, пока не загрузится fbevents.js, потом выполняются
+    const fbq = window.fbq = function () { fbq.callMethod ? fbq.callMethod.apply(fbq, arguments) : fbq.queue.push(arguments); };
+    window._fbq = fbq; fbq.push = fbq; fbq.loaded = true; fbq.version = '2.0'; fbq.queue = [];
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://connect.facebook.net/en_US/fbevents.js';
+    document.head.appendChild(s);
+    fbq('init', PIXEL_ID);
+    fbq('track', 'PageView');                      // событие «просмотр страницы»
+  }
 
-  const choice = get();
-  if (choice === 'yes') loadGA();
-  else if (!choice) show();                         // ещё не выбирал — показываем баннер
+  const apply = c => { if (c?.a) loadGA(); if (c?.m) loadPixel(); };
 
-  $('#cookie-yes')?.addEventListener('click', () => { set('yes'); hide(); loadGA(); });
-  $('#cookie-no')?.addEventListener('click', () => { set('no'); hide(); });
-  // Ссылка «Настройки cookie» в футере снова открывает баннер
+  const show = () => {
+    const c = read();
+    chkA.checked = !!c?.a; chkM.checked = !!c?.m;  // в настройках показываем текущий выбор
+    banner.hidden = false;
+  };
+  const save = c => {
+    const before = read();
+    write({ a: c.a, m: c.m, t: new Date().toISOString() });
+    banner.hidden = true;
+    opts.hidden = true; btnSave.hidden = true; btnCfg.hidden = false;
+    // Если согласие отозвали, а скрипты уже загружены — выгрузить их можно только перезагрузкой
+    if ((before?.a && !c.a) || (before?.m && !c.m)) location.reload();
+    else apply(c);
+  };
+
+  const saved = read();
+  if (saved) apply(saved); else show();            // первый визит — показываем баннер
+
+  $('#cookie-yes').addEventListener('click', () => save({ a: true, m: true }));
+  $('#cookie-no').addEventListener('click', () => save({ a: false, m: false }));
+  btnCfg.addEventListener('click', () => { opts.hidden = false; btnSave.hidden = false; btnCfg.hidden = true; });
+  btnSave.addEventListener('click', () => save({ a: chkA.checked, m: chkM.checked }));
   $('#cookie-open')?.addEventListener('click', show);
+
+  // --- Конверсии: клик по Telegram, WhatsApp, телефону или почте — это «заявка».
+  //     Событие уходит в GA и пиксель, только если они загружены (то есть было согласие) ---
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href]');
+    if (!a) return;
+    const ch = /t\.me\//.test(a.href) ? 'telegram' : /wa\.me\//.test(a.href) ? 'whatsapp'
+             : a.href.startsWith('tel:') ? 'phone' : a.href.startsWith('mailto:') ? 'email' : null;
+    if (!ch) return;
+    window.gtag?.('event', 'generate_lead', { method: ch });   // ?.() — вызвать, только если функция есть
+    window.fbq?.('track', 'Contact', { method: ch });
+  });
 })();

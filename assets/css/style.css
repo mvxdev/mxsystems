@@ -574,3 +574,40 @@ ul, ol { padding: 0; list-style: none; }
 .footer-bottom { display: flex; align-items: center; gap: 12px; padding-top: 24px; border-top: 1px solid var(--rule); font: 400 12px/1.4 var(--f-mono); color: var(--muted); }
 .footer-bottom .ico { width: 32px; height: 32px; }
 .footer-bottom .ico svg { width: 15px; height: 15px; }
+
+
+/* ========== 14. COOKIE-БАННЕР ========== */
+.cookie { position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 80; max-width: 440px; padding: 20px; border: 1px solid var(--rule-2); background: var(--bg-2); box-shadow: 0 30px 60px -20px #000; }
+.cookie[hidden] { display: none; }
+.cookie-title { margin-bottom: 8px; font: italic 500 22px/1.2 var(--f-serif); }
+.cookie-text { font-size: 14px; color: #bdb5a7; }
+.cookie-text a { color: var(--ink); border-bottom: 1px solid var(--rule-2); }
+.cookie-opts { display: grid; gap: 4px; margin-top: 14px; }
+.cookie-opts[hidden] { display: none; }
+/* Переключатель категории: чекбокс + название + пояснение */
+.tgl { display: grid; grid-template-columns: 20px 1fr; gap: 10px; align-items: start; padding: 10px 0; border-top: 1px solid var(--rule); font-size: 14px; cursor: pointer; }
+.tgl input { width: 16px; height: 16px; margin: 2px 0 0; accent-color: var(--accent); }   /* accent-color — цвет галочки */
+.tgl small { display: block; font: 400 11px/1.4 var(--f-mono); color: var(--muted); }
+.cookie-btns { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 16px; }
+.cookie-btns [hidden] { display: none; }
+.cookie-link { padding: 8px 4px; font: 400 12px/1 var(--f-mono); color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+.cookie-link:hover { color: var(--ink); }
+
+/* ========== 15. ЮРИДИЧЕСКИЕ СТРАНИЦЫ (политика конфиденциальности) ========== */
+.legal { padding: clamp(40px, 6vw, 80px) 0 96px; }
+.legal-in { max-width: 760px; }
+.legal h1 { margin: 20px 0 16px; font: 500 clamp(38px, 5.4vw, 64px)/1 var(--f-serif); letter-spacing: -.02em; }
+.legal .draft { margin: 24px 0 40px; padding: 14px 16px; border: 1px solid var(--accent); font: 400 13px/1.5 var(--f-mono); color: var(--accent); }
+.legal h2 { margin: 44px 0 14px; font: 500 28px/1.15 var(--f-serif); }
+.legal p, .legal li { color: #d6cfc2; }
+.legal p + p { margin-top: 12px; }
+.legal ul { display: grid; gap: 8px; margin-top: 12px; }
+.legal li { position: relative; padding-left: 22px; }
+.legal li::before { content: "—"; position: absolute; left: 0; color: var(--accent); }
+.legal a { color: var(--accent); border-bottom: 1px solid #ff5f1f55; }
+.legal table { width: 100%; margin-top: 14px; border-collapse: collapse; font-size: 14px; }
+.legal th, .legal td { padding: 10px 8px 10px 0; border-bottom: 1px solid var(--rule-2); text-align: left; vertical-align: top; }
+.legal th { font: 400 11px/1.3 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.legal .meta { font: 400 12px/1.5 var(--f-mono); color: var(--muted); }
+/* Таблица не помещается на телефоне — даём ей прокручиваться внутри своего блока */
+.table-scroll { overflow-x: auto; }

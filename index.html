@@ -633,5 +633,26 @@
       <p class="footer-bottom"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M12 21s-6.5-5.8-6.5-11A6.5 6.5 0 0 1 18.5 10c0 5.2-6.5 11-6.5 11Z"/><circle cx="12" cy="10" r="2.4"/></svg></span><span>MX Systems · Кишинёв, Молдова · © 2026</span></p>
     </div>
   </footer>
+
+  <!-- ===== COOKIE-БАННЕР =====
+       Показывается при первом визите. До согласия не загружается ни один сторонний скрипт.
+       Кнопки «Принять все» и «Только необходимые» одинаково заметны — так требует закон:
+       отказаться должно быть так же легко, как согласиться. Логика — main.js, раздел 9.
+       hidden — блок скрыт, пока скрипт не решит его показать. -->
+  <div class="cookie" id="cookie" role="dialog" aria-labelledby="cookie-title" aria-describedby="cookie-text" hidden>
+    <p class="cookie-title" id="cookie-title">Cookie и аналитика</p>
+    <p class="cookie-text" id="cookie-text">Сайт работает и без них. С вашего согласия включу Google Analytics — чтобы понимать, какие разделы полезны, — и Meta Pixel — чтобы измерять рекламу. <a href="privacy/">Подробнее</a></p>
+    <div class="cookie-opts" id="cookie-opts" hidden>
+      <label class="tgl"><input type="checkbox" checked disabled><span>Необходимые<small>Всегда включены: запоминают язык и этот выбор</small></span></label>
+      <label class="tgl"><input type="checkbox" id="c-analytics"><span>Аналитика<small>Google Analytics 4</small></span></label>
+      <label class="tgl"><input type="checkbox" id="c-marketing"><span>Реклама<small>Meta Pixel (Facebook, Instagram)</small></span></label>
+    </div>
+    <div class="cookie-btns">
+      <button type="button" class="btn btn--small btn--primary" id="cookie-yes">Принять все</button>
+      <button type="button" class="btn btn--small" id="cookie-no">Только необходимые</button>
+      <button type="button" class="cookie-link" id="cookie-cfg">Настроить</button>
+      <button type="button" class="btn btn--small" id="cookie-save" hidden>Сохранить выбор</button>
+    </div>
+  </div>
 </body>
 </html>
