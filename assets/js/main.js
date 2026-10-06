@@ -15,9 +15,8 @@
 const GA_ID = 'G-XXXXXXXXXX';
 const PIXEL_ID = '000000000000000';
 
-// Автоопределение языка браузера. Включим, когда будут готовы версии /ro/ и /en/,
-// иначе посетителя с румынским браузером отправит на несуществующую страницу.
-const AUTO_LANG = false;
+// Автоопределение языка браузера при первом заходе на русскую главную (см. раздел 8).
+const AUTO_LANG = true;
 
 // prefers-reduced-motion — системная настройка «уменьшить движение». Если включена — без анимаций.
 const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -283,8 +282,11 @@ function whileVisible(el, start, stop) {
   const langs = (navigator.languages || [navigator.language || '']).map(l => l.toLowerCase());
   const first = langs[0] || '';
   if (first.startsWith('ru')) return;                         // русский браузер — остаёмся
-  if (first.startsWith('ro') || first.startsWith('mo')) location.replace('ro/');
-  else if (first.startsWith('en')) location.replace('en/');
+  // Адрес перехода берём из ссылки переключателя языков: так он верен для любой страницы,
+  // а на страницах без переключателя (политика конфиденциальности) перехода просто не будет
+  const target = first.startsWith('ro') || first.startsWith('mo') ? 'ro' : first.startsWith('en') ? 'en' : null;
+  const link = target && $(`.lang a[data-lang="${target}"]`);
+  if (link) location.replace(link.href);
 })();
 
 

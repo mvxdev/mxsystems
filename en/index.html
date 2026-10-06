@@ -1,0 +1,666 @@
+<!doctype html>
+<!--
+  MX Systems — главная страница, английская версия (/en/).
+  ФАЙЛ СОБРАН АВТОМАТИЧЕСКИ скриптом tools/build_i18n.py из русского index.html.
+  Не правьте его руками: правьте index.html или переводы в скрипте и запустите скрипт заново.
+-->
+<html lang="en">
+<head>
+  <!-- Кодировка UTF-8 — нужна для кириллицы и румынских букв -->
+  <meta charset="utf-8">
+  <!-- viewport — говорит телефону: ширина страницы = ширина экрана (без «уменьшенной копии» десктопа) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- title и description — то, что показывает Google в результатах поиска -->
+  <title>MX Systems — ads, websites and automation for business · Chișinău</title>
+  <meta name="description" content="MX Systems studio: Google and Meta ads, websites and SEO, automation and integrations with 1C and messengers, security audits. The whole customer journey, from first click to payment. Chișinău, Moldova.">
+
+  <!-- canonical — «главный» адрес этой страницы, чтобы поисковик не считал дублями адреса с параметрами -->
+  <link rel="canonical" href="https://mxsystems.ro/en/">
+  <!-- hreflang — подсказка поисковикам: это одна и та же страница на разных языках.
+       x-default — какую версию показывать, если язык посетителя не совпал ни с одной -->
+  <link rel="alternate" hreflang="ru" href="https://mxsystems.ro/">
+  <link rel="alternate" hreflang="ro" href="https://mxsystems.ro/ro/">
+  <link rel="alternate" hreflang="en" href="https://mxsystems.ro/en/">
+  <link rel="alternate" hreflang="x-default" href="https://mxsystems.ro/">
+
+  <!-- Open Graph — данные для превью ссылки в Telegram, WhatsApp, Facebook.
+       Адреса здесь полные (https://…): мессенджеры не понимают относительные пути -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="MX Systems">
+  <meta property="og:url" content="https://mxsystems.ro/en/">
+  <meta property="og:title" content="MX Systems — we bring in customers and build a system where no lead gets lost">
+  <meta property="og:description" content="Ads, websites and automation — the whole customer journey, from first click to payment. Works with 1C, messengers and email.">
+  <meta property="og:image" content="https://mxsystems.ro/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="ru_RU">
+  <meta property="og:locale:alternate" content="ro_RO">
+  <!-- summary_large_image — крупное превью с картинкой (используют X/Twitter и некоторые мессенджеры) -->
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Favicon — иконка во вкладке браузера -->
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <!-- theme-color — цвет панели браузера на телефоне (в тон фону сайта) -->
+  <meta name="theme-color" content="#0d0c0a">
+
+  <!-- Шрифты Google Fonts. preconnect заранее открывает соединение — шрифты приходят быстрее.
+       Cormorant Garamond — заголовки, Golos Text — текст, JetBrains Mono — цифры и метки.
+       Во всех трёх есть кириллица и latin-ext (румынские ă â î ș ț).
+       display=swap — пока шрифт грузится, текст виден системным шрифтом, а не пустым местом -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Golos+Text:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <!-- Ставим на <html> класс .js: стили анимаций появления включаются, только если JS работает -->
+  <script>document.documentElement.classList.add('js')</script>
+  <!-- defer — скрипт загрузится параллельно и выполнится после разбора HTML (не тормозит отрисовку) -->
+  <script src="../assets/js/main.js" defer></script>
+</head>
+<body>
+
+  <!-- ===== ШАПКА ===== -->
+  <header class="header" id="header">
+    <div class="wrap header-in">
+      <a class="logo" href="./" aria-label="MX Systems — home"><span class="logo-mark" aria-hidden="true">MX</span>MX Systems</a>
+
+      <nav class="nav" id="nav" aria-label="Sections">
+        <a href="#cases">Work</a>
+        <a href="#services">Services</a>
+        <a href="#process">How we work</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <!-- Переключатель языков. aria-current="page" — отмечает текущий язык (и для скринридеров).
+           data-lang — по нему main.js запоминает выбор посетителя -->
+      <div class="lang" aria-label="Language">
+        <a href="../" hreflang="ru" lang="ru" data-lang="ru">RU</a>
+        <a href="../ro/" hreflang="ro" lang="ro" data-lang="ro">RO</a>
+        <a href="./" hreflang="en" lang="en" data-lang="en" aria-current="page">EN</a>
+      </div>
+
+      <a class="btn btn--small btn--primary" href="https://t.me/mvxev?text=Hi%21%20I%20saw%20the%20MX%20Systems%20website%20and%20would%20like%20to%20book%20a%20free%2030-minute%20review." target="_blank" rel="noopener" aria-label="Free review on Telegram">
+        <!-- Иконка Telegram (бумажный самолётик), нарисована в SVG -->
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.4 3.6 2.9 10.8c-.9.4-.9 1.6.1 1.9l4.6 1.4 1.7 5.4c.2.7 1.1.9 1.6.4l2.5-2.3 4.7 3.4c.6.4 1.4.1 1.6-.6l3-15.2c.2-1-.6-1.9-1.3-1.6ZM9.6 14.5l-.4 3.6-1.3-4.2 10-6.4-8.3 7Z"/></svg>
+        <span class="label">Free review · 30 min</span>
+      </a>
+
+      <!-- Кнопка меню для телефона. aria-expanded сообщает скринридеру, открыто ли меню -->
+      <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="nav"><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== HERO (первый экран) ===== -->
+    <div class="wrap"><p class="masthead"><span>Development · automation · ads</span><span class="mid">Chișinău · Moldova</span><span class="end">2026</span></p></div>
+
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap cover">
+        <h1 class="h1 rise" id="hero-title"><span class="no">MX Systems</span>We bring in customers and build a system <em>where no lead gets lost</em></h1>
+
+        <!-- Рис. 1 — схема: откуда приходят данные, что делает система, кто получает результат.
+             viewBox — «холст» 480×470 условных единиц; SVG сам масштабируется под ширину блока -->
+        <figure class="fig rise d2" aria-label="Diagram: leads from ads, accounting and email flow into the system; the team, customers and owner get the result">
+          <svg viewBox="0 0 480 470" aria-hidden="true">
+            <!-- Провода. У каждого есть id — по нему бегут импульсы -->
+            <path id="w1" class="s-wire" d="M70 76 V140 Q70 172 130 176 L190 180 V206"/>
+            <path id="w2" class="s-wire" d="M240 76 V206"/>
+            <path id="w3" class="s-wire" d="M410 76 V140 Q410 172 350 176 L290 180 V206"/>
+            <path id="w4" class="s-wire" d="M190 296 V312 L130 316 Q70 320 70 352 V394"/>
+            <path id="w5" class="s-wire" d="M240 296 V394"/>
+            <path id="w6" class="s-wire" d="M290 296 V312 L350 316 Q410 320 410 352 V394"/>
+            <!-- Входы -->
+            <rect class="s-box" x=".5" y="16.5" width="139" height="60"/><text class="s-t" x="16" y="44">ADS</text><text class="s-s" x="16" y="63">customer leads</text>
+            <rect class="s-box" x="170.5" y="16.5" width="139" height="60"/><text class="s-t" x="186" y="44">ACCOUNTING</text><text class="s-s" x="186" y="63">stock levels</text>
+            <rect class="s-box" x="340.5" y="16.5" width="139" height="60"/><text class="s-t" x="356" y="44">EMAIL</text><text class="s-s" x="356" y="63">inbox, orders</text>
+            <!-- Ядро — светлый блок, главный элемент рисунка -->
+            <rect class="s-core" x="70" y="206" width="340" height="90"/>
+            <text class="s-big" x="92" y="250">MX Systems</text>
+            <text class="s-sub" x="92" y="276">matches · tracks · reminds</text>
+            <circle cx="390" cy="226" r="4" fill="#ff5f1f"/>
+            <!-- Выходы -->
+            <rect class="s-box" x=".5" y="394.5" width="139" height="60"/><text class="s-t" x="16" y="422">TEAM</text><text class="s-s" x="16" y="441">notifications</text>
+            <rect class="s-box" x="170.5" y="394.5" width="139" height="60"/><text class="s-t" x="186" y="422">CUSTOMERS</text><text class="s-s" x="186" y="441">“order ready”</text>
+            <rect class="s-box" x="340.5" y="394.5" width="139" height="60"/><text class="s-t" x="356" y="422">OWNER</text><text class="s-s" x="356" y="441">summary 08:00</text>
+            <!-- Импульсы: точки едут по проводам. animateMotion — встроенная анимация SVG (SMIL),
+                 работает без JS и очень дёшево. begin — задержка старта, чтобы шли вразнобой -->
+            <circle class="s-pulse" r="4"><animateMotion dur="2.6s" repeatCount="indefinite"><mpath href="#w1"/></animateMotion></circle>
+            <circle class="s-pulse" r="4"><animateMotion dur="2.2s" begin=".9s" repeatCount="indefinite"><mpath href="#w2"/></animateMotion></circle>
+            <circle class="s-pulse" r="4"><animateMotion dur="2.6s" begin="1.6s" repeatCount="indefinite"><mpath href="#w3"/></animateMotion></circle>
+            <circle class="s-pulse" r="4"><animateMotion dur="2.6s" begin="1.2s" repeatCount="indefinite"><mpath href="#w4"/></animateMotion></circle>
+            <circle class="s-pulse" r="4"><animateMotion dur="2.2s" begin="2s" repeatCount="indefinite"><mpath href="#w5"/></animateMotion></circle>
+            <circle class="s-pulse" r="4"><animateMotion dur="2.6s" begin=".4s" repeatCount="indefinite"><mpath href="#w6"/></animateMotion></circle>
+          </svg>
+          <figcaption><b>Fig. 1</b>Data moves on its own — people get the finished result.</figcaption>
+        </figure>
+
+        <div class="row rise d3">
+          <p class="lead">We set up ads, build websites and automate routine work — the whole customer journey, from first click to payment. We plug into 1C, messengers and email, and stay with you after launch.</p>
+          <div class="actions">
+            <a class="btn btn--primary" href="https://t.me/mvxev?text=Hi%21%20I%20saw%20the%20MX%20Systems%20website%20and%20would%20like%20to%20book%20a%20free%2030-minute%20review." target="_blank" rel="noopener"><span>Free 30-minute review <small class="btn-sub">on Telegram — no strings attached</small></span><span class="arrow" aria-hidden="true">→</span></a>
+            <a class="btn" href="#cases">See the work <span class="arrow" aria-hidden="true">↓</span></a>
+          </div>
+          <!-- Строка доверия — в виде сносок, каждая ведёт к своему кейсу -->
+          <ul class="notes" aria-label="Systems in daily use">
+            <li><sup>¹</sup><a href="#case-fastload"><span class="k">Logistics · USA</span><br>System in daily use</a></li>
+            <li><sup>²</sup><a href="#case-4power"><span class="k">Car service · Chișinău</span><br>System in daily use</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== КЕЙСЫ ===== -->
+    <section class="section cases" id="cases" aria-labelledby="cases-title">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <p class="eyebrow"><b>01</b> / Work</p>
+          <h2 class="h2" id="cases-title">Two systems that <em>run every single day</em></h2>
+          <p>Not mockups, not pilots — both systems are used by the clients' teams every day. The interfaces below are simplified copies with demo data.</p>
+        </div>
+
+        <!-- ===== КЕЙС 01 — FastLoad (на EN идёт первым) ===== -->
+        <article class="case" id="case-fastload" aria-labelledby="fl-title">
+          <header class="case-head reveal">
+            <div class="case-tags">
+              <span class="case-no">Case 01</span>
+              <span class="badge"><i class="live-dot"></i>In production</span>
+            </div>
+            <h3 class="case-title" id="fl-title">FastLoad — a platform for the <em>IS Logistics Solutions</em> dispatch team</h3>
+            <!-- dl (список определений): пары «название — значение» -->
+            <dl class="case-meta">
+              <div><dt>Client</dt><dd>IS Logistics Solutions LLC</dd></div>
+              <div><dt>Industry</dt><dd>Logistics · USA</dd></div>
+              <div><dt>Team</dt><dd>8 dispatchers, 40 drivers</dd></div>
+            </dl>
+          </header>
+
+          <div class="case-body">
+            <div class="case-text reveal">
+              <section class="case-block">
+                <h4>The problem</h4>
+                <p>Dispatchers watched the Sylectus load board by hand (a US marketplace where brokers post freight): refreshing the page, checking every load against each driver's location and truck type, and writing bids to brokers manually. Good loads are gone within minutes, and anything posted outside working hours was simply lost.</p>
+              </section>
+              <section class="case-block">
+                <h4>What we built</h4>
+                <ul class="done">
+                  <li><b>24/7 load board monitoring.</b> The system pulls new loads on its own and matches them to each driver — by area and radius, truck type, dates and mileage limit — and instantly works out the deadhead miles to pickup.</li>
+                  <li><b>Instant Telegram alerts.</b> A matching load reaches the driver and the dispatcher right after it's posted.</li>
+                  <li><b>One-click bids to brokers.</b> The email goes out from the driver's or the company's Gmail with a ready signature and truck details (Gmail access passed Google's verification).</li>
+                  <li><b>Driver portal:</b> their loads, profile, working areas, Gmail and Telegram connection.</li>
+                  <li><b>Bulk SMS panel with AI-varied texts</b> — every message is unique, so fewer land in spam.</li>
+                </ul>
+              </section>
+            </div>
+
+            <!-- Упрощённый макет интерфейса FastLoad. Все данные демонстрационные.
+                 aria-hidden — для скринридеров это декорация, вместо неё читается текст .sr-only -->
+            <div class="case-ui reveal d1">
+              <p class="sr-only">Simplified mockup of the FastLoad interface with demo data: a list of matched loads with a send-bid button.</p>
+              <div class="ui" aria-hidden="true">
+                <div class="ui-bar"><i class="live-dot"></i><span>FastLoad · matched loads</span><span class="r">demo</span></div>
+                <div class="ui-sub"><span>Driver: Demo D.</span><span>Dry Van 53'</span><span>area: Southeast · 300 mi</span></div>
+                <div class="fl-list" id="fl-list">
+                  <div class="load">
+                    <div class="load-top"><span class="broker">Get Freight LLC</span><span class="tag">new · 4 sec</span></div>
+                    <div class="route"><b>Miami, FL</b><span class="arr">→</span><b>Dayton, NJ</b></div>
+                    <div class="load-meta"><span>1 214 mi</span><span>deadhead 38 mi</span><span>Dry Van</span></div>
+                    <div class="bid"><span class="rate">$ 2 450</span><span class="send">Send bid</span></div>
+                  </div>
+                  <div class="load">
+                    <div class="load-top"><span class="broker">Sample Logistics Co</span><span class="tag">12 min</span></div>
+                    <div class="route"><b>Orlando, FL</b><span class="arr">→</span><b>Charlotte, NC</b></div>
+                    <div class="load-meta"><span>526 mi</span><span>deadhead 52 mi</span><span>Dry Van</span></div>
+                    <div class="bid"><span class="rate">$ 1 240</span><span class="send">Send bid</span></div>
+                  </div>
+                  <div class="load">
+                    <div class="load-top"><span class="broker">Demo Brokerage Inc</span><span class="tag">bid sent</span></div>
+                    <div class="route"><b>Tampa, FL</b><span class="arr">→</span><b>Atlanta, GA</b></div>
+                    <div class="load-meta"><span>456 mi</span><span>deadhead 17 mi</span><span>Dry Van</span></div>
+                    <div class="bid is-sent"><span class="rate">$ 1 100</span><span class="send">✓ Sent</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Результат — как приборная панель: крупные моноширинные цифры с подписями капсом -->
+          <div class="case-result reveal">
+            <h4>Results</h4>
+            <div class="kpis">
+              <div class="kpi kpi--acc"><b>+<span class="count" data-to="20">20</span>–<span class="count" data-to="30">30</span>%</b><span>more loads from off-hours</span></div>
+              <div class="kpi"><b>24/7</b><span>load board monitoring</span></div>
+              <div class="kpi"><b><span class="count" data-to="8">8</span></b><span>dispatchers on the system</span></div>
+              <div class="kpi"><b><span class="count" data-to="40">40</span></b><span>drivers receiving loads</span></div>
+            </div>
+            <ul class="results">
+              <li>The system catches loads while dispatchers are off shift.</li>
+              <li>Above all, time: dispatchers no longer sit on the load board hitting refresh — they work only with loads that are already matched.</li>
+              <li>Used daily by the whole team; the client is on a paid support plan.</li>
+              <li>The project grew into a standalone product — <a class="link" href="https://fastload.app" target="_blank" rel="noopener">fastload.app ↗</a></li>
+            </ul>
+          </div>
+
+          <footer class="case-foot reveal">
+            <p class="stack"><span>Stack</span>Node.js · Express · PostgreSQL (Supabase) · Puppeteer · Telegram Bot API · Gmail API · OpenPhone API · Claude API</p>
+            <!-- details/summary — встроенный в браузер «раскрывающийся блок», работает без JS -->
+            <details class="shots">
+              <summary class="btn">See screenshots <span class="arrow" aria-hidden="true">↓</span></summary>
+              <!-- ВАЖНО: скриншоты публикуются ТОЛЬКО на демо-данных —
+                   без реальных госномеров, имён сотрудников и телефонов клиентов.
+                   Картинки кладите в assets/cases/fastload/ (например 01.webp) и замените
+                   <div class="shot"> на <img src="../assets/cases/fastload/01.webp" alt="…" loading="lazy" width="1600" height="1000"> -->
+              <div class="shots-grid">
+                <div class="shot">screenshot · assets/cases/fastload/01</div>
+                <div class="shot">screenshot · assets/cases/fastload/02</div>
+                <div class="shot">screenshot · assets/cases/fastload/03</div>
+              </div>
+            </details>
+          </footer>
+        </article>
+        <!-- ===== КЕЙС 02 — 4Power Club =====
+             Порядок кейсов: на RU и RO первым идёт 4Power (местному владельцу ближе автосервис
+             в Кишинёве), на EN первым — FastLoad. -->
+        <article class="case" id="case-4power" aria-labelledby="fp-title">
+          <header class="case-head reveal">
+            <div class="case-tags">
+              <span class="case-no">Case 02</span>
+              <span class="badge"><i class="live-dot"></i>In production</span>
+            </div>
+            <h3 class="case-title" id="fp-title">Workshop management system for <em>4Power Club</em></h3>
+            <dl class="case-meta">
+              <div><dt>Client</dt><dd>4Power Club</dd></div>
+              <div><dt>Industry</dt><dd>Car service · Chișinău</dd></div>
+              <div><dt>Team</dt><dd>6 bays, mechanics, 4 service advisors, warehouse</dd></div>
+            </dl>
+          </header>
+
+          <div class="case-body case-body--flip">
+            <div class="case-text reveal">
+              <section class="case-block">
+                <h4>The problem</h4>
+                <p>Information got lost between people: an advisor didn't learn a car was ready if a colleague had checked it in; cars waiting 2–3 weeks for ordered parts were forgotten; the warehouse received parts but told no one; parts ordered for a car that wasn't on site lost their link to it; customers were told their car was ready by hand. Parts were tracked in 1C.</p>
+              </section>
+              <section class="case-block">
+                <h4>What we built</h4>
+                <ul class="done">
+                  <li><b>Real-time car board</b> — by day and by status column; urgent cars are highlighted, and you can see how many days each one has been waiting.</li>
+                  <li><b>Parts tracked through the full cycle</b> “car waiting → ordered → in stock → fitted”, plus a separate tab for parts that arrived without a linked car.</li>
+                  <li><b>1C sync</b> — warehouse receipts come in automatically, with no double entry.</li>
+                  <li><b>“Shop floor screen”</b> — a shared monitor for the mechanics, nothing to install.</li>
+                  <li><b>Thresholds and working hours</b> — the system raises the alarm by itself when a car or a part is stuck longer than it should be.</li>
+                  <li><b>Notifications</b> to staff in Telegram and automatic messages to customers when their car is ready.</li>
+                  <li><b>A daily summary for the owner.</b></li>
+                  <li><b>Search</b> by plate number, VIN, phone, surname or work order number; staff roles and access rights.</li>
+                </ul>
+              </section>
+            </div>
+
+            <!-- Упрощённый макет доски машин. Данные демонстрационные, госномеров нет.
+                 data-labels — тексты статусов для анимации (на языке страницы) -->
+            <div class="case-ui reveal d1">
+              <p class="sr-only">Simplified mockup of the 4Power Club car board with demo data: columns “Waiting for repair”, “Waiting for parts”, “Ready”.</p>
+              <div class="ui" id="board-4p" aria-hidden="true">
+                <div class="ui-bar"><i class="live-dot"></i><span>4Power · car board</span><span class="r">demo</span></div>
+                <div class="ui-sub"><span>Today</span><span>6 bays</span><span>stock · 1C sync</span></div>
+                <div class="board">
+                  <div class="col" data-col="wait">
+                    <h5>Waiting for repair <span class="cnt">2</span></h5>
+                    <div class="col-cards">
+                      <div class="car"><b>Toyota RAV4</b><span class="car-status">bay 3 · 1 day</span></div>
+                      <div class="car"><b>Kia Sportage</b><span class="car-status">bay 5 · today</span></div>
+                    </div>
+                  </div>
+                  <div class="col" data-col="parts">
+                    <h5>Waiting for parts <span class="cnt">2</span></h5>
+                    <div class="col-cards">
+                      <div class="car" data-moving data-labels='["ordered · 9 days","part in stock","customer notified"]'><b>Audi Q5</b><span class="car-status">ordered · 9 days</span></div>
+                      <div class="car is-urgent"><b>BMW M3</b><span class="car-status">waiting 16 days · urgent</span></div>
+                    </div>
+                  </div>
+                  <div class="col" data-col="ready">
+                    <h5>Ready <span class="cnt">1</span></h5>
+                    <div class="col-cards">
+                      <div class="car is-done"><b>VW Passat</b><span class="car-status">customer notified</span></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="toast">✓ Customer got a WhatsApp message</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-result reveal">
+            <h4>Results</h4>
+            <div class="kpis">
+              <div class="kpi kpi--acc"><b><span class="count" data-to="600">600</span>+</b><span>automated tests</span></div>
+              <div class="kpi"><b><span class="count" data-to="6">6</span></b><span>bays in one system</span></div>
+              <div class="kpi"><b><span class="count" data-to="4">4</span></b><span>advisors see the same picture</span></div>
+              <div class="kpi"><b>1C</b><span>warehouse sync</span></div>
+            </div>
+            <ul class="results">
+              <li>Live — the whole team works in one system.</li>
+              <li>Fewer calls and chats along the lines of “is the car ready? / did the part arrive?” — the status is visible, not something you have to chase.</li>
+              <li>No car gets forgotten while waiting for parts — the system sends reminders on its own.</li>
+              <li>600+ automated tests — reliability is checked with every change.</li>
+            </ul>
+          </div>
+
+          <footer class="case-foot reveal">
+            <p class="stack"><span>Stack</span>Node.js · PostgreSQL · Vue 3 PWA · 1C (REST API) · Telegram · WhatsApp Business</p>
+            <details class="shots">
+              <summary class="btn">See screenshots <span class="arrow" aria-hidden="true">↓</span></summary>
+              <!-- ВАЖНО: скриншоты публикуются ТОЛЬКО на демо-данных —
+                   без реальных госномеров, имён сотрудников и телефонов клиентов.
+                   Картинки кладите в assets/cases/4power/ -->
+              <div class="shots-grid">
+                <div class="shot">screenshot · assets/cases/4power/01</div>
+                <div class="shot">screenshot · assets/cases/4power/02</div>
+                <div class="shot">screenshot · assets/cases/4power/03</div>
+              </div>
+            </details>
+          </footer>
+        </article>
+
+      </div>
+    </section>
+    <!-- ===== КТО ДЕЛАЕТ =====
+         Авторская колонка, как в журнале: фото, имя, роль и несколько строк от первого лица.
+         Для маленькой студии это главный фактор доверия — люди покупают у человека. -->
+    <section class="section author" id="about" aria-labelledby="about-title">
+      <div class="wrap author-grid">
+        <p class="eyebrow reveal"><b>02</b> / Who does the work</p>
+
+        <!-- ФОТО: положите файл assets/founder.jpg (портрет, примерно 800×1000) и замените
+             <div class="photo-ph"> на:
+             <img src="../assets/founder.jpg" alt="Максим Лазарев" width="800" height="1000" loading="lazy"> -->
+        <figure class="author-photo reveal">
+          <div class="photo-ph">photo · assets/founder.jpg</div>
+          <figcaption>Chișinău, 2026</figcaption>
+        </figure>
+
+        <div class="author-text reveal d1">
+          <h2 class="author-name" id="about-title">Maxim Lazarev</h2>
+          <p class="author-role">Founder · development and launch</p>
+          <p class="author-lead">One person runs the project — from the first conversation to launch. No managers between you and the person doing the work. When the job calls for it, I bring in specialists I trust.</p>
+          <a class="btn btn--primary" href="https://t.me/mvxev?text=Hi%21%20I%20saw%20the%20MX%20Systems%20website%20and%20would%20like%20to%20book%20a%20free%2030-minute%20review." target="_blank" rel="noopener"><span>Free 30-minute review <small class="btn-sub">message me on Telegram</small></span><span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== УСЛУГИ =====
+         Таблица во всю ширину: номер · название · описание · срок · цена. Шесть услуг.
+         Цены — [ЗАПОЛНИТЬ]: пока везде «по запросу». -->
+    <section class="section" id="services" aria-labelledby="services-title">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <p class="eyebrow"><b>03</b> / Services</p>
+          <h2 class="h2" id="services-title">From first click <em>to payment</em></h2>
+          <p>Take a single service or combine them: ads bring customers in, the website greets them, and the system makes sure no lead slips through.</p>
+        </div>
+        <!-- Шапка таблицы видна только на десктопе -->
+        <div class="svc-head" aria-hidden="true"><span>№</span><span>Service</span><span>What's included</span><span>Timeline</span><span>Price</span><span></span></div>
+        <ul class="svc-list reveal">
+            <li><a class="svc" href="#contact">
+              <span class="svc-n">01</span>
+              <span class="svc-name">Process audit</span>
+              <span class="svc-desc">I find where the business loses time and money on manual work and hand you a plan: what to automate, in what order, and what it will give you. The plan is yours to keep.</span>
+              <span class="svc-term"><small>Timeline</small>1–2 weeks</span>
+              <span class="svc-price"><small>Price</small>on request</span>
+              <span class="svc-arrow" aria-hidden="true">→</span>
+            </a></li>
+            <li><a class="svc" href="#contact">
+              <span class="svc-n">02</span>
+              <span class="svc-name">Development</span>
+              <span class="svc-desc">Websites, client portals and internal systems — from a landing page to a platform for the whole team. SEO basics included: speed, structure, meta tags, sitemap.</span>
+              <span class="svc-term"><small>Timeline</small>depends on scope</span>
+              <span class="svc-price"><small>Price</small>on request</span>
+              <span class="svc-arrow" aria-hidden="true">→</span>
+            </a></li>
+            <li><a class="svc" href="#contact">
+              <span class="svc-n">03</span>
+              <span class="svc-name">Automation</span>
+              <span class="svc-desc">One specific job, built end to end: an integration, an AI agent, notifications, a back office. It plugs into 1C, messengers, email and the tools you already use.</span>
+              <span class="svc-term"><small>Timeline</small>per project</span>
+              <span class="svc-price"><small>Price</small>on request</span>
+              <span class="svc-arrow" aria-hidden="true">→</span>
+            </a></li>
+            <li><a class="svc" href="#contact">
+              <span class="svc-n">04</span>
+              <span class="svc-name">Advertising</span>
+              <span class="svc-desc">Setting up and running ads on Google and Meta (Facebook, Instagram), plus analytics and pixels. Leads from ads land straight in your system instead of getting lost in chats.</span>
+              <span class="svc-term"><small>Timeline</small>launch and management</span>
+              <span class="svc-price"><small>Price</small>on request</span>
+              <span class="svc-arrow" aria-hidden="true">→</span>
+            </a></li>
+            <li><a class="svc" href="#contact">
+              <span class="svc-n">05</span>
+              <span class="svc-name">Security audit</span>
+              <span class="svc-desc">I check your website or system for vulnerabilities, server and HTTPS settings, personal data leaks, and how cookies and consent work under Moldova's Law 195/2024 (the technical side — together with your lawyer). You get a prioritised report and a fix plan. Only under contract and with your written permission.</span>
+              <span class="svc-term"><small>Timeline</small>depends on scope</span>
+              <span class="svc-price"><small>Price</small>on request</span>
+              <span class="svc-arrow" aria-hidden="true">→</span>
+            </a></li>
+            <li><a class="svc" href="#contact">
+              <span class="svc-n">06</span>
+              <span class="svc-name">Ongoing support</span>
+              <span class="svc-desc">Support, improvements, monitoring, quick answers. The system stays yours.</span>
+              <span class="svc-term"><small>Timeline</small>monthly</span>
+              <span class="svc-price"><small>Price</small>on request</span>
+              <span class="svc-arrow" aria-hidden="true">→</span>
+            </a></li>
+        </ul>
+      </div>
+    </section>
+
+
+    <!-- ===== КАЛЬКУЛЯТОР ПОТЕРЬ =====
+         Лид-магнит: посетитель сам считает, сколько денег теряет на потерянных заявках.
+         Расчёт делает main.js (раздел 5). Без JS видна цифра для значений по умолчанию. -->
+    <section class="section calc" id="calc" aria-labelledby="calc-title">
+      <div class="wrap calc-grid">
+        <div class="calc-intro reveal">
+          <p class="eyebrow"><b>04</b> / Loss calculator</p>
+          <h2 class="h2" id="calc-title">What <em>lost leads</em> cost you</h2>
+          <p>Didn't call back, forgot, replied the next day — and the customer went to a competitor. Work out what that costs you each month.</p>
+        </div>
+
+        <!-- form — чтобы поля были связаны с подписями и работали с клавиатуры; отправки нет -->
+        <form class="calc-box reveal d1" id="calc-form" onsubmit="return false">
+          <label class="field">
+            <span>Leads per month</span>
+            <!-- inputmode="numeric" — на телефоне откроется цифровая клавиатура -->
+            <input type="number" id="calc-leads" value="100" min="1" max="100000" step="1" inputmode="numeric">
+          </label>
+          <label class="field">
+            <span>Average order value, €</span>
+            <input type="number" id="calc-check" value="300" min="1" max="1000000" step="1" inputmode="numeric">
+          </label>
+          <label class="field field--range">
+            <span>Share of leads lost <output id="calc-pct-out" for="calc-pct">15%</output></span>
+            <!-- type="range" — ползунок; от 5 до 40%, по умолчанию 15% -->
+            <input type="range" id="calc-pct" min="5" max="40" step="1" value="15">
+            <span class="range-scale" aria-hidden="true"><i>5%</i><i>40%</i></span>
+          </label>
+
+          <div class="calc-result">
+            <span class="calc-label">You lose roughly</span>
+            <!-- aria-live="polite" — скринридер зачитает новую сумму после изменения полей -->
+            <output class="calc-sum" id="calc-out" aria-live="polite">≈ €4,500</output>
+            <span class="calc-label">a month</span>
+            <p class="calc-note">This is an estimate, not a promise: leads × average order × share lost. Where exactly they leak — we'll see in the review.</p>
+          </div>
+
+          <a class="btn btn--primary calc-cta" id="calc-cta" href="https://t.me/mvxev?text=Hi%21%20I%20saw%20the%20MX%20Systems%20website%20and%20would%20like%20to%20book%20a%20free%2030-minute%20review." target="_blank" rel="noopener"><span>Let's find where they leak — free, 30 minutes</span><span class="arrow" aria-hidden="true">→</span></a>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===== КАК РАБОТАЕМ =====
+         Горизонтальная шкала-таймлайн на десктопе, вертикальная на телефоне.
+         Линия шкалы «прорисовывается» слева направо, когда блок появляется на экране. -->
+    <section class="section" id="process" aria-labelledby="process-title">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <p class="eyebrow"><b>05</b> / How we work</p>
+          <h2 class="h2" id="process-title">Four steps — <em>from first chat to launch</em></h2>
+          <p>The first step is free: in 30 minutes we look at the problem, and you decide — no pressure — whether to go further.</p>
+        </div>
+
+        <ol class="steps reveal">
+          <li class="step">
+            <span class="step-n">01 · free</span>
+            <h3>Conversation</h3>
+            <p>Describe the problem on Telegram — text or voice message, whatever is easier. We get on a 30-minute call and work through it.</p>
+          </li>
+          <li class="step">
+            <span class="step-n">02</span>
+            <h3>Audit</h3>
+            <p>I look at your processes and propose a solution: what we will do, what it costs and where the scope ends. Everything is agreed before we start.</p>
+          </li>
+          <li class="step">
+            <span class="step-n">03</span>
+            <h3>Build</h3>
+            <p>I show you interim results as we go — you see the system long before handover.</p>
+          </li>
+          <li class="step">
+            <span class="step-n">04</span>
+            <h3>Launch and support</h3>
+            <p>We roll it out to your team and keep developing it as the business grows.</p>
+          </li>
+        </ol>
+
+        <!-- Что остаётся у клиента после проекта -->
+        <div class="own reveal">
+          <h3 class="own-title">It all <em>stays yours</em></h3>
+          <ul class="own-list">
+            <li><b>Code and access</b><span>Source code, servers and service accounts belong to you from day one.</span></li>
+            <li><b>Documentation</b><span>A description of how the system is built and how to maintain it.</span></li>
+            <li><b>Freedom to choose</b><span>Any developer can take the system further — you're not tied to anyone.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ===== FAQ (частые вопросы) =====
+         Аккордеон на details/summary — встроенный в браузер раскрывающийся блок, работает без JS.
+         ЧЕРНОВИК ответов — проверить и поправить. -->
+    <section class="section" id="faq" aria-labelledby="faq-title">
+      <div class="wrap faq-grid">
+        <div class="reveal">
+          <p class="eyebrow"><b>06</b> / Questions</p>
+          <h2 class="h2" id="faq-title">The questions <em>people hesitate to ask</em></h2>
+        </div>
+        <div class="faq reveal d1">
+          <details class="qa">
+            <summary><span class="qa-n">01</span><span class="qa-q">How much does it cost, and what drives the price?</span><span class="qa-icon" aria-hidden="true"></span></summary>
+            <p>Scope: how many processes, integrations and users, and whether you need ads and a website. After the free review I give you a ballpark; after the audit, the exact price and scope. The price is fixed before we start.</p>
+          </details>
+          <details class="qa">
+            <summary><span class="qa-n">02</span><span class="qa-q">How long will it take?</span><span class="qa-icon" aria-hidden="true"></span></summary>
+            <p>The audit takes 1–2 weeks. I give the build timeline after the audit: a single job can go live quickly, a large system is built in stages — and you see first results along the way.</p>
+          </details>
+          <details class="qa">
+            <summary><span class="qa-n">03</span><span class="qa-q">Do you work with 1C and my CRM?</span><span class="qa-icon" aria-hidden="true"></span></summary>
+            <p>Yes. 1C through its REST API, as in the 4Power Club system. CRMs and other tools — if they have an API or a data export; we check that during the review.</p>
+          </details>
+          <details class="qa">
+            <summary><span class="qa-n">04</span><span class="qa-q">What happens if you disappear?</span><span class="qa-icon" aria-hidden="true"></span></summary>
+            <p>The code, servers and access are yours from day one, along with the documentation. Any developer can maintain and extend the system.</p>
+          </details>
+          <details class="qa">
+            <summary><span class="qa-n">05</span><span class="qa-q">Do you work under a contract, with invoices?</span><span class="qa-icon" aria-hidden="true"></span></summary>
+            <p>Yes: a contract describing the work, timeline and price, and payment by invoice.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== КОНТАКТ (финальный призыв к действию) ===== -->
+    <section class="section contact" id="contact" aria-labelledby="contact-title">
+      <div class="wrap">
+        <div class="contact-head reveal">
+          <p class="eyebrow"><b>07</b> / Contact</p>
+          <h2 class="contact-title" id="contact-title">Tell me about the problem — <em>I'll reply within a day</em></h2>
+          <p class="contact-sub">The first 30 minutes are free: we look at the problem and decide whether it makes sense to go further. Text or voice message — both work.</p>
+        </div>
+        <ul class="contacts reveal d1">
+          <li><a class="ct ct--main" href="https://t.me/mvxev?text=Hi%21%20I%20saw%20the%20MX%20Systems%20website%20and%20would%20like%20to%20book%20a%20free%2030-minute%20review." target="_blank" rel="noopener">
+            <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M21.2 4.3 2.9 11.4c-.6.3-.6 1.1.1 1.3l4.6 1.5 1.8 5.5c.2.5.8.6 1.2.3l2.6-2.3 4.6 3.4c.5.4 1.2.1 1.3-.5l3-14.4c.2-.7-.4-1.2-.9-.9Z"/><path d="m7.6 14.2 9.9-6.6-7.4 8.2"/></svg></span>
+            <span class="ct-label">Telegram <i>· fastest</i></span>
+            <span class="ct-value">@mvxev</span>
+            <span class="ct-arrow" aria-hidden="true">→</span>
+          </a></li>
+          <li><a class="ct" href="https://wa.me/37369589555?text=Hi%21%20I%20saw%20the%20MX%20Systems%20website%20and%20would%20like%20to%20book%20a%20free%2030-minute%20review." target="_blank" rel="noopener">
+            <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M4.2 19.8 5.4 16A8.4 8.4 0 1 1 8.3 18.8Z"/><path d="M9.2 8.4c.1 3.4 2.9 6.2 6.3 6.4l1.1-1.4-1.9-1-1 .8a4.6 4.6 0 0 1-2.4-2.4l.8-1-1-1.9Z"/></svg></span>
+            <span class="ct-label">WhatsApp</span>
+            <span class="ct-value">+373 69 589 555</span>
+            <span class="ct-arrow" aria-hidden="true">→</span>
+          </a></li>
+          <li><a class="ct" href="tel:+37369589555">
+            <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M5.2 3.5h3.2l1.6 4.4-2.1 1.4a11.6 11.6 0 0 0 6.8 6.8l1.4-2.1 4.4 1.6v3.2a1.9 1.9 0 0 1-2.1 1.9A16.7 16.7 0 0 1 3.3 5.6a1.9 1.9 0 0 1 1.9-2.1Z"/></svg></span>
+            <span class="ct-label">Phone</span>
+            <span class="ct-value">+373 69 589 555</span>
+            <span class="ct-arrow" aria-hidden="true">→</span>
+          </a></li>
+          <li><a class="ct" href="mailto:mvxrev@gmail.com?subject=Free%20review">
+            <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><rect x="3" y="5.5" width="18" height="13" rx="1.5"/><path d="m3.6 6.5 8.4 6.6 8.4-6.6"/></svg></span>
+            <span class="ct-label">Email</span>
+            <span class="ct-value">mvxrev@gmail.com</span>
+            <span class="ct-arrow" aria-hidden="true">→</span>
+          </a></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== ФУТЕР ===== -->
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-top">
+        <div>
+          <a class="logo" href="./"><span class="logo-mark" aria-hidden="true">MX</span>MX Systems</a>
+          <p class="footer-tag">Development · automation · ads</p>
+        </div>
+        <ul class="footer-links">
+          <li><a href="https://t.me/mvxev?text=Hi%21%20I%20saw%20the%20MX%20Systems%20website%20and%20would%20like%20to%20book%20a%20free%2030-minute%20review." target="_blank" rel="noopener">Telegram</a></li>
+          <li><a href="https://wa.me/37369589555?text=Hi%21%20I%20saw%20the%20MX%20Systems%20website%20and%20would%20like%20to%20book%20a%20free%2030-minute%20review." target="_blank" rel="noopener">WhatsApp</a></li>
+          <li><a href="tel:+37369589555">+373 69 589 555</a></li>
+          <li><a href="mailto:mvxrev@gmail.com?subject=Free%20review">mvxrev@gmail.com</a></li>
+        </ul>
+        <ul class="footer-links">
+          <li><a href="#cases">Work</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="privacy/">Privacy policy</a></li>
+          <!-- Кнопка снова открывает баннер согласия на cookie (см. main.js, раздел 9) -->
+          <li><button type="button" id="cookie-open">Cookie settings</button></li>
+        </ul>
+      </div>
+      <p class="footer-bottom"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M12 21s-6.5-5.8-6.5-11A6.5 6.5 0 0 1 18.5 10c0 5.2-6.5 11-6.5 11Z"/><circle cx="12" cy="10" r="2.4"/></svg></span><span>MX Systems · Chișinău, Moldova · © 2026</span></p>
+    </div>
+  </footer>
+
+  <!-- ===== COOKIE-БАННЕР =====
+       Показывается при первом визите. До согласия не загружается ни один сторонний скрипт.
+       Кнопки «Принять все» и «Только необходимые» одинаково заметны — так требует закон:
+       отказаться должно быть так же легко, как согласиться. Логика — main.js, раздел 9.
+       hidden — блок скрыт, пока скрипт не решит его показать. -->
+  <div class="cookie" id="cookie" role="dialog" aria-labelledby="cookie-title" aria-describedby="cookie-text" hidden>
+    <p class="cookie-title" id="cookie-title">Cookies and analytics</p>
+    <p class="cookie-text" id="cookie-text">The site works without them. With your consent I'll turn on Google Analytics — to see which sections are useful — and Meta Pixel — to measure ads. <a href="privacy/">Details</a></p>
+    <div class="cookie-opts" id="cookie-opts" hidden>
+      <label class="tgl"><input type="checkbox" checked disabled><span>Essential<small>Always on: remember your language and this choice</small></span></label>
+      <label class="tgl"><input type="checkbox" id="c-analytics"><span>Analytics<small>Google Analytics 4</small></span></label>
+      <label class="tgl"><input type="checkbox" id="c-marketing"><span>Advertising<small>Meta Pixel (Facebook, Instagram)</small></span></label>
+    </div>
+    <div class="cookie-btns">
+      <button type="button" class="btn btn--small btn--primary" id="cookie-yes">Accept all</button>
+      <button type="button" class="btn btn--small" id="cookie-no">Essential only</button>
+      <button type="button" class="cookie-link" id="cookie-cfg">Customise</button>
+      <button type="button" class="btn btn--small" id="cookie-save" hidden>Save choice</button>
+    </div>
+  </div>
+</body>
+</html>
