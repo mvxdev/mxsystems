@@ -447,6 +447,48 @@
     </section>
 
 
+    <!-- ===== КАЛЬКУЛЯТОР ПОТЕРЬ =====
+         Лид-магнит: посетитель сам считает, сколько денег теряет на потерянных заявках.
+         Расчёт делает main.js (раздел 5). Без JS видна цифра для значений по умолчанию. -->
+    <section class="section calc" id="calc" aria-labelledby="calc-title">
+      <div class="wrap calc-grid">
+        <div class="calc-intro reveal">
+          <p class="eyebrow"><b>04</b> / Калькулятор потерь</p>
+          <h2 class="h2" id="calc-title">Сколько стоят <em>потерянные заявки</em></h2>
+          <p>Не перезвонили, забыли, ответили на следующий день — клиент ушёл к конкурентам. Посчитайте, во сколько это обходится в месяц.</p>
+        </div>
+
+        <!-- form — чтобы поля были связаны с подписями и работали с клавиатуры; отправки нет -->
+        <form class="calc-box reveal d1" id="calc-form" onsubmit="return false">
+          <label class="field">
+            <span>Заявок в месяц</span>
+            <!-- inputmode="numeric" — на телефоне откроется цифровая клавиатура -->
+            <input type="number" id="calc-leads" value="100" min="1" max="100000" step="1" inputmode="numeric">
+          </label>
+          <label class="field">
+            <span>Средний чек, €</span>
+            <input type="number" id="calc-check" value="300" min="1" max="1000000" step="1" inputmode="numeric">
+          </label>
+          <label class="field field--range">
+            <span>Сколько заявок теряется <output id="calc-pct-out" for="calc-pct">15%</output></span>
+            <!-- type="range" — ползунок; от 5 до 40%, по умолчанию 15% -->
+            <input type="range" id="calc-pct" min="5" max="40" step="1" value="15">
+            <span class="range-scale" aria-hidden="true"><i>5%</i><i>40%</i></span>
+          </label>
+
+          <div class="calc-result">
+            <span class="calc-label">Вы теряете примерно</span>
+            <!-- aria-live="polite" — скринридер зачитает новую сумму после изменения полей -->
+            <output class="calc-sum" id="calc-out" aria-live="polite">≈ €4 500</output>
+            <span class="calc-label">в месяц</span>
+            <p class="calc-note">Это оценка, а не обещание: заявки × средний чек × доля потерянных. Где именно теряются — видно на разборе.</p>
+          </div>
+
+          <a class="btn btn--primary calc-cta" id="calc-cta" href="https://t.me/mvxev?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%A3%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D1%81%D0%B0%D0%B9%D1%82%20MX%20Systems%2C%20%D1%85%D0%BE%D1%87%D1%83%20%D0%B7%D0%B0%D0%BF%D0%B8%D1%81%D0%B0%D1%82%D1%8C%D1%81%D1%8F%20%D0%BD%D0%B0%20%D0%B1%D0%B5%D1%81%D0%BF%D0%BB%D0%B0%D1%82%D0%BD%D1%8B%D0%B9%20%D1%80%D0%B0%D0%B7%D0%B1%D0%BE%D1%80%20%D0%B7%D0%B0%D0%B4%D0%B0%D1%87%D0%B8." target="_blank" rel="noopener"><span>Разберём, где теряются — бесплатно, 30 минут</span><span class="arrow" aria-hidden="true">→</span></a>
+        </form>
+      </div>
+    </section>
+
     <!-- ===== КАК РАБОТАЕМ ===== (шаг 3) -->
     <!-- ===== КОНТАКТ ===== (шаг 3) -->
   </main>

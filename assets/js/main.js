@@ -106,6 +106,43 @@ if (REDUCE) $$('svg').forEach(svg => svg.pauseAnimations && svg.pauseAnimations(
 })();
 
 
+/* ===== 5. КАЛЬКУЛЯТОР ПОТЕРЬ =====
+   Потери в месяц ≈ заявок × средний чек × доля потерянных.
+   Сумма сразу подставляется и в текст сообщения для Telegram — человеку не нужно
+   пересказывать цифры, он просто отправляет готовое сообщение. */
+(() => {
+  const form = $('#calc-form');
+  if (!form) return;
+  const leads = $('#calc-leads'), check = $('#calc-check'), pct = $('#calc-pct');
+  const pctOut = $('#calc-pct-out'), out = $('#calc-out'), cta = $('#calc-cta');
+
+  // Intl.NumberFormat — форматирует число по правилам языка: «4 500» (ru), «4.500» (ro), «4,500» (en)
+  const nf = new Intl.NumberFormat({ ru: 'ru-RU', ro: 'ro-RO', en: 'en-US' }[LANG] || 'ru-RU', { maximumFractionDigits: 0 });
+  // Текст сообщения в Telegram на языке страницы; {sum} заменится на посчитанную сумму
+  const MSG = {
+    ru: 'Здравствуйте! Посчитал на сайте MX Systems: на потерянных заявках теряю примерно €{sum} в месяц. Хочу бесплатный разбор.',
+    ro: 'Bună ziua! Am calculat pe site-ul MX Systems: pierd aproximativ €{sum} pe lună din cereri pierdute. Aș vrea o analiză gratuită.',
+    en: 'Hi! I used the calculator on the MX Systems site: I lose about €{sum} a month on lost leads. I would like a free review.',
+  }[LANG];
+
+  // Число из поля: пустое или отрицательное — считаем нулём
+  const num = el => Math.max(0, Number(el.value) || 0);
+
+  const update = () => {
+    const p = num(pct);
+    const sum = Math.round(num(leads) * num(check) * p / 100);
+    pctOut.textContent = p + '%';
+    out.textContent = '≈ €' + nf.format(sum);
+    // Заливка дорожки ползунка: насколько он сдвинут от минимума к максимуму (в процентах)
+    pct.style.setProperty('--p', ((p - pct.min) / (pct.max - pct.min) * 100) + '%');
+    // encodeURIComponent — переводит текст в формат, допустимый внутри ссылки (пробелы → %20 и т.д.)
+    cta.href = 'https://t.me/mvxev?text=' + encodeURIComponent(MSG.replace('{sum}', nf.format(sum)));
+  };
+  form.addEventListener('input', update);     // одно событие на всю форму — срабатывает от любого поля
+  update();
+})();
+
+
 /* ===== ОБЩИЙ ПОМОЩНИК: FLIP-анимация =====
    FLIP (First, Last, Invert, Play) — приём плавного перемещения элементов при изменении DOM:
    1) запоминаем, где элементы были; 2) меняем DOM (элементы «прыгают» на новые места);
