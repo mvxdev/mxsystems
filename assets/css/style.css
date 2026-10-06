@@ -223,12 +223,13 @@ ul, ol { padding: 0; list-style: none; }
 /* На телефоне сначала текст и кнопки, схема — после них (order меняет порядок без правки HTML) */
 @media (max-width: 1099px) { .cover .fig { order: 3; max-width: 520px; } }
 
+/* Размер: от 36px на телефоне до 72px на 1440px (5.2% ширины окна), не больше 72px.
+   На десктопе заголовок укладывается в 3 строки. */
 .h1 {
-  font: 500 clamp(42px, 11vw, 100px)/.92 var(--f-serif);
-  letter-spacing: -.028em;
+  font: 500 clamp(36px, 5.2vw, 72px)/.98 var(--f-serif);
+  letter-spacing: -.022em;
 }
 .h1 em { font-style: italic; color: var(--accent); }
-@media (min-width: 1100px) { .h1 { font-size: min(6.6vw, 100px); } }
 .h1 .no { display: block; margin: 0 0 1.6em; font: 400 12px/1 var(--f-mono); letter-spacing: .08em; color: var(--muted); }
 
 /* --- Схема «Рис. 1» --- */
