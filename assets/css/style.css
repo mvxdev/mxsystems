@@ -530,3 +530,47 @@ ul, ol { padding: 0; list-style: none; }
 .qa[open] .qa-icon::after { transform: rotate(0); }
 .qa p { padding: 0 36px 24px 52px; max-width: 62ch; color: #bdb5a7; }
 @media (max-width: 600px) { .qa p { padding-left: 0; padding-right: 0; } }
+
+
+/* ========== 12. КОНТАКТ ========== */
+.contact { border-top: 1px solid var(--ink); }
+.contact-head { margin-bottom: clamp(40px, 6vw, 72px); }
+.contact-head .eyebrow { margin-bottom: 28px; }
+.contact-title { max-width: 18ch; font: 500 clamp(40px, 6.8vw, 92px)/.95 var(--f-serif); letter-spacing: -.028em; }
+.contact-title em { font-style: italic; color: var(--accent); }
+.contact-sub { max-width: 52ch; margin-top: 24px; color: #bdb5a7; }
+
+/* Строки контактов: иконка · способ · значение · стрелка */
+.contacts { border-top: 1px solid var(--ink); }
+.contacts li { border-bottom: 1px solid var(--rule-2); }
+.ct { position: relative; isolation: isolate; display: grid; grid-template-columns: 48px 1fr auto 28px; align-items: center; gap: 18px; padding: 20px 8px; transition: color .3s; }
+.ct::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--bg-2); transform: scaleX(0); transform-origin: left; transition: transform .5s var(--ease); }
+.ct:hover::before, .ct:focus-visible::before { transform: scaleX(1); }
+.ct-label { font: 400 12px/1.3 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.ct-label i { font-style: normal; color: var(--accent); }
+.ct-value { font: 500 clamp(22px, 3vw, 40px)/1.1 var(--f-serif); letter-spacing: -.01em; }
+.ct-arrow { justify-self: end; font-family: var(--f-mono); color: var(--muted); transition: transform .3s, color .3s; }
+.ct:hover .ct-arrow { transform: translateX(4px); color: var(--accent); }
+.ct--main .ct-value { color: var(--accent); }
+@media (max-width: 640px) {
+  .ct { grid-template-columns: 44px 1fr 20px; row-gap: 4px; padding: 16px 0; }
+  .ct .ico { grid-row: span 2; }
+  .ct-value { grid-column: 2; font-size: 22px; }
+  .ct-arrow { grid-row: 1 / span 2; grid-column: 3; }
+}
+/* Иконка в тонком круге — как в третьем ряду референса */
+.ico { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--rule-2); border-radius: 50%; transition: border-color .3s, color .3s; }
+.ico svg { width: 20px; height: 20px; }
+.ct:hover .ico { border-color: var(--accent); color: var(--accent); }
+
+/* ========== 13. ФУТЕР ========== */
+.footer { padding: 56px 0 32px; border-top: 1px solid var(--rule-2); }
+.footer-top { display: grid; gap: 32px; padding-bottom: 40px; }
+@media (min-width: 800px) { .footer-top { grid-template-columns: 2fr 1fr 1fr; } }
+.footer-tag { margin-top: 14px; font: 400 11.5px/1.4 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.footer-links { display: grid; gap: 10px; font-size: 15px; color: #bdb5a7; }
+.footer-links a:hover, .footer-links button:hover { color: var(--accent); }
+.footer-links button { text-align: left; color: inherit; }
+.footer-bottom { display: flex; align-items: center; gap: 12px; padding-top: 24px; border-top: 1px solid var(--rule); font: 400 12px/1.4 var(--f-mono); color: var(--muted); }
+.footer-bottom .ico { width: 32px; height: 32px; }
+.footer-bottom .ico svg { width: 15px; height: 15px; }
