@@ -1,0 +1,53 @@
+# Автопубликация сайта на GitHub Pages (GitHub Actions).
+# Что делает: при каждой отправке изменений (git push) в ветку main собирает папку _site
+# ТОЛЬКО из файлов сайта и выкладывает её. Черновики (concepts/), служебные скрипты (tools/)
+# и архив ClinicAI (archive/) в публикацию не попадают — они остаются только в репозитории.
+# Если добавите на сайт новую папку или файл верхнего уровня — допишите её в список ниже.
+
+name: Публикация сайта
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:          # кнопка «Run workflow» — запустить публикацию вручную
+
+# Права, которые нужны для публикации на Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Если пришло новое изменение, пока старое ещё публикуется, — старое отменяем
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Забрать код репозитория
+        uses: actions/checkout@v4
+
+      - name: Собрать только файлы сайта
+        run: |
+          mkdir _site
+          cp -r index.html 404.html robots.txt sitemap.xml CNAME assets ru ro en privacy _site/
+          # .nojekyll — не прогонять файлы через Jekyll (встроенный в Pages генератор сайтов), отдавать как есть
+          touch _site/.nojekyll
+          echo "Опубликуем:" && find _site -maxdepth 2 | sort
+
+      - name: Настроить Pages
+        uses: actions/configure-pages@v5
+
+      - name: Загрузить сайт
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Опубликовать
+        id: deployment
+        uses: actions/deploy-pages@v4
