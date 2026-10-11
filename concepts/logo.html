@@ -1,0 +1,94 @@
+<!doctype html>
+<!--
+  Варианты логотипа MX Systems — для выбора. Не часть сайта (папка concepts закрыта в robots.txt).
+  Каждый вариант показан: крупно на тёмном и светлом фоне, в шапке сайта и как иконка вкладки (32 и 16 px).
+  Знаки нарисованы в SVG на «холсте» 64×64; currentColor — цвет линий берётся из фона карточки.
+-->
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Логотип — варианты · MX Systems</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <style>
+    :root { --bg: #0d0c0a; --bg-2: #14130f; --ink: #ece5d8; --muted: #8e8678; --rule: #ece5d824; --accent: #ff5f1f; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 48px 56px 96px; background: var(--bg); color: var(--ink); font: 400 15px/1.5 "JetBrains Mono", monospace; }
+    h1 { margin: 0 0 8px; font: 500 56px/1 "Cormorant Garamond", serif; letter-spacing: -.02em; }
+    .intro { margin: 0 0 40px; color: var(--muted); max-width: 70ch; }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .card { border: 1px solid var(--rule); background: var(--bg-2); padding: 24px; }
+    .card h2 { margin: 0; font: 500 30px/1.1 "Cormorant Garamond", serif; }
+    .card h2 b { margin-right: 10px; font: 400 13px/1 "JetBrains Mono", monospace; color: var(--accent); vertical-align: middle; }
+    .card p { margin: 6px 0 18px; color: var(--muted); font-size: 13px; }
+    /* Ряд образцов: тёмный, светлый, шапка, иконки */
+    .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .tile { display: grid; place-items: center; height: 200px; }
+    .tile svg { width: 120px; height: 120px; }
+    .dark { background: var(--bg); color: var(--ink); border: 1px solid var(--rule); }
+    .light { background: var(--ink); color: #17150f; }
+    .row { display: flex; align-items: center; gap: 20px; margin-top: 12px; padding: 14px 16px; border: 1px solid var(--rule); background: var(--bg); }
+    /* Превью шапки сайта */
+    .head { display: flex; align-items: center; gap: 10px; font: 600 22px/1 "Cormorant Garamond", serif; color: var(--ink); }
+    .head svg { width: 34px; height: 34px; }
+    .fav { margin-left: auto; display: flex; align-items: center; gap: 14px; color: var(--muted); font-size: 11px; }
+    /* Иконка вкладки: тёмная плашка со скруглением, как у настоящего favicon */
+    .fav i { display: grid; place-items: center; border-radius: 22%; background: var(--bg-2); color: var(--ink); border: 1px solid var(--rule); }
+    .fav i svg { width: 80%; height: 80%; }
+    .fav .s32 { width: 32px; height: 32px; } .fav .s16 { width: 16px; height: 16px; }
+  </style>
+</head>
+<body>
+  <h1>Логотип — варианты</h1>
+  <p class="intro">Сейчас на сайте — вариант 01. Посмотрите каждый в шапке и в размере иконки вкладки (16 px — так он выглядит среди десятка открытых вкладок). Назовите номер — или «как 03, но без рамки».</p>
+  <div class="grid" id="grid"></div>
+
+  <script>
+    // Каждый знак: [название, описание, SVG-разметка внутри холста 64×64]
+    // stroke — линия, fill — заливка; #ff5f1f — оранжевая точка-«импульс», как на схеме сайта
+    const S = 'fill="none" stroke="currentColor" stroke-linecap="square"';
+    const DOT = (x, y, r = 3.4) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#ff5f1f" stroke="none"/>`;
+    const MARKS = [
+      ['Печать (сейчас)', 'MX тонкими линиями в круге-печати, точка на конце X. Спокойный, «издательский».',
+        `<g ${S} stroke-width="2.6"><circle cx="32" cy="32" r="30" stroke-width="1.8"/><path d="M13.5 43V21l10 13 10-13v22M38 21l13 22M38 43l11-18.5"/></g>${DOT(50.6, 21.8)}`],
+      ['Лигатура', 'M и X слиты в одну линию: правая нога M продолжается в X. Без рамки — современнее и смелее.',
+        `<g ${S} stroke-width="3.2"><path d="M8 46V18l12 16 12-16 22 28"/><path d="M32 46l19.5-25"/></g>${DOT(53.5, 18.5, 4)}`],
+      ['Чертёж', 'MX внутри «метки обреза» — уголки рамки, как на техническом чертеже. Точка — узел в углу.',
+        `<g ${S} stroke-width="2.6"><path d="M4 16V4h12M48 4h12v12M60 48v12H48M16 60H4V48" stroke-width="2"/><path d="M15 43V21l9.5 13L34 21v22M39 21l12 22M39 43l12-22"/></g>${DOT(51, 21, 3.6)}`],
+      ['Узлы', 'Буквы собраны из линий между узлами, как схема интеграций. Один узел — оранжевый.',
+        `<g ${S} stroke-width="2.2"><path d="M12 44V20l10 14 10-14v24M38 20l14 24M38 44l14-24"/></g><g fill="#0d0c0a" stroke="currentColor" stroke-width="2"><circle cx="12" cy="44" r="3"/><circle cx="12" cy="20" r="3"/><circle cx="22" cy="34" r="3"/><circle cx="32" cy="20" r="3"/><circle cx="32" cy="44" r="3"/><circle cx="38" cy="20" r="3"/><circle cx="38" cy="44" r="3"/><circle cx="52" cy="44" r="3"/></g>${DOT(52, 20, 3.8)}`],
+      ['Курсив', 'MX наклонным шрифтом с засечками, как заголовки сайта, и оранжевая точка — «MX.» Самый «журнальный».',
+        `<circle cx="32" cy="32" r="30" fill="none" stroke="currentColor" stroke-width="1.8"/><text x="29" y="42" text-anchor="middle" fill="currentColor" style="font: italic 600 30px 'Cormorant Garamond', serif; letter-spacing: -1px">MX</text>${DOT(48, 39, 3.2)}`],
+      ['Штамп', 'Круговая надпись «MX SYSTEMS · CHIȘINĂU · SINCE 2019» вокруг знака — как печать. Для иконки — только центр.',
+        `<defs><path id="ring" d="M32 32m-24 0a24 24 0 1 1 48 0a24 24 0 1 1 -48 0"/></defs><circle cx="32" cy="32" r="30.5" fill="none" stroke="currentColor" stroke-width="1"/><text fill="currentColor" style="font: 500 5.1px 'JetBrains Mono', monospace; letter-spacing: .72px"><textPath href="#ring">MX SYSTEMS · CHIȘINĂU · SINCE 2019 ·</textPath></text><circle cx="32" cy="32" r="17" fill="none" stroke="currentColor" stroke-width="1"/><g ${S} stroke-width="1.9"><path d="M21.5 39V26l5.5 7.5 5.5-7.5v13M35.5 26l7 13M35.5 39l6.5-11.5"/></g>${DOT(43.2, 26.4, 2.2)}`],
+      ['Импульс', 'MX и провод, уходящий вправо к оранжевой точке: «данные пошли». Хорош в строку рядом с названием.',
+        `<g ${S} stroke-width="3"><path d="M6 44V20l9 13 9-13v24M29 20l13 24M29 44l13-24"/><path d="M42 32h12" stroke-width="2"/></g>${DOT(58, 32, 4)}`],
+      ['Блок', 'Светлая плашка с «вырезанными» тёмными линиями. Самый заметный в размере иконки и на аватарке.',
+        `<rect x="2" y="2" width="60" height="60" rx="12" fill="currentColor"/><g fill="none" stroke="var(--cut, #0d0c0a)" stroke-width="3.6" stroke-linecap="square"><path d="M13 44V20l9.5 13.5L32 20v24M38 20l13 24M38 44l11.5-20"/></g>${DOT(51, 20, 4.2)}`],
+    ];
+
+    const svg = (inner, extra = '') => `<svg viewBox="0 0 64 64" ${extra}>${inner}</svg>`;
+    // У «Штампа» в маленьком размере показываем только центр (кольцо с текстом в 16px не читается)
+    const small = (i, inner) => i === 5
+      ? `<g transform="translate(-14 -14) scale(1.45)">${inner.replace(/<text[\s\S]*?<\/text>/, '').replace(/<circle cx="32" cy="32" r="30.5"[^>]*\/>/, '')}</g>`
+      : inner;
+
+    document.getElementById('grid').innerHTML = MARKS.map(([name, desc, inner], i) => `
+      <section class="card">
+        <h2><b>${String(i + 1).padStart(2, '0')}</b>${name}</h2>
+        <p>${desc}</p>
+        <div class="tiles">
+          <div class="tile dark">${svg(inner)}</div>
+          <div class="tile light" style="--cut: #ece5d8">${svg(inner.replace('fill="currentColor"/><g fill="none" stroke="var(--cut, #0d0c0a)"', 'fill="#17150f"/><g fill="none" stroke="#ece5d8"'))}</div>
+        </div>
+        <div class="row">
+          <span class="head">${svg(inner)}MX Systems</span>
+          <span class="fav">вкладка <i class="s32">${svg(small(i, inner))}</i><i class="s16">${svg(small(i, inner))}</i></span>
+        </div>
+      </section>`).join('');
+  </script>
+</body>
+</html>
