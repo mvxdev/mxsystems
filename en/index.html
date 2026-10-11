@@ -296,7 +296,7 @@
             <dl class="case-meta">
               <div><dt>Client</dt><dd>4Power Club</dd></div>
               <div><dt>Industry</dt><dd>Car service · Chișinău</dd></div>
-              <div><dt>Team</dt><dd>6 bays, mechanics, 4 service advisors, warehouse</dd></div>
+              <div><dt>Team</dt><dd>6 bays, 5–6 mechanics, 3 service advisors, warehouse</dd></div>
             </dl>
           </header>
 
@@ -309,6 +309,7 @@
               <section class="case-block">
                 <h4>What we built</h4>
                 <ul class="done">
+                  <li><b>A layer on top of 1C.</b> 1C stays the accounting system; this one runs the process: car statuses, who is responsible, the “part ↔ car” link, notifications.</li>
                   <li><b>Real-time car board</b> — by day and by status column; urgent cars are highlighted, and you can see how many days each one has been waiting.</li>
                   <li><b>Parts tracked through the full cycle</b> “car waiting → ordered → in stock → fitted”, plus a separate tab for parts that arrived without a linked car.</li>
                   <li><b>1C sync</b> — warehouse receipts come in automatically, with no double entry.</li>
@@ -358,21 +359,22 @@
           <div class="case-result reveal">
             <h4>Results</h4>
             <div class="kpis">
-              <div class="kpi kpi--acc"><b><span class="count" data-to="600">600</span>+</b><span>automated checks on every update</span></div>
+              <div class="kpi kpi--acc"><b><span class="count" data-to="886">886</span></b><span>automated checks, all passing</span></div>
               <div class="kpi"><b><span class="count" data-to="6">6</span></b><span>bays in one system</span></div>
-              <div class="kpi"><b><span class="count" data-to="4">4</span></b><span>advisors see the same picture</span></div>
+              <div class="kpi"><b><span class="count" data-to="3">3</span></b><span>advisors see the same picture</span></div>
               <div class="kpi"><b>1C</b><span>warehouse sync</span></div>
             </div>
             <ul class="results">
               <li>Live — the whole team works in one system.</li>
               <li>Fewer calls and chats along the lines of “is the car ready? / did the part arrive?” — the status is visible, not something you have to chase.</li>
               <li>No car gets forgotten while waiting for parts — the system sends reminders on its own.</li>
-              <li>600+ automated checks: before every update, the system verifies on its own that nothing broke.</li>
+              <li>886 automated checks — all passing. They run against the real database and the real server, no mocks: the whole path is checked — login, permissions, request, write, response.</li>
+              <li>Under the hood: 68 API endpoints, 17 tables, 8 screens; one line of tests for every 4 lines of code.</li>
             </ul>
           </div>
 
           <footer class="case-foot reveal">
-            <p class="stack"><span>Stack</span>Node.js · PostgreSQL · Vue 3 PWA · 1C (REST API) · Telegram · WhatsApp Business</p>
+            <p class="stack"><span>Stack</span>Node.js · PostgreSQL · Vue 3 PWA · 1C (REST API) · SSE (real-time updates) · Telegram · WhatsApp Business</p>
             <details class="shots">
               <summary class="btn">See screenshots <span class="arrow" aria-hidden="true">↓</span></summary>
               <!-- ВАЖНО: скриншоты публикуются ТОЛЬКО на демо-данных —

@@ -197,7 +197,7 @@
             <dl class="case-meta">
               <div><dt>Client</dt><dd>4Power Club</dd></div>
               <div><dt>Domeniu</dt><dd>Service auto · Chișinău</dd></div>
-              <div><dt>Echipa</dt><dd>6 posturi, mecanici, 4 recepționeri, depozit</dd></div>
+              <div><dt>Echipa</dt><dd>6 posturi, 5–6 mecanici, 3 recepționeri, depozit</dd></div>
             </dl>
           </header>
 
@@ -210,6 +210,7 @@
               <section class="case-block">
                 <h4>Ce am făcut</h4>
                 <ul class="done">
+                  <li><b>Un strat peste 1C.</b> 1C rămâne contabilitatea, iar sistemul conduce procesul: statusurile mașinilor, responsabilii, legătura „piesă ↔ mașină”, notificările.</li>
                   <li><b>Panou cu mașinile în timp real</b> — pe zile și pe coloane de status; cele urgente sunt evidențiate și se vede câte zile așteaptă fiecare mașină.</li>
                   <li><b>Evidența pieselor pe tot ciclul</b> „mașina așteaptă → comandat → în depozit → montaj” și o filă separată pentru piesele venite fără legătură cu o mașină.</li>
                   <li><b>Sincronizare cu 1C</b> — intrările în depozit se preiau automat, fără introducere dublă.</li>
@@ -259,21 +260,22 @@
           <div class="case-result reveal">
             <h4>Rezultat</h4>
             <div class="kpis">
-              <div class="kpi kpi--acc"><b><span class="count" data-to="600">600</span>+</b><span>verificări automate la fiecare modificare</span></div>
+              <div class="kpi kpi--acc"><b><span class="count" data-to="886">886</span></b><span>verificări automate, toate trec</span></div>
               <div class="kpi"><b><span class="count" data-to="6">6</span></b><span>posturi într-un singur sistem</span></div>
-              <div class="kpi"><b><span class="count" data-to="4">4</span></b><span>recepționeri văd același lucru</span></div>
+              <div class="kpi"><b><span class="count" data-to="3">3</span></b><span>recepționeri văd același lucru</span></div>
               <div class="kpi"><b>1C</b><span>sincronizare depozit</span></div>
             </div>
             <ul class="results">
               <li>În funcțiune — toată echipa lucrează într-un singur sistem.</li>
               <li>Mai puține apeluri și mesaje de tipul „e gata mașina? / a venit piesa?” — statusul se vede, nu trebuie aflat.</li>
               <li>Nicio mașină nu se pierde în așteptarea pieselor — sistemul amintește singur.</li>
-              <li>600+ de verificări automate: înainte de fiecare modificare, sistemul verifică singur că nimic nu s-a stricat.</li>
+              <li>886 de verificări automate — toate trec. Rulează pe baza de date și serverul reale, fără simulări: se verifică tot drumul — autentificare, drepturi, cerere, scriere, răspuns.</li>
+              <li>Sub capotă: 68 de adrese API, 17 tabele, 8 ecrane; la fiecare 4 rânduri de cod — un rând de test.</li>
             </ul>
           </div>
 
           <footer class="case-foot reveal">
-            <p class="stack"><span>Tehnologii</span>Node.js · PostgreSQL · Vue 3 PWA · 1C (REST API) · Telegram · WhatsApp Business</p>
+            <p class="stack"><span>Tehnologii</span>Node.js · PostgreSQL · Vue 3 PWA · 1C (REST API) · SSE (actualizări în timp real) · Telegram · WhatsApp Business</p>
             <details class="shots">
               <summary class="btn">Vezi capturi de ecran <span class="arrow" aria-hidden="true">↓</span></summary>
               <!-- ВАЖНО: скриншоты публикуются ТОЛЬКО на демо-данных —
