@@ -422,6 +422,9 @@ def build(lang):
         '<meta property="og:locale" content="ru_RU">\n  <meta property="og:locale:alternate" content="ro_RO">\n  <meta property="og:locale:alternate" content="en_US">',
         f'<meta property="og:locale" content="{loc[lang]}">\n  <meta property="og:locale:alternate" content="{loc[others[0]]}">\n  <meta property="og:locale:alternate" content="{loc[others[1]]}">')
 
+    # Картинка-превью на языке страницы
+    html = html.replace('https://mxsystems.ro/assets/og-image.png', f'https://mxsystems.ro/assets/og-image-{lang}.png')
+
     # 3) Пути: страница лежит в папке ro/ или en/ — к общим файлам ведём через ../
     html = html.replace('href="assets/', 'href="../assets/').replace('src="assets/', 'src="../assets/')
 

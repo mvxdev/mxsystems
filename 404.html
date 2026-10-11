@@ -1,0 +1,43 @@
+<!doctype html>
+<!--
+  404 — страница «не найдено». GitHub Pages сам показывает 404.html на любой несуществующий адрес.
+  ВАЖНО: пути здесь абсолютные (/assets/…), а не относительные — эта страница может открыться
+  по любому адресу (например /ro/abc/def), и относительные пути там сломаются.
+  Тексты на трёх языках сразу: мы не знаем, с какой версии пришёл посетитель.
+-->
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>404 · MX Systems</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#0d0c0a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Golos+Text:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/assets/css/style.css?v=2">
+  <style>
+    /* Только для этой страницы: всё по центру экрана */
+    .nf { min-height: 100vh; display: grid; place-items: center; padding: 48px 0; }
+    .nf-code { font: 500 clamp(96px, 20vw, 220px)/.9 var(--f-mono); letter-spacing: -.06em; color: var(--accent); }
+    .nf h1 { margin: 16px 0 28px; font: 500 clamp(30px, 4vw, 48px)/1.05 var(--f-serif); }
+    .nf h1 em { font-style: italic; color: var(--muted); }
+    .nf-links { display: flex; flex-wrap: wrap; gap: 10px; }
+  </style>
+</head>
+<body>
+  <main class="nf">
+    <div class="wrap">
+      <a class="logo" href="/" aria-label="MX Systems"><svg class="logo-mark" viewBox="0 0 64 64" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"><circle cx="32" cy="32" r="30" stroke-width="1.8"/><path d="M13.5 43V21l10 13 10-13v22M38 21l13 22M38 43l11-18.5"/><circle cx="50.6" cy="21.8" r="3.4" fill="#ff5f1f" stroke="none"/></svg>MX Systems</a>
+      <p class="nf-code" aria-hidden="true">404</p>
+      <h1>Такой страницы нет. <em lang="ro">Pagina nu există.</em> <em lang="en">Page not found.</em></h1>
+      <div class="nf-links">
+        <a class="btn btn--primary" href="/">На главную <span class="arrow" aria-hidden="true">→</span></a>
+        <a class="btn" href="/ro/" lang="ro">Pagina principală <span class="arrow" aria-hidden="true">→</span></a>
+        <a class="btn" href="/en/" lang="en">Home <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

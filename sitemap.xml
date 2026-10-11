@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  sitemap.xml — карта сайта для поисковиков: список всех страниц.
+  xhtml:link — те же подсказки hreflang, что в <head>: какие страницы — одна и та же на разных языках.
+  lastmod — дата последнего изменения; обновляйте при заметных правках.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://mxsystems.ro/</loc>
+    <lastmod>2026-10-11</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mxsystems.ro/"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://mxsystems.ro/ro/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mxsystems.ro/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mxsystems.ro/"/>
+  </url>
+  <url>
+    <loc>https://mxsystems.ro/ro/</loc>
+    <lastmod>2026-10-11</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mxsystems.ro/"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://mxsystems.ro/ro/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mxsystems.ro/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mxsystems.ro/"/>
+  </url>
+  <url>
+    <loc>https://mxsystems.ro/en/</loc>
+    <lastmod>2026-10-11</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mxsystems.ro/"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://mxsystems.ro/ro/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mxsystems.ro/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mxsystems.ro/"/>
+  </url>
+  <url>
+    <loc>https://mxsystems.ro/privacy/</loc>
+    <lastmod>2026-10-11</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mxsystems.ro/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://mxsystems.ro/ro/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mxsystems.ro/en/privacy/"/>
+  </url>
+  <url>
+    <loc>https://mxsystems.ro/ro/privacy/</loc>
+    <lastmod>2026-10-11</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mxsystems.ro/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://mxsystems.ro/ro/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mxsystems.ro/en/privacy/"/>
+  </url>
+  <url>
+    <loc>https://mxsystems.ro/en/privacy/</loc>
+    <lastmod>2026-10-11</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mxsystems.ro/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://mxsystems.ro/ro/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mxsystems.ro/en/privacy/"/>
+  </url>
+</urlset>

@@ -1,0 +1,8 @@
+# robots.txt — правила для поисковых роботов.
+# Всё разрешено, кроме служебных папок; ниже — адрес карты сайта.
+User-agent: *
+Disallow: /concepts/
+Disallow: /archive/
+Disallow: /tools/
+
+Sitemap: https://mxsystems.ro/sitemap.xml
