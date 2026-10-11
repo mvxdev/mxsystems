@@ -335,18 +335,10 @@ ul, ol { padding: 0; list-style: none; }
 .link { color: var(--accent); border-bottom: 1px solid #ff5f1f66; transition: border-color .3s; }
 .link:hover { border-color: var(--accent); }
 
-/* --- Подвал кейса: стек и скриншоты --- */
+/* --- Подвал кейса: стек --- */
 .case-foot { display: grid; gap: 20px; margin-top: 32px; }
 .stack { font: 400 13px/1.7 var(--f-mono); color: var(--muted); }
 .stack span { margin-right: 14px; color: var(--ink); text-transform: uppercase; letter-spacing: .1em; font-size: 11px; }
-.shots summary { list-style: none; width: fit-content; }      /* убираем стандартный треугольник у details */
-.shots summary::-webkit-details-marker { display: none; }
-.shots[open] summary .arrow { transform: rotate(180deg); }
-.shots-grid { display: grid; gap: 12px; margin-top: 16px; }
-@media (min-width: 700px) { .shots-grid { grid-template-columns: repeat(3, 1fr); } }
-/* Заглушка скриншота: пропорции 16:10, подпись по центру */
-.shot { display: grid; place-items: center; aspect-ratio: 16 / 10; padding: 12px; border: 1px dashed var(--rule-2); background: var(--bg-2); font: 400 12px/1.4 var(--f-mono); color: var(--muted); text-align: center; }
-.shots-grid img { width: 100%; height: auto; border: 1px solid var(--rule-2); }
 
 /* ========== Макеты интерфейсов (общие стили «окна приложения») ========== */
 .ui { position: relative; overflow: hidden; border: 1px solid var(--rule-2); background: var(--bg-2); font-family: var(--f-mono); transition: transform .5s var(--ease), border-color .5s; }

@@ -108,8 +108,6 @@ T = [
     ('<h4>Что сделали</h4>', '<h4>Ce am făcut</h4>', '<h4>What we built</h4>'),
     ('<h4>Результат</h4>', '<h4>Rezultat</h4>', '<h4>Results</h4>'),
     ('<span>Стек</span>', '<span>Tehnologii</span>', '<span>Stack</span>'),
-    ('Смотреть скриншоты', 'Vezi capturi de ecran', 'See screenshots'),
-    ('<div class="shot">скриншот ·', '<div class="shot">captură ·', '<div class="shot">screenshot ·'),
     ('<span class="r">демо</span>', '<span class="r">demo</span>', '<span class="r">demo</span>'),
 
     # ---------- Кейс 4Power ----------
