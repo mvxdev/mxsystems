@@ -606,7 +606,6 @@ ul, ol { padding: 0; list-style: none; }
 .legal { padding: clamp(40px, 6vw, 80px) 0 96px; }
 .legal-in { max-width: 760px; }
 .legal h1 { margin: 20px 0 16px; font: 500 clamp(38px, 5.4vw, 64px)/1 var(--f-serif); letter-spacing: -.02em; }
-.legal .draft { margin: 24px 0 40px; padding: 14px 16px; border: 1px solid var(--accent); font: 400 13px/1.5 var(--f-mono); color: var(--accent); }
 .legal h2 { margin: 44px 0 14px; font: 500 28px/1.15 var(--f-serif); }
 .legal p, .legal li { color: #d6cfc2; }
 .legal p + p { margin-top: 12px; }
@@ -617,6 +616,6 @@ ul, ol { padding: 0; list-style: none; }
 .legal table { width: 100%; margin-top: 14px; border-collapse: collapse; font-size: 14px; }
 .legal th, .legal td { padding: 10px 8px 10px 0; border-bottom: 1px solid var(--rule-2); text-align: left; vertical-align: top; }
 .legal th { font: 400 11px/1.3 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-.legal .meta { font: 400 12px/1.5 var(--f-mono); color: var(--muted); }
+.legal .meta { margin-bottom: 40px; font: 400 12px/1.5 var(--f-mono); color: var(--muted); }
 /* Таблица не помещается на телефоне — даём ей прокручиваться внутри своего блока */
 .table-scroll { overflow-x: auto; }
