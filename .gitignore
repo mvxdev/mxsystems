@@ -6,3 +6,7 @@ desktop.ini
 .idea/
 # Локальные настройки Claude Code (конфиг запуска локального сервера)
 .claude/
+
+# Отчёты Lighthouse — для проверки, на сайт не нужны
+*.report.html
+*.report.json
