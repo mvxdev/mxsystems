@@ -119,9 +119,9 @@ if (REDUCE) $$('svg').forEach(svg => svg.pauseAnimations && svg.pauseAnimations(
   const nf = new Intl.NumberFormat({ ru: 'ru-RU', ro: 'ro-RO', en: 'en-US' }[LANG] || 'ru-RU', { maximumFractionDigits: 0 });
   // Текст сообщения в Telegram на языке страницы; {sum} заменится на посчитанную сумму
   const MSG = {
-    ru: 'Здравствуйте! Посчитал на сайте MX Systems: на потерянных заявках теряю примерно €{sum} в месяц. Хочу бесплатный разбор.',
-    ro: 'Bună ziua! Am calculat pe site-ul MX Systems: pierd aproximativ €{sum} pe lună din cereri pierdute. Aș vrea o analiză gratuită.',
-    en: 'Hi! I used the calculator on the MX Systems site: I lose about €{sum} a month on lost leads. I would like a free review.',
+    ru: 'Здравствуйте! Посчитал на сайте MX Systems: на потерянных заявках теряю примерно €{sum} в месяц. Хочу разбор задачи.',
+    ro: 'Bună ziua! Am calculat pe site-ul MX Systems: pierd aproximativ €{sum} pe lună din cereri pierdute. Aș vrea o analiză a situației.',
+    en: 'Hi! I used the calculator on the MX Systems site: I lose about €{sum} a month on lost leads. I would like a project review.',
   }[LANG];
 
   // Число из поля: пустое или отрицательное — считаем нулём

@@ -24,11 +24,11 @@ SRC = (ROOT / 'index.html').read_text(encoding='utf-8')
 
 # --- Предзаполненные сообщения для Telegram / WhatsApp и тема письма ---
 MSG = {
-    'ru': 'Здравствуйте! Увидел сайт MX Systems, хочу записаться на бесплатный разбор задачи.',
-    'ro': 'Bună ziua! Am văzut site-ul MX Systems și aș vrea o analiză gratuită de 30 de minute.',
-    'en': 'Hi! I saw the MX Systems website and would like to book a free 30-minute review.',
+    'ru': 'Здравствуйте! Увидел сайт MX Systems, хочу записаться на разбор задачи.',
+    'ro': 'Bună ziua! Am văzut site-ul MX Systems și aș vrea o analiză a situației, de 30 de minute.',
+    'en': 'Hi! I saw the MX Systems website and would like to book a 30-minute project review.',
 }
-SUBJ = {'ru': 'Бесплатный разбор задачи', 'ro': 'Analiză gratuită', 'en': 'Free review'}
+SUBJ = {'ru': 'Разбор задачи', 'ro': 'Analiza situației', 'en': 'Project review'}
 
 # --- Таблица переводов: (русский, румынский, английский) ---
 # Порядок важен: длинные фразы идут раньше коротких, которые в них входят.
@@ -55,8 +55,9 @@ T = [
     ('<a href="#process">Как работаем</a>', '<a href="#process">Cum lucrăm</a>', '<a href="#process">How we work</a>'),
     ('<a href="#contact">Контакт</a>', '<a href="#contact">Contact</a>', '<a href="#contact">Contact</a>'),
     ('aria-label="Язык"', 'aria-label="Limba"', 'aria-label="Language"'),
-    ('aria-label="Бесплатный разбор задачи в Telegram"', 'aria-label="Analiză gratuită pe Telegram"', 'aria-label="Free review on Telegram"'),
-    ('<span class="label">Бесплатный разбор · 30 мин</span>', '<span class="label">Analiză gratuită · 30 min</span>', '<span class="label">Free review · 30 min</span>'),
+    ('aria-label="Разбор задачи в Telegram"', 'aria-label="Analiza situației pe Telegram"', 'aria-label="Project review on Telegram"'),
+    ('<span class="label">Разбор задачи · 30 мин</span>', '<span class="label">Analiza situației · 30 min</span>', '<span class="label">Project review · 30 min</span>'),
+    ('<span class="end">с 2019</span>', '<span class="end">din 2019</span>', '<span class="end">since 2019</span>'),
     ('aria-label="Меню"', 'aria-label="Meniu"', 'aria-label="Menu"'),
 
     # ---------- Hero ----------
@@ -81,12 +82,12 @@ T = [
     ('Настраиваем рекламу, разрабатываем сайты и автоматизируем рутину — весь путь клиента от первого клика до оплаты. Встраиваем в 1С, мессенджеры и почту, сопровождаем после запуска.',
      'Configurăm publicitatea, dezvoltăm site-uri și automatizăm rutina — tot drumul clientului, de la primul clic la plată. Integrăm cu 1C, mesageria și e-mailul și rămânem alături după lansare.',
      'We set up ads, build websites and automate routine work — the whole customer journey, from first click to payment. We plug into 1C, messengers and email, and stay with you after launch.'),
-    ('Бесплатный разбор задачи, 30 минут <small class="btn-sub">в Telegram — без обязательств</small>',
-     'Analiză gratuită, 30 de minute <small class="btn-sub">pe Telegram — fără obligații</small>',
-     'Free 30-minute review <small class="btn-sub">on Telegram — no strings attached</small>'),
-    ('Бесплатный разбор задачи, 30 минут <small class="btn-sub">напишите мне в Telegram</small>',
-     'Analiză gratuită, 30 de minute <small class="btn-sub">scrieți-mi pe Telegram</small>',
-     'Free 30-minute review <small class="btn-sub">message me on Telegram</small>'),
+    ('Разбор задачи, 30 минут <small class="btn-sub">в Telegram — без обязательств</small>',
+     'Analiza situației, 30 de minute <small class="btn-sub">pe Telegram — fără obligații</small>',
+     '30-minute project review <small class="btn-sub">on Telegram — no strings attached</small>'),
+    ('Разбор задачи, 30 минут <small class="btn-sub">напишите мне в Telegram</small>',
+     'Analiza situației, 30 de minute <small class="btn-sub">scrieți-mi pe Telegram</small>',
+     '30-minute project review <small class="btn-sub">message me on Telegram</small>'),
     ('Посмотреть кейсы', 'Vezi proiectele', 'See the work'),
     ('aria-label="Системы в ежедневной работе"', 'aria-label="Sisteme folosite zilnic"', 'aria-label="Systems in daily use"'),
     ('<br>Система в ежедневной работе', '<br>Sistem folosit zilnic', '<br>System in daily use'),
@@ -158,7 +159,7 @@ T = [
     ('>ждёт 16 дн · срочно<', '>așteaptă 16 zile · urgent<', '>waiting 16 days · urgent<'),
     ('>клиент уведомлён<', '>client anunțat<', '>customer notified<'),
     ('✓ Клиенту ушло сообщение в WhatsApp', '✓ Clientul a primit mesaj pe WhatsApp', '✓ Customer got a WhatsApp message'),
-    ('<span>автоматических тестов</span>', '<span>teste automate</span>', '<span>automated tests</span>'),
+    ('<span>автопроверок при каждой доработке</span>', '<span>verificări automate la fiecare modificare</span>', '<span>automated checks on every update</span>'),
     ('<span>постов в одной системе</span>', '<span>posturi într-un singur sistem</span>', '<span>bays in one system</span>'),
     ('<span>приёмщика видят одно и то же</span>', '<span>recepționeri văd același lucru</span>', '<span>advisors see the same picture</span>'),
     ('<b>1С</b><span>синхронизация склада</span>', '<b>1C</b><span>sincronizare depozit</span>', '<b>1C</b><span>warehouse sync</span>'),
@@ -169,16 +170,16 @@ T = [
     ('<li>Ни одна машина не теряется в ожидании запчастей — система сама напоминает.</li>',
      '<li>Nicio mașină nu se pierde în așteptarea pieselor — sistemul amintește singur.</li>',
      '<li>No car gets forgotten while waiting for parts — the system sends reminders on its own.</li>'),
-    ('<li>600+ автоматических тестов — надёжность проверяется при каждом изменении.</li>',
-     '<li>600+ teste automate — fiabilitatea e verificată la fiecare modificare.</li>',
-     '<li>600+ automated tests — reliability is checked with every change.</li>'),
+    ('<li>600+ автоматических проверок: перед каждой доработкой система сама проверяет, что ничего не сломалось.</li>',
+     '<li>600+ de verificări automate: înainte de fiecare modificare, sistemul verifică singur că nimic nu s-a stricat.</li>',
+     '<li>600+ automated checks: before every update, the system verifies on its own that nothing broke.</li>'),
     ('1С (REST API)', '1C (REST API)', '1C (REST API)'),
 
     # ---------- Кейс FastLoad ----------
-    ('FastLoad — платформа для диспетчерской <em>IS Logistics Solutions</em>', 'FastLoad — platformă pentru dispeceratul <em>IS Logistics Solutions</em>', 'FastLoad — a platform for the <em>IS Logistics Solutions</em> dispatch team'),
+    ('FastLoad — платформа для диспетчерской <em>MIRTEH GRUP</em>', 'FastLoad — platformă pentru dispeceratul <em>MIRTEH GRUP</em>', 'FastLoad — a platform for the <em>MIRTEH GRUP</em> dispatch team'),
     ('<dd>Логистика · США</dd>', '<dd>Logistică · SUA</dd>', '<dd>Logistics · USA</dd>'),
     ('<span class="k">Логистика · США</span>', '<span class="k">Logistică · SUA</span>', '<span class="k">Logistics · USA</span>'),
-    ('<dd>8 диспетчеров, 40 водителей</dd>', '<dd>8 dispeceri, 40 de șoferi</dd>', '<dd>8 dispatchers, 40 drivers</dd>'),
+    ('<dd>17 диспетчеров, 98 водителей</dd>', '<dd>17 dispeceri, 98 de șoferi</dd>', '<dd>17 dispatchers, 98 drivers</dd>'),
     ('Диспетчеры вручную мониторили биржу грузов Sylectus (американская площадка, где брокеры выкладывают грузы): обновляли страницу, сверяли каждый груз с местоположением и типом трака каждого водителя, вручную писали брокерам ставки. Хорошие грузы разбирают за минуты, а всё, что публиковалось вне смены, компания теряла.',
      'Dispecerii monitorizau manual bursa de mărfuri Sylectus (o platformă americană unde brokerii publică încărcături): reîncărcau pagina, verificau fiecare încărcătură față de locația și tipul camionului fiecărui șofer și scriau manual oferte brokerilor. Încărcăturile bune dispar în câteva minute, iar tot ce se publica în afara turei era pierdut.',
      "Dispatchers watched the Sylectus load board by hand (a US marketplace where brokers post freight): refreshing the page, checking every load against each driver's location and truck type, and writing bids to brokers manually. Good loads are gone within minutes, and anything posted outside working hours was simply lost."),
@@ -224,7 +225,7 @@ T = [
     # ---------- Кто делает ----------
     ('<b>02</b> / Кто делает', '<b>02</b> / Cine lucrează', '<b>02</b> / Who does the work'),
     ('alt="Максим Лазарев"', 'alt="Maxim Lazarev"', 'alt="Maxim Lazarev"'),
-    ('<figcaption>Кишинёв, 2026</figcaption>', '<figcaption>Chișinău, 2026</figcaption>', '<figcaption>Chișinău, 2026</figcaption>'),
+    ('<figcaption>Кишинёв · с 2019</figcaption>', '<figcaption>Chișinău · din 2019</figcaption>', '<figcaption>Chișinău · since 2019</figcaption>'),
     ('>Максим Лазарев</h2>', '>Maxim Lazarev</h2>', '>Maxim Lazarev</h2>'),
     ('Основатель · разработка и запуск', 'Fondator · dezvoltare și lansare', 'Founder · development and launch'),
     ('Проект ведёт один человек — от первого разговора до запуска. Никаких менеджеров между вами и тем, кто делает работу. Под задачу подключаю проверенных специалистов.',
@@ -290,15 +291,15 @@ T = [
     ('Это оценка, а не обещание: заявки × средний чек × доля потерянных. Где именно теряются — видно на разборе.',
      'Este o estimare, nu o promisiune: cereri × valoarea medie × cota pierdută. Unde anume se pierd — vedem la analiză.',
      "This is an estimate, not a promise: leads × average order × share lost. Where exactly they leak — we'll see in the review."),
-    ('Разберём, где теряются — бесплатно, 30 минут', 'Aflăm unde se pierd — gratuit, 30 de minute', "Let's find where they leak — free, 30 minutes"),
+    ('Разберём, где теряются — 30 минут', 'Aflăm unde se pierd — 30 de minute', "Let's find where they leak — 30 minutes"),
 
     # ---------- Как работаем ----------
     ('<b>05</b> / Как работаем', '<b>05</b> / Cum lucrăm', '<b>05</b> / How we work'),
     ('Четыре шага — <em>от разговора до запуска</em>', 'Patru pași — <em>de la discuție la lansare</em>', 'Four steps — <em>from first chat to launch</em>'),
-    ('Первый шаг бесплатный: за 30 минут разбираем задачу, и вы спокойно решаете, идти ли дальше.',
-     'Primul pas e gratuit: în 30 de minute analizăm situația, iar dumneavoastră decideți liniștit dacă mergem mai departe.',
-     'The first step is free: in 30 minutes we look at the problem, and you decide — no pressure — whether to go further.'),
-    ('01 · бесплатно', '01 · gratuit', '01 · free'),
+    ('Первый шаг — 30-минутный разбор задачи без обязательств: после него вы спокойно решаете, идти ли дальше.',
+     'Primul pas este o analiză de 30 de minute, fără obligații: după ea decideți liniștit dacă mergem mai departe.',
+     'The first step is a 30-minute review with no strings attached: afterwards you decide, no pressure, whether to go further.'),
+    ('01 · без обязательств', '01 · fără obligații', '01 · no strings attached'),
     ('<h3>Разговор</h3>', '<h3>Discuția</h3>', '<h3>Conversation</h3>'),
     ('Опишите задачу в Telegram — текстом или голосовым, как удобнее. Созваниваемся на 30 минут и разбираем её.',
      'Descrieți situația pe Telegram — în scris sau prin mesaj vocal, cum vă e comod. Ne auzim 30 de minute și o analizăm.',
@@ -330,9 +331,9 @@ T = [
     ('<b>06</b> / Вопросы', '<b>06</b> / Întrebări', '<b>06</b> / Questions'),
     ('То, что <em>неловко спросить</em>', 'Întrebările <em>pe care ezitați să le puneți</em>', 'The questions <em>people hesitate to ask</em>'),
     ('Сколько стоит и от чего зависит цена?', 'Cât costă și de ce depinde prețul?', 'How much does it cost, and what drives the price?'),
-    ('От объёма: сколько процессов, интеграций и пользователей, нужна ли реклама и сайт. После бесплатного разбора называю ориентир, после аудита — точную цену и границы работ. Цена фиксируется до старта.',
-     'De volum: câte procese, integrări și utilizatori, dacă e nevoie de publicitate și de site. După analiza gratuită vă dau un reper, după audit — prețul exact și limitele lucrării. Prețul se fixează înainte de start.',
-     'Scope: how many processes, integrations and users, and whether you need ads and a website. After the free review I give you a ballpark; after the audit, the exact price and scope. The price is fixed before we start.'),
+    ('От объёма: сколько процессов, интеграций и пользователей, нужна ли реклама и сайт. После первого разбора называю ориентир, после аудита — точную цену и границы работ. Цена фиксируется до старта.',
+     'De volum: câte procese, integrări și utilizatori, dacă e nevoie de publicitate și de site. După prima analiză vă dau un reper, după audit — prețul exact și limitele lucrării. Prețul se fixează înainte de start.',
+     'Scope: how many processes, integrations and users, and whether you need ads and a website. After the first review I give you a ballpark; after the audit, the exact price and scope. The price is fixed before we start.'),
     ('Сколько времени займёт?', 'Cât durează?', 'How long will it take?'),
     ('Аудит — 1–2 недели. Срок сборки называю после аудита: одну задачу можно запустить быстро, большую систему делаем по этапам — и первые результаты вы видите по ходу работы.',
      'Auditul durează 1–2 săptămâni. Termenul de construcție îl spun după audit: o problemă punctuală se poate lansa repede, un sistem mare îl facem pe etape — și vedeți primele rezultate pe parcurs.',
@@ -353,16 +354,16 @@ T = [
     # ---------- Контакт ----------
     ('<b>07</b> / Контакт', '<b>07</b> / Contact', '<b>07</b> / Contact'),
     ('Расскажите о задаче — <em>отвечу в течение дня</em>', 'Povestiți-mi despre proiect — <em>vă răspund în decurs de o zi</em>', "Tell me about the problem — <em>I'll reply within a day</em>"),
-    ('Первые 30 минут — бесплатно: разберём задачу и решим, есть ли смысл идти дальше. Можно текстом или голосовым.',
-     'Primele 30 de minute sunt gratuite: analizăm situația și decidem dacă are sens să mergem mai departe. Puteți scrie sau trimite un mesaj vocal.',
-     'The first 30 minutes are free: we look at the problem and decide whether it makes sense to go further. Text or voice message — both work.'),
+    ('Первые 30 минут — за мой счёт: разберём задачу и решим, есть ли смысл идти дальше. Можно текстом или голосовым.',
+     'Primele 30 de minute sunt din partea mea: analizăm situația și decidem dacă are sens să mergem mai departe. Puteți scrie sau trimite un mesaj vocal.',
+     'The first 30 minutes are on me: we look at the problem and decide whether it makes sense to go further. Text or voice message — both work.'),
     ('Telegram <i>· быстрее всего</i>', 'Telegram <i>· cel mai rapid</i>', 'Telegram <i>· fastest</i>'),
     ('<span class="ct-label">Телефон</span>', '<span class="ct-label">Telefon</span>', '<span class="ct-label">Phone</span>'),
 
     # ---------- Футер ----------
     ('>Политика конфиденциальности</a>', '>Politica de confidențialitate</a>', '>Privacy policy</a>'),
     ('>Настройки cookie</button>', '>Setări cookie</button>', '>Cookie settings</button>'),
-    ('MX Systems · Кишинёв, Молдова · © 2026', 'MX Systems · Chișinău, Moldova · © 2026', 'MX Systems · Chișinău, Moldova · © 2026'),
+    ('MX Systems · Кишинёв, Молдова · © 2019–2026', 'MX Systems · Chișinău, Moldova · © 2019–2026', 'MX Systems · Chișinău, Moldova · © 2019–2026'),
 
     # ---------- Cookie-баннер ----------
     ('>Cookie и аналитика</p>', '>Cookie-uri și analitică</p>', '>Cookies and analytics</p>'),
