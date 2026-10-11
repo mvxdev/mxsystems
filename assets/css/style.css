@@ -166,8 +166,9 @@ ul, ol { padding: 0; list-style: none; }
 .header-in { display: flex; align-items: center; gap: 24px; height: var(--header); border-bottom: 1px solid var(--rule-2); }
 
 .logo { display: flex; align-items: center; gap: 10px; white-space: nowrap; font: 600 22px/1 var(--f-serif); letter-spacing: -.01em; }
-/* Монограмма в круге — как печать издательства */
-.logo-mark { display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid var(--ink); border-radius: 50%; font: 500 10.5px/1 var(--f-mono); letter-spacing: -.02em; }
+/* Знак MX (assets/logo.svg) — встроен в HTML как SVG, цвет линий = цвет текста */
+.logo-mark { width: 34px; height: 34px; flex: none; }
+.logo:hover .logo-mark circle:last-child { transform: translateX(1px); }
 
 .nav { display: flex; gap: 28px; margin-left: auto; font: italic 500 19px/1 var(--f-serif); }
 .nav a { position: relative; padding: 4px 0; }
@@ -406,10 +407,7 @@ ul, ol { padding: 0; list-style: none; }
   .author-grid .eyebrow { grid-column: 1 / -1; }
 }
 .author-photo { max-width: 420px; }
-/* Фото чуть приглушаем (grayscale — оттенки серого) — в тон тёмной обложке */
-.author-photo img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; filter: grayscale(1) contrast(1.05); transition: filter .8s var(--ease); }
-/* При наведении фото плавно становится цветным */
-.author-photo:hover img { filter: none; }
+.author-photo img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }   /* object-fit: cover — фото заполняет рамку без искажений */
 .photo-ph { display: grid; place-items: center; aspect-ratio: 4 / 5; border: 1px dashed var(--rule-2); background: var(--bg-2); font: 400 12px/1.4 var(--f-mono); color: var(--muted); }
 .author-photo figcaption { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--ink); font: 400 11px/1.4 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .author-name { font: 500 clamp(40px, 6vw, 76px)/.95 var(--f-serif); letter-spacing: -.025em; }
