@@ -5,4 +5,4 @@ Disallow: /concepts/
 Disallow: /archive/
 Disallow: /tools/
 
-Sitemap: https://mxsystems.ro/sitemap.xml
+Sitemap: https://mxsystems.md/sitemap.xml

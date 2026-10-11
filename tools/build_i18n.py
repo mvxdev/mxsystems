@@ -424,8 +424,8 @@ def build(lang):
 
     # 2) Язык страницы, адреса и превью для соцсетей
     html = html.replace('<html lang="ru">', f'<html lang="{lang}">')
-    html = html.replace('<link rel="canonical" href="https://mxsystems.ro/">', f'<link rel="canonical" href="https://mxsystems.ro/{lang}/">')
-    html = html.replace('<meta property="og:url" content="https://mxsystems.ro/">', f'<meta property="og:url" content="https://mxsystems.ro/{lang}/">')
+    html = html.replace('<link rel="canonical" href="https://mxsystems.md/">', f'<link rel="canonical" href="https://mxsystems.md/{lang}/">')
+    html = html.replace('<meta property="og:url" content="https://mxsystems.md/">', f'<meta property="og:url" content="https://mxsystems.md/{lang}/">')
     loc = {'ru': 'ru_RU', 'ro': 'ro_RO', 'en': 'en_US'}
     others = [l for l in ('ru', 'ro', 'en') if l != lang]
     html = html.replace(
@@ -433,7 +433,7 @@ def build(lang):
         f'<meta property="og:locale" content="{loc[lang]}">\n  <meta property="og:locale:alternate" content="{loc[others[0]]}">\n  <meta property="og:locale:alternate" content="{loc[others[1]]}">')
 
     # Картинка-превью на языке страницы
-    html = html.replace('https://mxsystems.ro/assets/og-image.png', f'https://mxsystems.ro/assets/og-image-{lang}.png')
+    html = html.replace('https://mxsystems.md/assets/og-image.png', f'https://mxsystems.md/assets/og-image-{lang}.png')
 
     # 3) Пути: страница лежит в папке ro/ или en/ — к общим файлам ведём через ../
     html = html.replace('href="assets/', 'href="../assets/').replace('src="assets/', 'src="../assets/')
