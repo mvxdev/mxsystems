@@ -15,8 +15,6 @@
 const GA_ID = 'G-XXXXXXXXXX';
 const PIXEL_ID = '000000000000000';
 
-// Автоопределение языка браузера при первом заходе на русскую главную (см. раздел 8).
-const AUTO_LANG = true;
 
 // prefers-reduced-motion — системная настройка «уменьшить движение». Если включена — без анимаций.
 const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -263,30 +261,17 @@ function whileVisible(el, start, stop) {
 
 
 /* ===== 8. ЯЗЫК =====
-   а) Выбор в переключателе запоминаем в localStorage (хранилище браузера), чтобы
-      автоопределение больше не перебивало решение посетителя.
-   б) Автоопределение: при первом заходе на русскую главную смотрим язык браузера
-      и, если он румынский или английский, отправляем на /ro/ или /en/. */
+   Выбор в переключателе запоминаем в localStorage (хранилище браузера), чтобы
+   автоопределение языка (скрипт в <head> index.html) больше не перебивало решение посетителя. */
 (() => {
   const KEY = 'mx-lang';
   // localStorage может быть недоступен (приватный режим) — поэтому всё в try/catch
-  const get = () => { try { return localStorage.getItem(KEY); } catch { return null; } };
   const set = v => { try { localStorage.setItem(KEY, v); } catch { /* не страшно */ } };
 
   $$('.lang a[data-lang]').forEach(a => a.addEventListener('click', () => set(a.dataset.lang)));
 
-  if (!AUTO_LANG || LANG !== 'ru' || get()) return;
-  // Поисковых роботов не перенаправляем: у робота Google язык браузера английский,
-  // и иначе он не увидел бы русскую главную
-  if (/bot|crawl|spider|slurp|facebookexternalhit|telegrambot|whatsapp/i.test(navigator.userAgent)) return;
-  const langs = (navigator.languages || [navigator.language || '']).map(l => l.toLowerCase());
-  const first = langs[0] || '';
-  if (first.startsWith('ru')) return;                         // русский браузер — остаёмся
-  // Адрес перехода берём из ссылки переключателя языков: так он верен для любой страницы,
-  // а на страницах без переключателя (политика конфиденциальности) перехода просто не будет
-  const target = first.startsWith('ro') || first.startsWith('mo') ? 'ro' : first.startsWith('en') ? 'en' : null;
-  const link = target && $(`.lang a[data-lang="${target}"]`);
-  if (link) location.replace(link.href);
+  // Само перенаправление по языку браузера — во встроенном скрипте в <head> index.html:
+  // там оно срабатывает раньше, чем грузятся шрифты и стили.
 })();
 
 

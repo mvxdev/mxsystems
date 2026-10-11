@@ -8,6 +8,22 @@
 <head>
   <!-- Кодировка UTF-8 — нужна для кириллицы и румынских букв -->
   <meta charset="utf-8">
+  <!-- Автоопределение языка — САМЫМ ПЕРВЫМ, до загрузки шрифтов и стилей: если посетителя нужно
+       отправить на /ro/ или /en/, это происходит сразу, и браузер не тратит время на русскую страницу.
+       Работает только на русской главной (lang="ru"), только при первом визите (нет сохранённого выбора)
+       и не трогает поисковых роботов. Если localStorage недоступен (приватный режим) — catch, остаёмся.
+       Сохранение выбора в переключателе — main.js, раздел 8. -->
+  <script>
+    (function () {
+      try {
+        if (document.documentElement.lang !== 'ru' || localStorage.getItem('mx-lang')) return;
+        if (/bot|crawl|spider|slurp|facebookexternalhit|telegrambot|whatsapp/i.test(navigator.userAgent)) return;
+        var l = ((navigator.languages && navigator.languages[0]) || navigator.language || '').toLowerCase();
+        if (l.indexOf('ro') === 0 || l.indexOf('mo') === 0) location.replace('ro/');
+        else if (l.indexOf('en') === 0) location.replace('en/');
+      } catch (e) {}
+    })();
+  </script>
   <!-- viewport — говорит телефону: ширина страницы = ширина экрана (без «уменьшенной копии» десктопа) -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -53,15 +69,19 @@
        display=swap — пока шрифт грузится, текст виден системным шрифтом, а не пустым местом -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Golos+Text:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+  <!-- Неблокирующая загрузка шрифтов: rel="preload" скачивает CSS шрифтов параллельно и не мешает
+       первой отрисовке; когда файл пришёл, onload превращает его в обычную таблицу стилей.
+       noscript — запасной вариант для браузеров без JavaScript -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Golos+Text:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Golos+Text:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
 
-  <!-- ?v=2 — номер версии. После правки style.css или main.js увеличьте его (здесь и в privacy/),
+  <!-- ?v=2 — номер версии. После правки style.css или main.js увеличьте его (здесь, в privacy/ и 404.html),
        иначе браузеры посетителей могут показать старую копию файла из кэша -->
-  <link rel="stylesheet" href="../assets/css/style.css?v=2">
+  <link rel="stylesheet" href="../assets/css/style.css?v=3">
   <!-- Ставим на <html> класс .js: стили анимаций появления включаются, только если JS работает -->
   <script>document.documentElement.classList.add('js')</script>
   <!-- defer — скрипт загрузится параллельно и выполнится после разбора HTML (не тормозит отрисовку) -->
-  <script src="../assets/js/main.js?v=2" defer></script>
+  <script src="../assets/js/main.js?v=3" defer></script>
 </head>
 <body>
 
