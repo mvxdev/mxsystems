@@ -407,7 +407,9 @@ ul, ol { padding: 0; list-style: none; }
 }
 .author-photo { max-width: 420px; }
 /* Фото чуть приглушаем (grayscale — оттенки серого) — в тон тёмной обложке */
-.author-photo img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; filter: grayscale(1) contrast(1.05); }
+.author-photo img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; filter: grayscale(1) contrast(1.05); transition: filter .8s var(--ease); }
+/* При наведении фото плавно становится цветным */
+.author-photo:hover img { filter: none; }
 .photo-ph { display: grid; place-items: center; aspect-ratio: 4 / 5; border: 1px dashed var(--rule-2); background: var(--bg-2); font: 400 12px/1.4 var(--f-mono); color: var(--muted); }
 .author-photo figcaption { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--ink); font: 400 11px/1.4 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .author-name { font: 500 clamp(40px, 6vw, 76px)/.95 var(--f-serif); letter-spacing: -.025em; }

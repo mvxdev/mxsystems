@@ -372,11 +372,11 @@
       <div class="wrap author-grid">
         <p class="eyebrow reveal"><b>02</b> / Who does the work</p>
 
-        <!-- ФОТО: положите файл assets/founder.jpg (портрет, примерно 800×1000) и замените
-             <div class="photo-ph"> на:
-             <img src="../assets/founder.jpg" alt="Максим Лазарев" width="800" height="1000" loading="lazy"> -->
+        <!-- ФОТО: портрет 800×1000 (4:5). width/height заранее говорят браузеру размер картинки,
+             чтобы страница не «прыгала» при загрузке. loading="lazy" — фото грузится, только
+             когда до него докрутили (экономит трафик на телефоне). -->
         <figure class="author-photo reveal">
-          <div class="photo-ph">photo · assets/founder.jpg</div>
+          <img src="../assets/founder.jpg" alt="Maxim Lazarev" width="800" height="1000" loading="lazy" decoding="async">
           <figcaption>Chișinău, 2026</figcaption>
         </figure>
 
@@ -571,8 +571,8 @@
             <p>The code, servers and access are yours from day one, along with the documentation. Any developer can maintain and extend the system.</p>
           </details>
           <details class="qa">
-            <summary><span class="qa-n">05</span><span class="qa-q">Do you work under a contract, with invoices?</span><span class="qa-icon" aria-hidden="true"></span></summary>
-            <p>Yes: a contract describing the work, timeline and price, and payment by invoice.</p>
+            <summary><span class="qa-n">05</span><span class="qa-q">Do you work under a contract?</span><span class="qa-icon" aria-hidden="true"></span></summary>
+            <p>Yes, always under a written contract: what we will do, the timeline, the price and how payment works.</p>
           </details>
         </div>
       </div>

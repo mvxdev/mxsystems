@@ -223,7 +223,7 @@ T = [
 
     # ---------- Кто делает ----------
     ('<b>02</b> / Кто делает', '<b>02</b> / Cine lucrează', '<b>02</b> / Who does the work'),
-    ('<div class="photo-ph">фото · assets/founder.jpg</div>', '<div class="photo-ph">fotografie · assets/founder.jpg</div>', '<div class="photo-ph">photo · assets/founder.jpg</div>'),
+    ('alt="Максим Лазарев"', 'alt="Maxim Lazarev"', 'alt="Maxim Lazarev"'),
     ('<figcaption>Кишинёв, 2026</figcaption>', '<figcaption>Chișinău, 2026</figcaption>', '<figcaption>Chișinău, 2026</figcaption>'),
     ('>Максим Лазарев</h2>', '>Maxim Lazarev</h2>', '>Maxim Lazarev</h2>'),
     ('Основатель · разработка и запуск', 'Fondator · dezvoltare și lansare', 'Founder · development and launch'),
@@ -340,10 +340,10 @@ T = [
     ('Код, серверы и доступы — у вас с первого дня, плюс документация. Систему сможет поддерживать и развивать любой разработчик.',
      'Codul, serverele și accesele sunt la dumneavoastră din prima zi, plus documentația. Sistemul poate fi întreținut și dezvoltat de orice programator.',
      'The code, servers and access are yours from day one, along with the documentation. Any developer can maintain and extend the system.'),
-    ('Работаете по договору, со счётом?', 'Lucrați pe bază de contract și factură?', 'Do you work under a contract, with invoices?'),
-    ('Да: договор с описанием работ, сроков и цены, оплата по счёту.',
-     'Da: contract cu descrierea lucrărilor, a termenelor și a prețului, iar plata se face pe bază de factură.',
-     'Yes: a contract describing the work, timeline and price, and payment by invoice.'),
+    ('Работаете по договору?', 'Lucrați pe bază de contract?', 'Do you work under a contract?'),
+    ('Да, всегда по письменному договору: что делаем, в какие сроки, сколько стоит и как проходит оплата.',
+     'Da, mereu pe bază de contract scris: ce facem, în ce termene, cât costă și cum se face plata.',
+     'Yes, always under a written contract: what we will do, the timeline, the price and how payment works.'),
 
     # ---------- Контакт ----------
     ('<b>07</b> / Контакт', '<b>07</b> / Contact', '<b>07</b> / Contact'),

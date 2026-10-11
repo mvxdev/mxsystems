@@ -372,11 +372,11 @@
       <div class="wrap author-grid">
         <p class="eyebrow reveal"><b>02</b> / Кто делает</p>
 
-        <!-- ФОТО: положите файл assets/founder.jpg (портрет, примерно 800×1000) и замените
-             <div class="photo-ph"> на:
-             <img src="assets/founder.jpg" alt="Максим Лазарев" width="800" height="1000" loading="lazy"> -->
+        <!-- ФОТО: портрет 800×1000 (4:5). width/height заранее говорят браузеру размер картинки,
+             чтобы страница не «прыгала» при загрузке. loading="lazy" — фото грузится, только
+             когда до него докрутили (экономит трафик на телефоне). -->
         <figure class="author-photo reveal">
-          <div class="photo-ph">фото · assets/founder.jpg</div>
+          <img src="assets/founder.jpg" alt="Максим Лазарев" width="800" height="1000" loading="lazy" decoding="async">
           <figcaption>Кишинёв, 2026</figcaption>
         </figure>
 
@@ -571,8 +571,8 @@
             <p>Код, серверы и доступы — у вас с первого дня, плюс документация. Систему сможет поддерживать и развивать любой разработчик.</p>
           </details>
           <details class="qa">
-            <summary><span class="qa-n">05</span><span class="qa-q">Работаете по договору, со счётом?</span><span class="qa-icon" aria-hidden="true"></span></summary>
-            <p>Да: договор с описанием работ, сроков и цены, оплата по счёту.</p>
+            <summary><span class="qa-n">05</span><span class="qa-q">Работаете по договору?</span><span class="qa-icon" aria-hidden="true"></span></summary>
+            <p>Да, всегда по письменному договору: что делаем, в какие сроки, сколько стоит и как проходит оплата.</p>
           </details>
         </div>
       </div>
