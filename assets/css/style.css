@@ -165,9 +165,11 @@ ul, ol { padding: 0; list-style: none; }
 .header.is-scrolled { background: #0d0c0ad0; -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
 .header-in { display: flex; align-items: center; gap: 24px; height: var(--header); border-bottom: 1px solid var(--rule-2); }
 
-.logo { display: flex; align-items: center; gap: 10px; white-space: nowrap; font: 600 22px/1 var(--f-serif); letter-spacing: -.01em; }
-/* Знак MX (assets/logo.svg) — встроен в HTML как SVG, цвет линий = цвет текста */
-.logo-mark { width: 34px; height: 34px; flex: none; }
+/* Логотип: знак «MX.» (векторный, assets/logo.svg) + слово «Systems» тем же курсивом */
+.logo { display: flex; align-items: baseline; gap: 7px; white-space: nowrap; font: italic 500 23px/1 var(--f-serif); letter-spacing: -.01em; }
+/* Знак встроен в HTML как SVG: буквы берут цвет текста (currentColor), точка — оранжевая.
+   height задаёт размер, ширина считается сама по пропорциям viewBox. align-self — ставим знак на одну линию с текстом */
+.logo-mark { height: 22px; width: auto; flex: none; align-self: center; transform: translateY(1px); }
 .logo:hover .logo-mark circle:last-child { transform: translateX(1px); }
 
 .nav { display: flex; gap: 28px; margin-left: auto; font: italic 500 19px/1 var(--f-serif); }

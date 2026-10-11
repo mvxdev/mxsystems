@@ -1,0 +1,26 @@
+<!doctype html>
+<!--
+  Служебная страница: превращает буквы «MX» шрифта Cormorant Garamond SemiBold Italic
+  в векторный контур (SVG path). Нужна, чтобы логотип выглядел одинаково везде —
+  даже там, где шрифт не загружается (иконка вкладки, превью в мессенджерах).
+  opentype.js — библиотека, которая читает файл шрифта и отдаёт контуры букв.
+  Запуск: chrome --headless --dump-dom http://localhost:8000/tools/outline-logo.html
+-->
+<html>
+<head><meta charset="utf-8"></head>
+<body>
+<pre id="out">…</pre>
+<script src="https://cdn.jsdelivr.net/npm/opentype.js@1.3.4/dist/opentype.min.js"></script>
+<script>
+  const FONT = 'https://fonts.gstatic.com/s/cormorantgaramond/v21/co3smX5slCNuHLi8bLeY9MK7whWMhyjYrGFEsdtdc62E6zd5LDfOjw.ttf';
+  opentype.load(FONT, (err, font) => {
+    const out = document.getElementById('out');
+    if (err) { out.textContent = 'ERROR ' + err; return; }
+    // Буквы размером 100 единиц, базовая линия на y=100; -2 — чуть плотнее, как letter-spacing у заголовков
+    const path = font.getPath('MX', 0, 100, 100, { kerning: true, letterSpacing: -0.02 });
+    const box = path.getBoundingBox();
+    out.textContent = JSON.stringify({ d: path.toPathData(2), box });
+  });
+</script>
+</body>
+</html>
