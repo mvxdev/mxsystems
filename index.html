@@ -4,26 +4,17 @@
   Румынская и английская версии — ro/index.html и en/index.html, у них та же структура.
   Каждая секция отмечена комментарием «===== НАЗВАНИЕ =====», чтобы версии было легко сверять.
 -->
-<html lang="ru">
+<html lang="ru" data-home>
 <head>
   <!-- Кодировка UTF-8 — нужна для кириллицы и румынских букв -->
   <meta charset="utf-8">
-  <!-- Автоопределение языка — САМЫМ ПЕРВЫМ, до загрузки шрифтов и стилей: если посетителя нужно
-       отправить на /ro/ или /en/, это происходит сразу, и браузер не тратит время на русскую страницу.
-       Работает только на русской главной (lang="ru"), только при первом визите (нет сохранённого выбора)
-       и не трогает поисковых роботов. Если localStorage недоступен (приватный режим) — catch, остаёмся.
-       Сохранение выбора в переключателе — main.js, раздел 8. -->
-  <script>
-    (function () {
-      try {
-        if (document.documentElement.lang !== 'ru' || localStorage.getItem('mx-lang')) return;
-        if (/bot|crawl|spider|slurp|facebookexternalhit|telegrambot|whatsapp/i.test(navigator.userAgent)) return;
-        var l = ((navigator.languages && navigator.languages[0]) || navigator.language || '').toLowerCase();
-        if (l.indexOf('ro') === 0 || l.indexOf('mo') === 0) location.replace('ro/');
-        else if (l.indexOf('en') === 0) location.replace('en/');
-      } catch (e) {}
-    })();
-  </script>
+  <!-- CSP (Content-Security-Policy) — политика безопасности: браузер выполняет только скрипты-файлы
+       с нашего сайта и от Google/Meta, а любой внедрённый чужой код блокирует (защита от XSS).
+       Добавляете новый внешний сервис (виджет, карта, чат) — впишите его домен сюда.
+       referrer — при переходе на другие сайты передаём только адрес домена, без полного пути -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com https://connect.facebook.net; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com https://www.facebook.com; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://www.facebook.com https://connect.facebook.net; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <script src="assets/js/early.js?v=8"></script>
   <!-- viewport — говорит телефону: ширина страницы = ширина экрана (без «уменьшенной копии» десктопа) -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -69,19 +60,14 @@
        display=swap — пока шрифт грузится, текст виден системным шрифтом, а не пустым местом -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- Неблокирующая загрузка шрифтов: rel="preload" скачивает CSS шрифтов параллельно и не мешает
-       первой отрисовке; когда файл пришёл, onload превращает его в обычную таблицу стилей.
-       noscript — запасной вариант для браузеров без JavaScript -->
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Golos+Text:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <!-- Шрифты подключает early.js (без блокировки отрисовки); noscript — запасной вариант без JavaScript -->
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Golos+Text:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
 
   <!-- ?v=2 — номер версии. После правки style.css или main.js увеличьте его (здесь, в privacy/ и 404.html),
        иначе браузеры посетителей могут показать старую копию файла из кэша -->
-  <link rel="stylesheet" href="assets/css/style.css?v=7">
-  <!-- Ставим на <html> класс .js: стили анимаций появления включаются, только если JS работает -->
-  <script>document.documentElement.classList.add('js')</script>
+  <link rel="stylesheet" href="assets/css/style.css?v=8">
   <!-- defer — скрипт загрузится параллельно и выполнится после разбора HTML (не тормозит отрисовку) -->
-  <script src="assets/js/main.js?v=7" defer></script>
+  <script src="assets/js/main.js?v=8" defer></script>
 </head>
 <body>
 
@@ -468,8 +454,8 @@
           <p>Не перезвонили, забыли, ответили на следующий день — клиент ушёл к конкурентам. Посчитайте, во сколько это обходится в месяц.</p>
         </div>
 
-        <!-- form — чтобы поля были связаны с подписями и работали с клавиатуры; отправки нет -->
-        <form class="calc-box reveal d1" id="calc-form" onsubmit="return false">
+        <!-- form — чтобы поля были связаны с подписями и работали с клавиатуры; отправку отменяет main.js (раздел 5) -->
+        <form class="calc-box reveal d1" id="calc-form">
           <label class="field">
             <span>Заявок в месяц</span>
             <!-- inputmode="numeric" — на телефоне откроется цифровая клавиатура -->

@@ -610,3 +610,12 @@ ul, ol { padding: 0; list-style: none; }
 .legal .meta { margin-bottom: 40px; font: 400 12px/1.5 var(--f-mono); color: var(--muted); }
 /* Таблица не помещается на телефоне — даём ей прокручиваться внутри своего блока */
 .table-scroll { overflow-x: auto; }
+
+
+/* ========== 16. СТРАНИЦА 404 ========== */
+/* Всё по центру экрана */
+.nf { min-height: 100vh; display: grid; place-items: center; padding: 48px 0; }
+.nf-code { font: 500 clamp(96px, 20vw, 220px)/.9 var(--f-mono); letter-spacing: -.06em; color: var(--accent); }
+.nf h1 { margin: 16px 0 28px; font: 500 clamp(30px, 4vw, 48px)/1.05 var(--f-serif); }
+.nf h1 em { font-style: italic; color: var(--muted); }
+.nf-links { display: flex; flex-wrap: wrap; gap: 10px; }

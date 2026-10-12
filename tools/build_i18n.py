@@ -423,7 +423,7 @@ def build(lang):
                   html, count=1, flags=re.S)
 
     # 2) Язык страницы, адреса и превью для соцсетей
-    html = html.replace('<html lang="ru">', f'<html lang="{lang}">')
+    html = html.replace('<html lang="ru" data-home>', f'<html lang="{lang}" data-home>')
     html = html.replace('<link rel="canonical" href="https://mxsystems.md/">', f'<link rel="canonical" href="https://mxsystems.md/{lang}/">')
     html = html.replace('<meta property="og:url" content="https://mxsystems.md/">', f'<meta property="og:url" content="https://mxsystems.md/{lang}/">')
     loc = {'ru': 'ru_RU', 'ro': 'ro_RO', 'en': 'en_US'}

@@ -138,6 +138,8 @@ if (REDUCE) $$('svg').forEach(svg => svg.pauseAnimations && svg.pauseAnimations(
     cta.href = 'https://t.me/mvxev?text=' + encodeURIComponent(MSG.replace('{sum}', nf.format(sum)));
   };
   form.addEventListener('input', update);     // одно событие на всю форму — срабатывает от любого поля
+  // Форма ничего не отправляет: Enter в поле не должен перезагружать страницу
+  form.addEventListener('submit', e => e.preventDefault());
   update();
 })();
 

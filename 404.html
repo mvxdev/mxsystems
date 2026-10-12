@@ -8,6 +8,13 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
+  <!-- CSP (Content-Security-Policy) — политика безопасности: браузер выполняет только скрипты-файлы
+       с нашего сайта и от Google/Meta, а любой внедрённый чужой код блокирует (защита от XSS).
+       Добавляете новый внешний сервис (виджет, карта, чат) — впишите его домен сюда.
+       referrer — при переходе на другие сайты передаём только адрес домена, без полного пути -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com https://connect.facebook.net; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com https://www.facebook.com; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://www.facebook.com https://connect.facebook.net; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <script src="/assets/js/early.js?v=8"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>404 · MX Systems</title>
   <meta name="robots" content="noindex">
@@ -15,16 +22,8 @@
   <meta name="theme-color" content="#0d0c0a">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Golos+Text:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
-  <link rel="stylesheet" href="/assets/css/style.css?v=7">
-  <style>
-    /* Только для этой страницы: всё по центру экрана */
-    .nf { min-height: 100vh; display: grid; place-items: center; padding: 48px 0; }
-    .nf-code { font: 500 clamp(96px, 20vw, 220px)/.9 var(--f-mono); letter-spacing: -.06em; color: var(--accent); }
-    .nf h1 { margin: 16px 0 28px; font: 500 clamp(30px, 4vw, 48px)/1.05 var(--f-serif); }
-    .nf h1 em { font-style: italic; color: var(--muted); }
-    .nf-links { display: flex; flex-wrap: wrap; gap: 10px; }
-  </style>
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Golos+Text:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
+  <link rel="stylesheet" href="/assets/css/style.css?v=8">
 </head>
 <body>
   <main class="nf">
