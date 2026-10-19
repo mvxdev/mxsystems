@@ -65,7 +65,7 @@
 
   <!-- ?v=2 — номер версии. После правки style.css или main.js увеличьте его (здесь, в privacy/ и 404.html),
        иначе браузеры посетителей могут показать старую копию файла из кэша -->
-  <link rel="stylesheet" href="../assets/css/style.css?v=9">
+  <link rel="stylesheet" href="../assets/css/style.css?v=10">
   <!-- defer — скрипт загрузится параллельно и выполнится после разбора HTML (не тормозит отрисовку) -->
   <script src="../assets/js/main.js?v=8" defer></script>
 </head>
@@ -364,18 +364,24 @@
           </div>
           <div class="prod-grid">
             <article class="prod">
+              <!-- Скриншот главной страницы продукта: width/height заранее задают пропорцию (16:10),
+                   loading="lazy" — картинка грузится, только когда до неё докрутили -->
+              <img class="prod-shot" src="../assets/products/carbids.jpg" alt="CarBids home page: VIN search and number of lots" width="960" height="600" loading="lazy" decoding="async">
               <div class="prod-top"><span class="badge"><i class="live-dot"></i>Live</span><a class="prod-link" href="https://carbids.info" target="_blank" rel="noopener">carbids.info ↗</a></div>
               <h4 class="prod-name">CarBids</h4>
               <p class="prod-what">US auction car history by VIN</p>
               <p class="prod-desc">Copart and IAAI sales: photos, mileage, damage, title and final price. The data updates itself, every car gets its own page for Google search, and a Telegram channel with daily deals runs automatically.</p>
-              <dl class="prod-kpis"><div><dt>3.3M</dt><dd>lots in the database</dd></div><div><dt>3.6M</dt><dd>VIN pages</dd></div><div><dt>4</dt><dd>languages</dd></div></dl>
+              <dl class="prod-kpis"><div><dt>3.6M</dt><dd>lots in the database</dd></div><div><dt>61</dt><dd>makes</dd></div><div><dt>4</dt><dd>languages</dd></div></dl>
             </article>
             <article class="prod">
+              <!-- Скриншот главной страницы продукта: width/height заранее задают пропорцию (16:10),
+                   loading="lazy" — картинка грузится, только когда до неё докрутили -->
+              <img class="prod-shot" src="../assets/products/fastload.jpg" alt="FastLoad home page: a broker load with the real rate and a bid button" width="960" height="600" loading="lazy" decoding="async">
               <div class="prod-top"><span class="badge"><i class="live-dot"></i>Live</span><a class="prod-link" href="https://fastload.app" target="_blank" rel="noopener">fastload.app ↗</a></div>
               <h4 class="prod-name">FastLoad</h4>
-              <p class="prod-what">Load matching on US load boards</p>
-              <p class="prod-desc">A standalone product grown out of the MIRTEH GRUP system: the load board is watched around the clock, loads are matched to the truck and driver, and a bid goes to the broker in one click.</p>
-              <dl class="prod-kpis"><div><dt>24/7</dt><dd>monitoring</dd></div><div><dt>1</dt><dd>click to bid</dd></div></dl>
+              <p class="prod-what">Loads straight from brokers — for owner-operators</p>
+              <p class="prod-desc">A service for owner-operators and expedite drivers in the US: loads come straight from the broker with the real rate, and your own bid goes to the broker from your own email — no dispatcher in the middle. Grown out of the MIRTEH GRUP system.</p>
+              <dl class="prod-kpis"><div><dt>up to 40%</dt><dd>of the rate stays with the driver</dd></div><div><dt>1 click</dt><dd>to bid to the broker</dd></div></dl>
             </article>
             <article class="prod prod--offer">
               <div class="prod-top"><span class="tag-offer">For car workshops</span><a class="prod-link" href="#case-4power">case study ↑</a></div>

@@ -65,7 +65,7 @@
 
   <!-- ?v=2 — номер версии. После правки style.css или main.js увеличьте его (здесь, в privacy/ и 404.html),
        иначе браузеры посетителей могут показать старую копию файла из кэша -->
-  <link rel="stylesheet" href="assets/css/style.css?v=9">
+  <link rel="stylesheet" href="assets/css/style.css?v=10">
   <!-- defer — скрипт загрузится параллельно и выполнится после разбора HTML (не тормозит отрисовку) -->
   <script src="assets/js/main.js?v=8" defer></script>
 </head>
@@ -364,18 +364,24 @@
           </div>
           <div class="prod-grid">
             <article class="prod">
+              <!-- Скриншот главной страницы продукта: width/height заранее задают пропорцию (16:10),
+                   loading="lazy" — картинка грузится, только когда до неё докрутили -->
+              <img class="prod-shot" src="assets/products/carbids.jpg" alt="Главная страница CarBids: поиск по VIN и число лотов в базе" width="960" height="600" loading="lazy" decoding="async">
               <div class="prod-top"><span class="badge"><i class="live-dot"></i>Работает</span><a class="prod-link" href="https://carbids.info" target="_blank" rel="noopener">carbids.info ↗</a></div>
               <h4 class="prod-name">CarBids</h4>
               <p class="prod-what">История машин с аукционов США по VIN</p>
               <p class="prod-desc">Продажи Copart и IAAI: фото, пробег, повреждения, документы и итоговая цена. Данные обновляются сами, у каждой машины — своя страница для поиска Google, Telegram-канал с находками дня ведётся автоматически.</p>
-              <dl class="prod-kpis"><div><dt>3,3 млн</dt><dd>лотов в базе</dd></div><div><dt>3,6 млн</dt><dd>страниц VIN</dd></div><div><dt>4</dt><dd>языка</dd></div></dl>
+              <dl class="prod-kpis"><div><dt>3,6 млн</dt><dd>лотов в базе</dd></div><div><dt>61</dt><dd>марка</dd></div><div><dt>4</dt><dd>языка</dd></div></dl>
             </article>
             <article class="prod">
+              <!-- Скриншот главной страницы продукта: width/height заранее задают пропорцию (16:10),
+                   loading="lazy" — картинка грузится, только когда до неё докрутили -->
+              <img class="prod-shot" src="assets/products/fastload.jpg" alt="Главная страница FastLoad: груз от брокера с реальной ставкой и кнопкой ставки" width="960" height="600" loading="lazy" decoding="async">
               <div class="prod-top"><span class="badge"><i class="live-dot"></i>Работает</span><a class="prod-link" href="https://fastload.app" target="_blank" rel="noopener">fastload.app ↗</a></div>
               <h4 class="prod-name">FastLoad</h4>
-              <p class="prod-what">Подбор грузов на биржах США</p>
-              <p class="prod-desc">Отдельный продукт, выросший из системы для MIRTEH GRUP: биржа под присмотром круглые сутки, грузы подбираются под трак и водителя, ставка брокеру — в один клик.</p>
-              <dl class="prod-kpis"><div><dt>24/7</dt><dd>мониторинг</dd></div><div><dt>1</dt><dd>клик до ставки</dd></div></dl>
+              <p class="prod-what">Грузы напрямую от брокеров — для владельцев траков</p>
+              <p class="prod-desc">Сервис для владельцев траков и экспедиторов в США: груз приходит прямо от брокера с реальной ставкой, а своя ставка уходит брокеру с собственной почты — без диспетчера посередине. Вырос из системы для MIRTEH GRUP.</p>
+              <dl class="prod-kpis"><div><dt>до 40%</dt><dd>ставки остаётся у водителя</dd></div><div><dt>1 клик</dt><dd>до ставки брокеру</dd></div></dl>
             </article>
             <article class="prod prod--offer">
               <div class="prod-top"><span class="tag-offer">Для автосервисов</span><a class="prod-link" href="#case-4power">кейс ↑</a></div>
@@ -438,7 +444,7 @@
               <span class="svc-name">Разработка</span>
               <span class="svc-desc">Сайты, личные кабинеты и внутренние системы — от лендинга до платформы для всей команды. SEO-основа включена: скорость, структура, мета-теги, карта сайта.</span>
               <span class="svc-term"><small>Срок</small>по объёму</span>
-              <span class="svc-price"><small>Цена</small>сайт от €600<br>система от €1 500</span>
+              <span class="svc-price"><small>Цена</small>сайт от €600<br>система от €1&nbsp;500</span>
               <span class="svc-arrow" aria-hidden="true">→</span>
             </a></li>
             <li><a class="svc" href="#contact">

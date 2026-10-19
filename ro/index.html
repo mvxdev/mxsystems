@@ -65,7 +65,7 @@
 
   <!-- ?v=2 — номер версии. После правки style.css или main.js увеличьте его (здесь, в privacy/ и 404.html),
        иначе браузеры посетителей могут показать старую копию файла из кэша -->
-  <link rel="stylesheet" href="../assets/css/style.css?v=9">
+  <link rel="stylesheet" href="../assets/css/style.css?v=10">
   <!-- defer — скрипт загрузится параллельно и выполнится после разбора HTML (не тормозит отрисовку) -->
   <script src="../assets/js/main.js?v=8" defer></script>
 </head>
@@ -364,18 +364,24 @@
           </div>
           <div class="prod-grid">
             <article class="prod">
+              <!-- Скриншот главной страницы продукта: width/height заранее задают пропорцию (16:10),
+                   loading="lazy" — картинка грузится, только когда до неё докрутили -->
+              <img class="prod-shot" src="../assets/products/carbids.jpg" alt="Pagina principală CarBids: căutare după VIN și numărul de loturi" width="960" height="600" loading="lazy" decoding="async">
               <div class="prod-top"><span class="badge"><i class="live-dot"></i>Funcționează</span><a class="prod-link" href="https://carbids.info" target="_blank" rel="noopener">carbids.info ↗</a></div>
               <h4 class="prod-name">CarBids</h4>
               <p class="prod-what">Istoricul mașinilor de la licitațiile din SUA după VIN</p>
               <p class="prod-desc">Vânzările Copart și IAAI: fotografii, kilometraj, avarii, documente și prețul final. Datele se actualizează singure, fiecare mașină are propria pagină pentru căutarea Google, iar canalul de Telegram cu chilipirurile zilei merge automat.</p>
-              <dl class="prod-kpis"><div><dt>3,3 mil.</dt><dd>loturi în bază</dd></div><div><dt>3,6 mil.</dt><dd>pagini VIN</dd></div><div><dt>4</dt><dd>limbi</dd></div></dl>
+              <dl class="prod-kpis"><div><dt>3,6 mil.</dt><dd>loturi în bază</dd></div><div><dt>61</dt><dd>de mărci</dd></div><div><dt>4</dt><dd>limbi</dd></div></dl>
             </article>
             <article class="prod">
+              <!-- Скриншот главной страницы продукта: width/height заранее задают пропорцию (16:10),
+                   loading="lazy" — картинка грузится, только когда до неё докрутили -->
+              <img class="prod-shot" src="../assets/products/fastload.jpg" alt="Pagina principală FastLoad: încărcătură de la broker cu tariful real și butonul de ofertă" width="960" height="600" loading="lazy" decoding="async">
               <div class="prod-top"><span class="badge"><i class="live-dot"></i>Funcționează</span><a class="prod-link" href="https://fastload.app" target="_blank" rel="noopener">fastload.app ↗</a></div>
               <h4 class="prod-name">FastLoad</h4>
-              <p class="prod-what">Găsirea încărcăturilor pe bursele din SUA</p>
-              <p class="prod-desc">Un produs separat, crescut din sistemul pentru MIRTEH GRUP: bursa e urmărită non-stop, încărcăturile se potrivesc camionului și șoferului, iar oferta către broker pleacă dintr-un clic.</p>
-              <dl class="prod-kpis"><div><dt>24/7</dt><dd>monitorizare</dd></div><div><dt>1</dt><dd>clic până la ofertă</dd></div></dl>
+              <p class="prod-what">Încărcături direct de la brokeri — pentru proprietarii de camioane</p>
+              <p class="prod-desc">Un serviciu pentru proprietarii de camioane și șoferii de expediere din SUA: încărcătura vine direct de la broker, cu tariful real, iar oferta proprie pleacă la broker de pe propriul e-mail — fără dispecer la mijloc. A crescut din sistemul pentru MIRTEH GRUP.</p>
+              <dl class="prod-kpis"><div><dt>până la 40%</dt><dd>din tarif rămâne la șofer</dd></div><div><dt>1 clic</dt><dd>până la oferta către broker</dd></div></dl>
             </article>
             <article class="prod prod--offer">
               <div class="prod-top"><span class="tag-offer">Pentru service-uri auto</span><a class="prod-link" href="#case-4power">proiectul ↑</a></div>

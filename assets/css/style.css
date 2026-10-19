@@ -649,3 +649,7 @@ ul, ol { padding: 0; list-style: none; }
 /* Карточка-предложение (4Power CRM): ярлык вместо статуса и кнопка внизу */
 .tag-offer { padding: 7px 12px; border: 1px solid #ff5f1f66; border-radius: 999px; font: 500 11.5px/1 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
 .prod-cta { margin-top: auto; align-self: flex-start; }
+
+/* Скриншот продукта сверху карточки: тонкая рамка, лёгкое увеличение при наведении на карточку */
+.prod-shot { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; margin-bottom: 8px; border: 1px solid var(--rule-2); transition: transform .6s var(--ease); }
+.prod:hover .prod-shot { transform: scale(1.015); }
