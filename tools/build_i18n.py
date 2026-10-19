@@ -95,9 +95,9 @@ T = [
     # ---------- Кейсы: общее ----------
     ('<b>01</b> / Проекты', '<b>01</b> / Proiecte', '<b>01</b> / Projects'),
     ('Системы, которые <em>работают каждый день</em>', 'Sisteme care <em>lucrează în fiecare zi</em>', 'Systems that <em>run every single day</em>'),
-    ('Системы для клиентов и мои собственные продукты — всё в ежедневной работе. Интерфейсы ниже — упрощённые копии на демо-данных.',
-     'Sisteme pentru clienți și produsele mele proprii — toate folosite zilnic. Interfețele de mai jos sunt copii simplificate, cu date demonstrative.',
-     'Client systems and my own products — all in daily use. The interfaces below are simplified copies with demo data.'),
+    ('Внедрения у клиентов и платформы — всё в ежедневной работе. Интерфейсы ниже — упрощённые копии на демо-данных.',
+     'Implementări la clienți și platforme — toate folosite zilnic. Interfețele de mai jos sunt copii simplificate, cu date demonstrative.',
+     'Client implementations and platforms — all in daily use. The interfaces below are simplified copies with demo data.'),
     ('<span class="case-no">Кейс 01</span>', '<span class="case-no">Proiect 01</span>', '<span class="case-no">Case 01</span>'),
     ('<span class="case-no">Кейс 02</span>', '<span class="case-no">Proiect 02</span>', '<span class="case-no">Case 02</span>'),
     ('<i class="live-dot"></i>В эксплуатации</span>', '<i class="live-dot"></i>În funcțiune</span>', '<i class="live-dot"></i>In production</span>'),
@@ -221,9 +221,9 @@ T = [
     ('<li>На базе проекта вырос отдельный продукт — ', '<li>Din proiect a crescut un produs separat — ', '<li>The project grew into a standalone product — '),
 
     # ---------- Проекты: группы и «Свои продукты» ----------
-    ('<p class="group-label reveal">Для клиентов</p>', '<p class="group-label reveal">Pentru clienți</p>', '<p class="group-label reveal">For clients</p>'),
-    ('<p class="group-label">Свои продукты</p>', '<p class="group-label">Produse proprii</p>', '<p class="group-label">Own products</p>'),
-    ('Сервисы, которые я разработал <em>и веду сам</em>', 'Servicii pe care le-am dezvoltat <em>și le administrez singur</em>', 'Services I built <em>and run myself</em>'),
+    ('<p class="group-label reveal">Внедрения</p>', '<p class="group-label reveal">Implementări</p>', '<p class="group-label reveal">Implementations</p>'),
+    ('<p class="group-label">Платформы</p>', '<p class="group-label">Platforme</p>', '<p class="group-label">Platforms</p>'),
+    ('Платформы, которые <em>работают прямо сейчас</em>', 'Platforme care <em>funcționează chiar acum</em>', 'Platforms that are <em>live right now</em>'),
     ('<i class="live-dot"></i>Работает</span>', '<i class="live-dot"></i>Funcționează</span>', '<i class="live-dot"></i>Live</span>'),
     ('<p class="prod-what">История машин с аукционов США по VIN</p>', '<p class="prod-what">Istoricul mașinilor de la licitațiile din SUA după VIN</p>', '<p class="prod-what">US auction car history by VIN</p>'),
     ('Продажи Copart и IAAI: фото, пробег, повреждения, документы и итоговая цена. Данные обновляются сами, у каждой машины — своя страница для поиска Google, Telegram-канал с находками дня ведётся автоматически.',
