@@ -619,3 +619,33 @@ ul, ol { padding: 0; list-style: none; }
 .nf h1 { margin: 16px 0 28px; font: 500 clamp(30px, 4vw, 48px)/1.05 var(--f-serif); }
 .nf h1 em { font-style: italic; color: var(--muted); }
 .nf-links { display: flex; flex-wrap: wrap; gap: 10px; }
+
+
+/* ========== 17. ПРОЕКТЫ: подписи групп и «Свои продукты» ========== */
+/* Подпись группы: «Для клиентов», «Свои продукты» — мелкий моно-капс с линией до края */
+.group-label { display: flex; align-items: center; gap: 12px; margin: 0 0 8px; font: 400 12px/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+.group-label::after { content: ""; flex: 1; height: 1px; background: var(--rule-2); }
+
+.products { margin-top: clamp(64px, 9vw, 120px); }
+.products-head { margin-bottom: clamp(28px, 4vw, 44px); }
+.products-title { margin-top: 18px; font: 500 clamp(30px, 4.2vw, 54px)/1 var(--f-serif); letter-spacing: -.02em; }
+.products-title em { font-style: italic; color: var(--accent); }
+
+/* Сетка карточек: 3 колонки на десктопе, 1 на телефоне */
+.prod-grid { display: grid; gap: 16px; }
+@media (min-width: 1000px) { .prod-grid { grid-template-columns: repeat(3, 1fr); } }
+.prod { display: flex; flex-direction: column; gap: 12px; padding: clamp(20px, 2.4vw, 28px); border: 1px solid var(--rule-2); background: var(--bg-2); transition: border-color .4s, transform .5s var(--ease); }
+.prod:hover { border-color: var(--ink); transform: translateY(-3px); }
+.prod-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+.prod-link { font: 400 12.5px/1 var(--f-mono); color: var(--accent); border-bottom: 1px solid #ff5f1f55; padding-bottom: 2px; }
+.prod-link:hover { border-color: var(--accent); }
+.prod-name { font: italic 500 clamp(30px, 3vw, 40px)/1 var(--f-serif); letter-spacing: -.01em; }
+.prod-what { font: 400 12px/1.4 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.prod-desc { color: #bdb5a7; font-size: 15px; }
+/* Показатели внизу карточки — как на панели результатов, только мельче */
+.prod-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin: auto 0 0; padding-top: 16px; border-top: 1px solid var(--rule); }
+.prod-kpis dt { font: 500 22px/1.1 var(--f-mono); letter-spacing: -.03em; color: var(--ink); }
+.prod-kpis dd { margin: 4px 0 0; font: 400 10.5px/1.3 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+/* Карточка-предложение (4Power CRM): ярлык вместо статуса и кнопка внизу */
+.tag-offer { padding: 7px 12px; border: 1px solid #ff5f1f66; border-radius: 999px; font: 500 11.5px/1 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.prod-cta { margin-top: auto; align-self: flex-start; }

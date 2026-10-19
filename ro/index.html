@@ -65,7 +65,7 @@
 
   <!-- ?v=2 — номер версии. После правки style.css или main.js увеличьте его (здесь, в privacy/ и 404.html),
        иначе браузеры посетителей могут показать старую копию файла из кэша -->
-  <link rel="stylesheet" href="../assets/css/style.css?v=8">
+  <link rel="stylesheet" href="../assets/css/style.css?v=9">
   <!-- defer — скрипт загрузится параллельно и выполнится после разбора HTML (не тормозит отрисовку) -->
   <script src="../assets/js/main.js?v=8" defer></script>
 </head>
@@ -166,9 +166,11 @@
       <div class="wrap">
         <div class="section-head reveal">
           <p class="eyebrow"><b>01</b> / Proiecte</p>
-          <h2 class="h2" id="cases-title">Două sisteme care <em>lucrează în fiecare zi</em></h2>
-          <p>Nu machete și nici proiecte-pilot — ambele sisteme sunt folosite zilnic de echipele clienților. Interfețele de mai jos sunt copii simplificate, cu date demonstrative.</p>
+          <h2 class="h2" id="cases-title">Sisteme care <em>lucrează în fiecare zi</em></h2>
+          <p>Sisteme pentru clienți și produsele mele proprii — toate folosite zilnic. Interfețele de mai jos sunt copii simplificate, cu date demonstrative.</p>
         </div>
+
+        <p class="group-label reveal">Pentru clienți</p>
 
         <!-- ===== КЕЙС 01 — 4Power Club =====
              Порядок кейсов: на RU и RO первым идёт 4Power (местному владельцу ближе автосервис
@@ -183,7 +185,7 @@
             <dl class="case-meta">
               <div><dt>Client</dt><dd>4Power Club</dd></div>
               <div><dt>Domeniu</dt><dd>Service auto · Chișinău</dd></div>
-              <div><dt>Echipa</dt><dd>6 posturi, 5–6 mecanici, 3 recepționeri, depozit</dd></div>
+              <div><dt>Echipa</dt><dd>6 posturi, 5–6 mecanici, 4 recepționeri, depozit</dd></div>
             </dl>
           </header>
 
@@ -199,10 +201,12 @@
                   <li><b>Un strat peste 1C.</b> 1C rămâne contabilitatea, iar sistemul conduce procesul: statusurile mașinilor, responsabilii, legătura „piesă ↔ mașină”, notificările.</li>
                   <li><b>Panou cu mașinile în timp real</b> — pe zile și pe coloane de status; cele urgente sunt evidențiate și se vede câte zile așteaptă fiecare mașină.</li>
                   <li><b>Evidența pieselor pe tot ciclul</b> „mașina așteaptă → comandat → în depozit → montaj” și o filă separată pentru piesele venite fără legătură cu o mașină.</li>
-                  <li><b>Sincronizare cu 1C</b> — intrările în depozit se preiau automat, fără introducere dublă.</li>
+                  <li><b>Legătura cu 1C</b> — comenzile și intrările în depozit vin singure din 1C, fără introducere dublă; o intrare repetată nu dublează piesa.</li>
                   <li><b>„Ecranul atelierului”</b> — un monitor comun pentru mecanici, fără nimic de instalat.</li>
                   <li><b>Praguri și ore de lucru</b> — sistemul dă singur alarma dacă o mașină sau o piesă stă blocată mai mult decât e normal.</li>
-                  <li><b>Notificări</b> pentru angajați în Telegram și mesaje automate către clienți când mașina e gata.</li>
+                  <li><b>Mesaje către clienți în numele service-ului</b> — „mașina e gata” și comanda de lucru pleacă singure când 1C a închis comanda, cu telefonul recepționerului responsabil. Angajații primesc notificări în Telegram.</li>
+                  <li><b>Calendarul programărilor</b> — o singură coadă pe zi și butonul „Programează la reparație” când au sosit toate piesele.</li>
+                  <li><b>Ecranul maistrului pe telefon</b> și marcajul de test-drive: cine predă cheile vede dacă mașina a fost testată.</li>
                   <li><b>Raport zilnic pentru proprietar.</b></li>
                   <li><b>Căutare</b> după numărul de înmatriculare, VIN, telefon, nume sau numărul comenzii; roluri și drepturi de acces pentru angajați.</li>
                 </ul>
@@ -248,7 +252,7 @@
             <div class="kpis">
               <div class="kpi kpi--acc"><b><span class="count" data-to="886">886</span></b><span>verificări automate, toate trec</span></div>
               <div class="kpi"><b><span class="count" data-to="6">6</span></b><span>posturi într-un singur sistem</span></div>
-              <div class="kpi"><b><span class="count" data-to="3">3</span></b><span>recepționeri văd același lucru</span></div>
+              <div class="kpi"><b><span class="count" data-to="4">4</span></b><span>recepționeri văd același lucru</span></div>
               <div class="kpi"><b>1C</b><span>sincronizare depozit</span></div>
             </div>
             <ul class="results">
@@ -351,6 +355,37 @@
           </footer>
         </article>
 
+        <!-- ===== СВОИ ПРОДУКТЫ =====
+             Собственные продукты: работают сами по себе, не на заказ. Карточки компактнее кейсов. -->
+        <div class="products reveal" id="products">
+          <div class="products-head">
+            <p class="group-label">Produse proprii</p>
+            <h3 class="products-title">Servicii pe care le-am dezvoltat <em>și le administrez singur</em></h3>
+          </div>
+          <div class="prod-grid">
+            <article class="prod">
+              <div class="prod-top"><span class="badge"><i class="live-dot"></i>Funcționează</span><a class="prod-link" href="https://carbids.info" target="_blank" rel="noopener">carbids.info ↗</a></div>
+              <h4 class="prod-name">CarBids</h4>
+              <p class="prod-what">Istoricul mașinilor de la licitațiile din SUA după VIN</p>
+              <p class="prod-desc">Vânzările Copart și IAAI: fotografii, kilometraj, avarii, documente și prețul final. Datele se actualizează singure, fiecare mașină are propria pagină pentru căutarea Google, iar canalul de Telegram cu chilipirurile zilei merge automat.</p>
+              <dl class="prod-kpis"><div><dt>3,3 mil.</dt><dd>loturi în bază</dd></div><div><dt>3,6 mil.</dt><dd>pagini VIN</dd></div><div><dt>4</dt><dd>limbi</dd></div></dl>
+            </article>
+            <article class="prod">
+              <div class="prod-top"><span class="badge"><i class="live-dot"></i>Funcționează</span><a class="prod-link" href="https://fastload.app" target="_blank" rel="noopener">fastload.app ↗</a></div>
+              <h4 class="prod-name">FastLoad</h4>
+              <p class="prod-what">Găsirea încărcăturilor pe bursele din SUA</p>
+              <p class="prod-desc">Un produs separat, crescut din sistemul pentru MIRTEH GRUP: bursa e urmărită non-stop, încărcăturile se potrivesc camionului și șoferului, iar oferta către broker pleacă dintr-un clic.</p>
+              <dl class="prod-kpis"><div><dt>24/7</dt><dd>monitorizare</dd></div><div><dt>1</dt><dd>clic până la ofertă</dd></div></dl>
+            </article>
+            <article class="prod prod--offer">
+              <div class="prod-top"><span class="tag-offer">Pentru service-uri auto</span><a class="prod-link" href="#case-4power">proiectul ↑</a></div>
+              <h4 class="prod-name">4Power CRM</h4>
+              <p class="prod-what">Management de service auto peste 1C</p>
+              <p class="prod-desc">Același sistem care funcționează zilnic la 4Power Club. Fiecare service primește propriul server și propria bază de date — îl adaptez la posturile, procesul și 1C-ul dumneavoastră.</p>
+              <a class="btn btn--small btn--primary prod-cta" href="#contact">Discutăm pentru service-ul dvs. <span class="arrow" aria-hidden="true">→</span></a>
+            </article>
+          </div>
+        </div>
       </div>
     </section>
     <!-- ===== КТО ДЕЛАЕТ =====
