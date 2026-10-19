@@ -19,3 +19,19 @@ Shot "$base/og-template.html?lang=ru" 'og-image.png'    1200 630
 Shot "$base/og-template.html?lang=ro" 'og-image-ro.png' 1200 630
 Shot "$base/og-template.html?lang=en" 'og-image-en.png' 1200 630
 Shot "$base/icon-template.html"       'apple-touch-icon.png' 180 180
+
+# Картинка для карточки 4Power CRM: макет на ВЫМЫШЛЕННЫХ данных (tools/crm-shot.html).
+# Снимаем 1200×750 и уменьшаем до 960×600 в JPEG (качество 80) — так файл весит в разы меньше PNG.
+Shot "$base/crm-shot.html" 'products\crm.png' 1200 750
+Add-Type -AssemblyName System.Drawing
+$src = [System.Drawing.Image]::FromFile("$out\products\crm.png")
+$dst = New-Object System.Drawing.Bitmap 960, 600
+$g = [System.Drawing.Graphics]::FromImage($dst); $g.InterpolationMode = 'HighQualityBicubic'
+$g.DrawImage($src, 0, 0, 960, 600)
+$codec = [System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders() | Where-Object { $_.MimeType -eq 'image/jpeg' }
+$q = New-Object System.Drawing.Imaging.EncoderParameters 1
+$q.Param[0] = New-Object System.Drawing.Imaging.EncoderParameter ([System.Drawing.Imaging.Encoder]::Quality), 80L
+$dst.Save("$out\products\crm.jpg", $codec, $q)
+$g.Dispose(); $dst.Dispose(); $src.Dispose()
+Remove-Item "$out\products\crm.png"
+Write-Output ("products\crm.jpg: {0:N0} KB" -f ((Get-Item "$out\products\crm.jpg").Length / 1KB))

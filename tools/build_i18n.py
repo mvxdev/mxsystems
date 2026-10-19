@@ -240,6 +240,7 @@ T = [
     ('<dt>1 клик</dt><dd>до ставки брокеру</dd>', '<dt>1 clic</dt><dd>până la oferta către broker</dd>', '<dt>1 click</dt><dd>to bid to the broker</dd>'),
     ('alt="Главная страница CarBids: поиск по VIN и число лотов в базе"', 'alt="Pagina principală CarBids: căutare după VIN și numărul de loturi"', 'alt="CarBids home page: VIN search and number of lots"'),
     ('alt="Главная страница FastLoad: груз от брокера с реальной ставкой и кнопкой ставки"', 'alt="Pagina principală FastLoad: încărcătură de la broker cu tariful real și butonul de ofertă"', 'alt="FastLoad home page: a broker load with the real rate and a bid button"'),
+    ('alt="Доска машин 4Power CRM по дням — демо-данные"', 'alt="Panoul de mașini 4Power CRM pe zile — date demonstrative"', 'alt="4Power CRM car board by day — demo data"'),
     ('<span class="tag-offer">Для автосервисов</span>', '<span class="tag-offer">Pentru service-uri auto</span>', '<span class="tag-offer">For car workshops</span>'),
     ('>кейс ↑</a>', '>proiectul ↑</a>', '>case study ↑</a>'),
     ('<p class="prod-what">Управление автосервисом поверх 1С</p>', '<p class="prod-what">Management de service auto peste 1C</p>', '<p class="prod-what">Workshop management on top of 1C</p>'),
