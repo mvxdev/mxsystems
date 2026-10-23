@@ -111,7 +111,13 @@ T = [
     ('<span class="r">демо</span>', '<span class="r">demo</span>', '<span class="r">demo</span>'),
 
     # ---------- Кейс 4Power ----------
-    ('Система управления автосервисом <em>4Power Club</em>', 'Sistem de management pentru service-ul auto <em>4Power Club</em>', 'Workshop management system for <em>4Power Club</em>'),
+    ('Сайт и CRM для автосервиса <em>4Power Club</em>', 'Site și CRM pentru service-ul auto <em>4Power Club</em>', 'Website and CRM for the <em>4Power Club</em> workshop'),
+    ('<dt>Сайт</dt>', '<dt>Site</dt>', '<dt>Website</dt>'),
+    ('<b>Сайт сервиса</b> ', '<b>Site-ul service-ului</b> ', '<b>The workshop’s website</b> '),
+    (' — на румынском и русском: услуги, запись на ремонт, разметка для Google, чтобы сервис был виден в поиске и на картах.',
+     ' — în română și rusă: servicii, programare la reparație, marcaj pentru Google, ca service-ul să apară în căutare și pe hărți.',
+     ' — in Romanian and Russian: services, repair booking, and Google markup so the workshop shows up in search and on maps.'),
+    (' · сайт: Astro, Tailwind', ' · site: Astro, Tailwind', ' · website: Astro, Tailwind'),
     ('<dd>Автосервис · Кишинёв</dd>', '<dd>Service auto · Chișinău</dd>', '<dd>Car service · Chișinău</dd>'),
     ('<span class="k">Автосервис · Кишинёв</span>', '<span class="k">Service auto · Chișinău</span>', '<span class="k">Car service · Chișinău</span>'),
     ('<dd>6 постов, 5–6 механиков, 4 приёмщика, склад</dd>', '<dd>6 posturi, 5–6 mecanici, 4 recepționeri, depozit</dd>', '<dd>6 bays, 5–6 mechanics, 4 service advisors, warehouse</dd>'),
