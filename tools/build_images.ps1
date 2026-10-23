@@ -35,3 +35,20 @@ $dst.Save("$out\products\crm.jpg", $codec, $q)
 $g.Dispose(); $dst.Dispose(); $src.Dispose()
 Remove-Item "$out\products\crm.png"
 Write-Output ("products\crm.jpg: {0:N0} KB" -f ((Get-Item "$out\products\crm.jpg").Length / 1KB))
+
+# Скриншоты ЖИВЫХ сайтов для карточек «Платформы» (там только публичные данные, личных нет).
+# Окно 1200×750 (16:10) → уменьшаем до 960×600 JPEG. 12 секунд — сайты успевают догрузить фото и цифры.
+function LiveShot($url, $name) {
+  & $chrome --headless=new --disable-gpu --hide-scrollbars --lang=ru --force-device-scale-factor=1 `
+    "--window-size=1200,750" --virtual-time-budget=12000 "--screenshot=$out\products\$name.png" $url 2>$null | Out-Null
+  $s = [System.Drawing.Image]::FromFile("$out\products\$name.png")
+  $d = New-Object System.Drawing.Bitmap 960, 600
+  $gr = [System.Drawing.Graphics]::FromImage($d); $gr.InterpolationMode = 'HighQualityBicubic'
+  $gr.DrawImage($s, 0, 0, 960, 600)
+  $d.Save("$out\products\$name.jpg", $codec, $q)
+  $gr.Dispose(); $d.Dispose(); $s.Dispose()
+  Remove-Item "$out\products\$name.png"
+  Write-Output ("products\{0}.jpg: {1:N0} KB" -f $name, ((Get-Item "$out\products\$name.jpg").Length / 1KB))
+}
+LiveShot 'https://carbids.info/' 'carbids'
+LiveShot 'https://fastload.app/' 'fastload'
