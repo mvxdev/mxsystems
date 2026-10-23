@@ -1,43 +1,62 @@
 <!doctype html>
 <!--
-  Макет экрана «Доска · По дням» системы 4Power CRM — для картинки в карточке на сайте.
-  ВСЕ ДАННЫЕ ВЫМЫШЛЕННЫЕ: госномера, машины, имена и задачи придуманы.
-  Настоящие данные клиентов и сотрудников сервиса сюда не попадают (закон о персональных данных).
+  Макет экрана 4Power CRM для картинки в карточке на сайте: доска «По дням» и открытая
+  НОВАЯ карточка машины справа (вид с 23.10.2026: полоса статусов, одна главная кнопка,
+  «шаг назад», «Клиент забрал», блоки «Работа», «Что сделать», «Клиент», «Оплата»).
+  ВСЕ ДАННЫЕ ВЫМЫШЛЕННЫЕ: госномера, машины, имена, телефон и задачи придуманы.
+  Настоящие данные клиентов и сотрудников сюда не попадают (закон о персональных данных).
   PNG делает tools/build_images.ps1 → assets/products/crm.jpg (960×600).
 -->
 <html lang="ru">
 <head>
   <meta charset="utf-8">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap">
   <style>
-    html, body { margin: 0; width: 1200px; height: 750px; overflow: hidden; background: #0f1012; color: #e6e6e6; font: 400 13px/1.4 Inter, system-ui, sans-serif; }
+    html, body { margin: 0; width: 1200px; height: 750px; overflow: hidden; background: #0e0e0f; color: #e6e6e6; font: 400 13px/1.4 Inter, system-ui, sans-serif; }
     * { box-sizing: border-box; }
-    .top { display: flex; align-items: center; gap: 14px; height: 50px; padding: 0 14px; background: #16171a; border-bottom: 1px solid #24262b; }
-    .logo { font: 400 21px/1 Anton, sans-serif; font-style: italic; letter-spacing: .3px; }
-    .logo b { color: #ff3b1f; font-weight: 400; }
+    :root { --red: #ec2a2a; }
+    /* ---------- Шапка ---------- */
+    .top { display: flex; align-items: center; gap: 14px; height: 50px; padding: 0 14px; background: #141416; border-bottom: 1px solid #222326; }
+    .logo { font: 400 20px/1 Anton, sans-serif; font-style: italic; letter-spacing: .3px; white-space: nowrap; }
+    .logo b { color: var(--red); font-weight: 400; }
     .sep { color: #555; }
-    .nav { display: flex; gap: 14px; color: #a9abb0; }
+    .nav { display: flex; gap: 12px; color: #a9abb0; white-space: nowrap; }
     .nav .on { color: #fff; font-weight: 600; }
-    .nav .onec { color: #ff5f3f; }
-    .nav .onec i { font-style: normal; font-size: 11px; padding: 1px 6px; margin-left: 4px; border-radius: 9px; background: #3a1d18; }
-    .search { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; height: 32px; margin-left: 6px; padding: 0 12px; display: flex; align-items: center; border-radius: 6px; background: #1d1f23; color: #6c6f75; font-size: 12px; }
-    .seg { display: flex; border-radius: 6px; overflow: hidden; background: #1d1f23; font-size: 12px; }
-    .seg span { padding: 8px 10px; color: #a9abb0; } .seg .on { background: #2a2c31; color: #fff; }
-    .btn { padding: 8px 12px; border-radius: 6px; background: #1d1f23; font-size: 12px; font-weight: 600; }
-    .btn.acc { background: #ff5f1f; color: #fff; }
-    main { width: 860px; margin: 0 auto; padding: 18px 0; }
-    h2 { margin: 6px 0 10px; font: 700 14px/1 Inter; } h2 small { margin-left: 6px; color: #7d8086; font-weight: 500; font-size: 11px; }
-    .car { display: grid; grid-template-columns: 14px 1fr auto; gap: 2px 8px; padding: 10px 6px; border-bottom: 1px solid #22242a; }
-    .dot { width: 8px; height: 8px; margin-top: 5px; border-radius: 50%; }
-    .blue { background: #3d8bff; } .red { background: #ff5a2d; } .green { background: #2fbf6a; }
-    .head { font-size: 13px; } .plate { font: 700 13px/1.4 "JetBrains Mono", monospace; margin-right: 6px; } .model { color: #a9abb0; }
-    .task { grid-column: 2; margin-top: 2px; } .meta { grid-column: 2; color: #6f7278; font-size: 11.5px; }
-    .st { grid-row: 1; grid-column: 3; display: flex; align-items: center; gap: 8px; color: #a9abb0; font-size: 12px; }
-    .days { padding: 2px 7px; border-radius: 4px; background: #3a3112; color: #f2c230; font-size: 11px; font-weight: 600; }
-    .t { color: #6f7278; }
-    .issued { margin: 10px 0 18px; color: #6f7278; font-size: 11.5px; } .issued b { font: 600 11.5px "JetBrains Mono"; color: #8a8d93; }
-    .appt { display: grid; grid-template-columns: 50px auto 1fr auto; align-items: center; gap: 10px; padding: 9px 6px; border-bottom: 1px solid #22242a; }
-    .appt .tm { color: #8a8d93; } .appt .arr { padding: 4px 10px; border: 1px solid #5a2a1c; border-radius: 5px; color: #ff6a3a; font-size: 12px; }
+    .nav .onec { color: #ff4d4d; } .nav .onec i { font-style: normal; font-size: 10.5px; padding: 1px 6px; margin-left: 4px; border-radius: 9px; background: #3a1616; }
+    .search { flex: 1; min-width: 0; height: 30px; padding: 0 12px; display: flex; align-items: center; white-space: nowrap; overflow: hidden; border-radius: 6px; background: #1b1c1f; color: #5f6166; font-size: 12px; }
+    /* ---------- Доска (за карточкой, приглушена) ---------- */
+    .board { position: absolute; top: 50px; left: 0; width: 760px; padding: 16px 0 0 40px; opacity: .45; }
+    h2 { margin: 4px 0 8px; font: 700 13px/1 Inter; } h2 small { margin-left: 6px; color: #7d8086; font-weight: 500; font-size: 11px; }
+    .car { display: grid; grid-template-columns: 12px 1fr auto; gap: 2px 8px; padding: 9px 4px; border-bottom: 1px solid #1f2023; }
+    .dot { width: 7px; height: 7px; margin-top: 5px; border-radius: 50%; } .blue { background: #3d8bff; } .orange { background: #ff6a2d; } .green { background: #2fbf6a; }
+    .plate { font: 700 12.5px/1.4 "JetBrains Mono", monospace; margin-right: 6px; } .model { color: #a9abb0; }
+    .task { grid-column: 2; } .meta { grid-column: 2; color: #6f7278; font-size: 11px; }
+    .st { grid-row: 1; grid-column: 3; display: flex; align-items: center; gap: 7px; color: #a9abb0; font-size: 11.5px; }
+    .days { padding: 1px 7px; border-radius: 4px; background: #3a3112; color: #f2c230; font-size: 10.5px; font-weight: 600; }
+    /* ---------- Новая карточка машины (панель справа) ---------- */
+    .card { position: absolute; top: 44px; right: 14px; bottom: 0; width: 430px; padding: 22px 24px; border-radius: 14px 14px 0 0; background: #161618; border: 1px solid #26272a; box-shadow: -30px 0 60px #000a; }
+    .c-head { display: flex; justify-content: space-between; }
+    .c-plate { font: 700 26px/1 "JetBrains Mono", monospace; letter-spacing: .5px; }
+    .c-model { margin-top: 6px; color: #9a9ca1; }
+    .c-tools { color: #8a8c91; font-size: 18px; letter-spacing: 6px; }
+    /* Полоса статусов: текущий сегмент красный */
+    .flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin: 18px 0 6px; }
+    .flow i { height: 4px; border-radius: 2px; background: #2c2d31; } .flow i.on { background: var(--red); }
+    .flow-l { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; font-size: 10px; color: #6f7278; } .flow-l b { color: #fff; font-weight: 600; }
+    .c-status { margin: 16px 0 12px; font: 800 19px/1.2 Inter; } .c-status small { font: 400 12px Inter; color: #8a8c91; margin-left: 6px; }
+    .main-btn { display: grid; place-items: center; height: 46px; border-radius: 8px; background: var(--red); color: #fff; font: 700 16px Inter; }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .two span { display: grid; place-items: center; height: 40px; border-radius: 8px; border: 1px solid #2c2d31; font-weight: 600; }
+    .row { display: flex; justify-content: space-between; align-items: center; margin: 14px 0 6px; color: #a9abb0; font-size: 12.5px; }
+    .tg { width: 32px; height: 18px; border-radius: 9px; background: #2c2d31; position: relative; display: inline-block; vertical-align: middle; margin-left: 8px; }
+    .tg::after { content: ""; position: absolute; left: 3px; top: 3px; width: 12px; height: 12px; border-radius: 50%; background: #8a8c91; }
+    .sec { margin: 16px 0 8px; font: 600 10.5px/1 Inter; letter-spacing: .1em; text-transform: uppercase; color: #6f7278; display: flex; justify-content: space-between; }
+    .sec a { color: #cfd0d3; letter-spacing: 0; text-transform: none; font-size: 11.5px; }
+    .kv { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #222326; font-size: 12.5px; color: #a9abb0; } .kv b { color: #e6e6e6; font-weight: 500; }
+    .todo { font-size: 13.5px; line-height: 1.5; }
+    .client { font: 700 17px/1.2 Inter; } .phone { margin-top: 3px; color: #a9abb0; }
+    .call { display: inline-grid; place-items: center; width: 160px; height: 36px; margin-top: 10px; border-radius: 8px; border: 1px solid #2c2d31; font-weight: 600; }
+    .pay { display: flex; gap: 6px; margin-top: 8px; } .pay span { padding: 6px 10px; border-radius: 999px; border: 1px solid #2c2d31; font-size: 11.5px; color: #a9abb0; } .pay .on { background: #2a2b2f; color: #fff; }
   </style>
 </head>
 <body>
@@ -45,20 +64,37 @@
     <span class="logo"><b>4</b>POWER CLUB</span><span class="sep">/</span>
     <span class="nav"><span class="on">Доска</span><span>Запчасти</span><span class="onec">1С<i>12</i></span><span>Экран цеха</span><span>Настройки</span></span>
     <span class="search">Поиск: госномер, VIN, телефон, фамилия, № наряда</span>
-    <span class="seg"><span class="on">По дням</span><span>Колонки</span></span>
-    <span class="btn">Только мои</span><span class="btn acc">+ Принять машину</span>
   </div>
-  <main>
-    <h2>Сегодня · понедельник, 19 октября<small>6</small></h2>
-    <div class="car"><i class="dot blue"></i><div class="head"><span class="plate">DEM 101</span><span class="model">BMW X5</span></div><div class="st"><span class="days">2-й день</span>В ожидании ремонта <span class="t">20 ч</span></div><div class="task">Диагностика подвески, заменить передние стойки</div><div class="meta">с вс, 18 окт · Сергей · Игорь</div></div>
-    <div class="car"><i class="dot red"></i><div class="head"><span class="plate">TST 204</span><span class="model">Toyota Camry</span></div><div class="st"><span class="days">4-й день</span>Ждёт запчасти <span class="t">3 д</span></div><div class="task">Замена сцепления — ждём комплект, заказан 16.10</div><div class="meta">с пт, 16 окт · Денис</div></div>
-    <div class="car"><i class="dot red"></i><div class="head"><span class="plate">XYZ 318</span><span class="model">Audi A6</span></div><div class="st">В работе <span class="t">6 ч</span></div><div class="task">ТО: масло, фильтры, свечи; проверить тормозные диски</div><div class="meta">Артём · Игорь</div></div>
-    <div class="car"><i class="dot green"></i><div class="head"><span class="plate">ABC 427</span><span class="model">Volkswagen Golf</span></div><div class="st">Готова <span class="t">2 ч</span></div><div class="task">Замена ремня ГРМ и помпы</div><div class="meta">Сергей · Павел</div></div>
-    <div class="car"><i class="dot green"></i><div class="head"><span class="plate">QWE 530</span><span class="model">Skoda Octavia</span></div><div class="st">Готова <span class="t">4 ч</span></div><div class="task">Стук справа спереди — заменена стойка стабилизатора</div><div class="meta">Денис</div></div>
-    <p class="issued">Выдано сегодня: 4 <b>RTY 611, UIO 712, PAS 813, DFG 914</b></p>
-    <h2>Завтра · вторник, 20 октября<small>3</small></h2>
-    <div class="appt"><span class="tm">09:00</span><span class="plate">HJK 115</span><span class="model">Nissan Qashqai · замена пыльника ШРУСа</span><span class="arr">приехала</span></div>
-    <div class="appt"><span class="tm">11:30</span><span class="plate">LZX 226</span><span class="model">Mercedes C200 · генератор не даёт зарядку</span><span class="arr">приехала</span></div>
-  </main>
+
+  <div class="board">
+    <h2>Сегодня · суббота, 24 октября<small>6</small></h2>
+    <div class="car"><i class="dot blue"></i><div><span class="plate">DEM 101</span><span class="model">BMW X5</span></div><div class="st"><span class="days">3-й день</span>В ожидании ремонта</div><div class="task">Диагностика двигателя, возможно — снятие ГБЦ</div><div class="meta">с чт, 22 окт · Сергей</div></div>
+    <div class="car"><i class="dot orange"></i><div><span class="plate">TST 204</span><span class="model">Toyota Camry</span></div><div class="st"><span class="days">6-й день</span>В работе</div><div class="task">Проводка топливного насоса</div><div class="meta">с пн, 19 окт · Денис · Игорь</div></div>
+    <div class="car"><i class="dot orange"></i><div><span class="plate">XYZ 318</span><span class="model">Audi A6</span></div><div class="st"><span class="days">2-й день</span>В работе</div><div class="task">Скрип сзади, проверить ходовую</div><div class="meta">с пт, 23 окт · Артём · Павел</div></div>
+    <div class="car"><i class="dot orange"></i><div><span class="plate">ABC 427</span><span class="model">VW Passat</span></div><div class="st"><span class="days">2-й день</span>В работе</div><div class="task">Уходит антифриз, масло и фильтры</div><div class="meta">с пт, 23 окт · Сергей · Олег</div></div>
+    <div class="car"><i class="dot green"></i><div><span class="plate">QWE 530</span><span class="model">Skoda Octavia</span></div><div class="st"><span class="days">3-й день</span>Готова</div><div class="task">Снять и отправить турбину на ремонт</div><div class="meta">с чт, 22 окт · Денис</div></div>
+  </div>
+
+  <!-- Открытая карточка машины DEM 101 -->
+  <aside class="card">
+    <div class="c-head"><div><div class="c-plate">DEM 101</div><div class="c-model">BMW X5</div></div><div class="c-tools">⋯ ✕</div></div>
+    <div class="flow"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+    <div class="flow-l"><b>Ожидает</b><span>Запчасти</span><span>В работе</span><span>Готова</span><span>Выдана</span></div>
+    <div class="c-status">В ожидании ремонта<small>· 2 д · с 22.10</small></div>
+    <div class="main-btn">В работу →</div>
+    <div class="two"><span>← Ждёт запчасти</span><span>Клиент забрал</span></div>
+    <div class="row"><span>Другой статус ▾</span><span>Срочная<i class="tg"></i></span></div>
+    <div class="sec">Работа</div>
+    <div class="kv"><span>Ответственный</span><b>Сергей ▾</b></div>
+    <div class="kv"><span>Пост</span><b>не на подъёмнике ▾</b></div>
+    <div class="kv"><span>Принята</span><b>22.10 в 16:40</b></div>
+    <div class="sec">Что сделать <a>править</a></div>
+    <div class="todo">Диагностика двигателя, возможно — снятие ГБЦ и отправка на ремонт</div>
+    <div class="sec">Клиент <a>править</a></div>
+    <div class="client">Иван Петров</div><div class="phone">+373 60 000 101</div>
+    <span class="call">Позвонить</span>
+    <div class="row" style="margin-top:14px"><span>Оплата</span></div>
+    <div class="pay"><span class="on">не выяснили</span><span>нал</span><span>карта</span><span>перечисл.</span></div>
+  </aside>
 </body>
 </html>
