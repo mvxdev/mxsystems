@@ -18,9 +18,11 @@
   <!-- viewport — говорит телефону: ширина страницы = ширина экрана (без «уменьшенной копии» десктопа) -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- title и description — то, что показывает Google в результатах поиска -->
-  <title>MX Systems — реклама, сайты и автоматизация для бизнеса · Кишинёв</title>
-  <meta name="description" content="Студия MX Systems: реклама Google и Meta, сайты и SEO, автоматизация и интеграция с 1С и мессенджерами, аудит безопасности. Весь путь клиента от клика до оплаты. Кишинёв, Молдова.">
+  <!-- title и description — то, что показывает Google в результатах поиска.
+       title до ~60 символов, description до ~155 — длиннее Google обрезает многоточием.
+       Сначала услуга и город (то, что ищут), бренд — в конце -->
+  <title>Сайты, CRM и автоматизация бизнеса в Кишинёве — MX Systems</title>
+  <meta name="description" content="Сайты и CRM под ключ в Кишинёве, автоматизация бизнеса в Молдове, интеграция с 1С, реклама Google и Meta. Разбор задачи — 30 минут, без обязательств.">
 
   <!-- canonical — «главный» адрес этой страницы, чтобы поисковик не считал дублями адреса с параметрами -->
   <link rel="canonical" href="https://mxsystems.md/">
@@ -44,8 +46,12 @@
   <meta property="og:locale" content="ru_RU">
   <meta property="og:locale:alternate" content="ro_RO">
   <meta property="og:locale:alternate" content="en_US">
-  <!-- summary_large_image — крупное превью с картинкой (используют X/Twitter и некоторые мессенджеры) -->
+  <!-- Twitter Card — то же превью для X/Twitter и части мессенджеров.
+       summary_large_image — крупная картинка над заголовком -->
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MX Systems — приводим клиентов и строим систему, в которой ни одна заявка не теряется">
+  <meta name="twitter:description" content="Реклама, сайты и автоматизация — весь путь клиента от первого клика до оплаты. Встраиваем в 1С, мессенджеры и почту.">
+  <meta name="twitter:image" content="https://mxsystems.md/assets/og-image.png">
 
   <!-- Favicon — иконка во вкладке браузера -->
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
@@ -68,6 +74,312 @@
   <link rel="stylesheet" href="assets/css/style.css?v=10">
   <!-- defer — скрипт загрузится параллельно и выполнится после разбора HTML (не тормозит отрисовку) -->
   <script src="assets/js/main.js?v=8" defer></script>
+
+  <!-- JSON-LD — «структурированные данные» по стандарту schema.org: та же информация, что на странице,
+       но в виде, понятном поисковику (кто мы, где, телефон, услуги и цены, вопросы и ответы).
+       Это не исполняемый скрипт: браузер его не запускает, поэтому CSP он не нарушает.
+       Блок между метками СОБИРАЕТ tools/build_i18n.py из текста этой страницы — руками не править:
+       поменяли услугу, цену или вопрос — запустите скрипт, и разметка обновится сама. -->
+  <!-- JSON-LD:START -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ProfessionalService",
+      "@id": "https://mxsystems.md/#org",
+      "name": "MX Systems",
+      "url": "https://mxsystems.md/",
+      "description": "Сайты и CRM под ключ в Кишинёве, автоматизация бизнеса в Молдове, интеграция с 1С, реклама Google и Meta. Разбор задачи — 30 минут, без обязательств.",
+      "logo": "https://mxsystems.md/assets/apple-touch-icon.png",
+      "image": "https://mxsystems.md/assets/og-image.png",
+      "telephone": "+373 69 589 555",
+      "email": "mvxrev@gmail.com",
+      "foundingDate": "2019",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Кишинёв",
+        "addressCountry": "MD"
+      },
+      "areaServed": [
+        {
+          "@type": "Country",
+          "name": "Молдова"
+        },
+        {
+          "@type": "Country",
+          "name": "Румыния"
+        }
+      ],
+      "knowsLanguage": [
+        "ru",
+        "ro",
+        "en"
+      ],
+      "sameAs": [
+        "https://t.me/mvxev"
+      ],
+      "founder": {
+        "@type": "Person",
+        "name": "Максим Лазарев",
+        "jobTitle": "Основатель"
+      },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Услуги",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "priceCurrency": "EUR",
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "name": "€300",
+              "priceCurrency": "EUR",
+              "price": "300"
+            },
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Аудит процессов",
+              "description": "Разбираю, где бизнес теряет время и деньги на ручной работе, и выдаю план: что автоматизировать, в каком порядке и что это даст. План остаётся у вас, а стоимость аудита засчитывается в проект, если продолжаем.",
+              "provider": {
+                "@id": "https://mxsystems.md/#org"
+              },
+              "areaServed": [
+                {
+                  "@type": "Country",
+                  "name": "Молдова"
+                },
+                {
+                  "@type": "Country",
+                  "name": "Румыния"
+                }
+              ]
+            }
+          },
+          {
+            "@type": "Offer",
+            "priceCurrency": "EUR",
+            "priceSpecification": [
+              {
+                "@type": "PriceSpecification",
+                "name": "сайт от €600",
+                "priceCurrency": "EUR",
+                "minPrice": "600"
+              },
+              {
+                "@type": "PriceSpecification",
+                "name": "система от €1 500",
+                "priceCurrency": "EUR",
+                "minPrice": "1500"
+              }
+            ],
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Разработка",
+              "description": "Сайты, личные кабинеты и внутренние системы — от лендинга до платформы для всей команды. SEO-основа включена: скорость, структура, мета-теги, карта сайта.",
+              "provider": {
+                "@id": "https://mxsystems.md/#org"
+              },
+              "areaServed": [
+                {
+                  "@type": "Country",
+                  "name": "Молдова"
+                },
+                {
+                  "@type": "Country",
+                  "name": "Румыния"
+                }
+              ]
+            }
+          },
+          {
+            "@type": "Offer",
+            "priceCurrency": "EUR",
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "name": "от €800",
+              "priceCurrency": "EUR",
+              "minPrice": "800"
+            },
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Автоматизация",
+              "description": "Одна конкретная задача, собранная от и до: интеграция, AI-агент, уведомления, бэк-офис. Встраивается в 1С, мессенджеры, почту и сервисы, которые у вас уже работают.",
+              "provider": {
+                "@id": "https://mxsystems.md/#org"
+              },
+              "areaServed": [
+                {
+                  "@type": "Country",
+                  "name": "Молдова"
+                },
+                {
+                  "@type": "Country",
+                  "name": "Румыния"
+                }
+              ]
+            }
+          },
+          {
+            "@type": "Offer",
+            "priceCurrency": "EUR",
+            "priceSpecification": [
+              {
+                "@type": "PriceSpecification",
+                "name": "запуск от €250",
+                "priceCurrency": "EUR",
+                "minPrice": "250"
+              },
+              {
+                "@type": "UnitPriceSpecification",
+                "name": "от €250/мес",
+                "priceCurrency": "EUR",
+                "minPrice": "250",
+                "unitCode": "MON",
+                "billingDuration": "P1M"
+              }
+            ],
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Реклама",
+              "description": "Настройка и ведение рекламы в Google и Meta (Facebook, Instagram), аналитика и пиксели. Заявки с рекламы сразу попадают в вашу систему, а не теряются в переписке. Рекламный бюджет вы платите площадке напрямую — моя плата фиксированная.",
+              "provider": {
+                "@id": "https://mxsystems.md/#org"
+              },
+              "areaServed": [
+                {
+                  "@type": "Country",
+                  "name": "Молдова"
+                },
+                {
+                  "@type": "Country",
+                  "name": "Румыния"
+                }
+              ]
+            }
+          },
+          {
+            "@type": "Offer",
+            "priceCurrency": "EUR",
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "name": "от €350",
+              "priceCurrency": "EUR",
+              "minPrice": "350"
+            },
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Аудит безопасности",
+              "description": "Базовая проверка сайта или системы: уязвимости, настройки сервера и HTTPS, утечки персональных данных, работа cookie и согласий по закону 195/2024 (техническая часть — вместе с вашим юристом). На выходе — отчёт с приоритетами и план исправлений. Только по договору и с вашего письменного разрешения.",
+              "provider": {
+                "@id": "https://mxsystems.md/#org"
+              },
+              "areaServed": [
+                {
+                  "@type": "Country",
+                  "name": "Молдова"
+                },
+                {
+                  "@type": "Country",
+                  "name": "Румыния"
+                }
+              ]
+            }
+          },
+          {
+            "@type": "Offer",
+            "priceCurrency": "EUR",
+            "priceSpecification": {
+              "@type": "UnitPriceSpecification",
+              "name": "от €150/мес",
+              "priceCurrency": "EUR",
+              "minPrice": "150",
+              "unitCode": "MON",
+              "billingDuration": "P1M"
+            },
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Сопровождение",
+              "description": "Поддержка, доработки, мониторинг, быстрые ответы. Система остаётся вашей.",
+              "provider": {
+                "@id": "https://mxsystems.md/#org"
+              },
+              "areaServed": [
+                {
+                  "@type": "Country",
+                  "name": "Молдова"
+                },
+                {
+                  "@type": "Country",
+                  "name": "Румыния"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://mxsystems.md/#website",
+      "name": "MX Systems",
+      "url": "https://mxsystems.md/",
+      "inLanguage": "ru",
+      "publisher": {
+        "@id": "https://mxsystems.md/#org"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://mxsystems.md/#faq",
+      "inLanguage": "ru",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Сколько стоит и от чего зависит цена?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "От объёма: сколько процессов, интеграций и пользователей, нужна ли реклама и сайт. После первого разбора называю ориентир, после аудита — точную цену и границы работ. Цена фиксируется до старта."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Сколько времени займёт?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Аудит — 1–2 недели. Срок сборки называю после аудита: одну задачу можно запустить быстро, большую систему делаем по этапам — и первые результаты вы видите по ходу работы."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Работаете ли с 1С и моей CRM?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Да. С 1С — через REST API, как в системе для 4Power Club. С CRM и другими сервисами — если у них есть API или выгрузка данных; это проверяем на разборе."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Что будет, если вы пропадёте?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Код, серверы и доступы — у вас с первого дня, плюс документация. Систему сможет поддерживать и развивать любой разработчик."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Работаете по договору?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Да, всегда по письменному договору: что делаем, в какие сроки, сколько стоит и как проходит оплата."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+  <!-- JSON-LD:END -->
 </head>
 <body>
 
@@ -226,21 +538,21 @@
                 <div class="ui-sub"><span>Сегодня</span><span>7 постов</span><span>склад · синхр. с 1С</span></div>
                 <div class="board">
                   <div class="col" data-col="wait">
-                    <h5>В ожидании ремонта <span class="cnt">2</span></h5>
+                    <p class="col-h">В ожидании ремонта <span class="cnt">2</span></p>
                     <div class="col-cards">
                       <div class="car"><b>Toyota RAV4</b><span class="car-status">пост 3 · 1 дн</span></div>
                       <div class="car"><b>Kia Sportage</b><span class="car-status">пост 5 · сегодня</span></div>
                     </div>
                   </div>
                   <div class="col" data-col="parts">
-                    <h5>Ждёт запчасти <span class="cnt">2</span></h5>
+                    <p class="col-h">Ждёт запчасти <span class="cnt">2</span></p>
                     <div class="col-cards">
                       <div class="car" data-moving data-labels='["заказано · 9 дн","деталь на складе","клиент уведомлён"]'><b>Audi Q5</b><span class="car-status">заказано · 9 дн</span></div>
                       <div class="car is-urgent"><b>BMW M3</b><span class="car-status">ждёт 16 дн · срочно</span></div>
                     </div>
                   </div>
                   <div class="col" data-col="ready">
-                    <h5>Готова <span class="cnt">1</span></h5>
+                    <p class="col-h">Готова <span class="cnt">1</span></p>
                     <div class="col-cards">
                       <div class="car is-done"><b>VW Passat</b><span class="car-status">клиент уведомлён</span></div>
                     </div>

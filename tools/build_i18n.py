@@ -13,6 +13,7 @@
 страницах не осталось кириллицы (кроме HTML-комментариев — они остаются на русском,
 потому что это пояснения для разработчика).
 """
+import json
 import re
 import sys
 import urllib.parse as u
@@ -34,12 +35,12 @@ SUBJ = {'ru': 'Разбор задачи', 'ro': 'Analiza situației', 'en': 'Pr
 # Порядок важен: длинные фразы идут раньше коротких, которые в них входят.
 T = [
     # ---------- <head> ----------
-    ('<title>MX Systems — реклама, сайты и автоматизация для бизнеса · Кишинёв</title>',
-     '<title>MX Systems — publicitate, site-uri și automatizare pentru afaceri · Chișinău</title>',
-     '<title>MX Systems — ads, websites and automation for business · Chișinău</title>'),
-    ('content="Студия MX Systems: реклама Google и Meta, сайты и SEO, автоматизация и интеграция с 1С и мессенджерами, аудит безопасности. Весь путь клиента от клика до оплаты. Кишинёв, Молдова."',
-     'content="Studioul MX Systems: publicitate Google și Meta, site-uri și SEO, automatizare și integrare cu 1C și aplicațiile de mesagerie, audit de securitate. Tot drumul clientului, de la primul clic la plată. Chișinău, Moldova."',
-     'content="MX Systems studio: Google and Meta ads, websites and SEO, automation and integrations with 1C and messengers, security audits. The whole customer journey, from first click to payment. Chișinău, Moldova."'),
+    ('<title>Сайты, CRM и автоматизация бизнеса в Кишинёве — MX Systems</title>',
+     '<title>Site-uri, CRM și automatizare afaceri Chișinău — MX Systems</title>',
+     '<title>Websites, CRM & Business Automation, Moldova — MX Systems</title>'),
+    ('content="Сайты и CRM под ключ в Кишинёве, автоматизация бизнеса в Молдове, интеграция с 1С, реклама Google и Meta. Разбор задачи — 30 минут, без обязательств."',
+     'content="Dezvoltare site-uri și CRM în Chișinău, automatizare afaceri, integrare 1C, publicitate Google și Meta. Prima analiză — 30 de minute, fără obligații."',
+     'content="Websites and CRM in Chișinău, business automation and 1C integration, Google and Meta ads for companies in Moldova and Romania. 30-minute project review."'),
     ('content="MX Systems — приводим клиентов и строим систему, в которой ни одна заявка не теряется"',
      'content="MX Systems — aducem clienți și construim sistemul în care nicio cerere nu se pierde"',
      'content="MX Systems — we bring in customers and build a system where no lead gets lost"'),
@@ -148,9 +149,9 @@ T = [
      'Simplified mockup of the 4Power Club car board with demo data: columns “Waiting for repair”, “Waiting for parts”, “Ready”.'),
     ('<span>4Power · доска машин</span>', '<span>4Power · panou mașini</span>', '<span>4Power · car board</span>'),
     ('<span>Сегодня</span><span>7 постов</span><span>склад · синхр. с 1С</span>', '<span>Azi</span><span>7 posturi</span><span>depozit · sincr. 1C</span>', '<span>Today</span><span>7 bays</span><span>stock · 1C sync</span>'),
-    ('<h5>В ожидании ремонта ', '<h5>Așteaptă reparația ', '<h5>Waiting for repair '),
-    ('<h5>Ждёт запчасти ', '<h5>Așteaptă piese ', '<h5>Waiting for parts '),
-    ('<h5>Готова ', '<h5>Gata ', '<h5>Ready '),
+    ('>В ожидании ремонта <span', '>Așteaptă reparația <span', '>Waiting for repair <span'),
+    ('>Ждёт запчасти <span', '>Așteaptă piese <span', '>Waiting for parts <span'),
+    ('>Готова <span class="cnt">', '>Gata <span class="cnt">', '>Ready <span class="cnt">'),
     ('пост 3 · 1 дн<', 'post 3 · 1 zi<', 'bay 3 · 1 day<'),
     ('пост 5 · сегодня<', 'post 5 · azi<', 'bay 5 · today<'),
     ("""data-labels='["заказано · 9 дн","деталь на складе","клиент уведомлён"]'""",
@@ -457,6 +458,117 @@ def swap_cases(html):
     return html
 
 
+# --- Структурированные данные (JSON-LD, schema.org) ---
+# Разметку НЕ пишем руками: она собирается из текста готовой страницы (услуги, цены, вопросы FAQ).
+# Так она всегда дословно совпадает с тем, что видит посетитель, — Google это проверяет.
+# Чего нет на сайте (адрес улицы, часы работы, рейтинги, отзывы), того нет и в разметке.
+DOMAIN = 'https://mxsystems.md'
+ORG = {
+    'ru': {'city': 'Кишинёв', 'founder': 'Максим Лазарев', 'role': 'Основатель',
+           'areas': ['Молдова', 'Румыния'], 'catalog': 'Услуги'},
+    'ro': {'city': 'Chișinău', 'founder': 'Maxim Lazarev', 'role': 'Fondator',
+           'areas': ['Moldova', 'România'], 'catalog': 'Servicii'},
+    'en': {'city': 'Chișinău', 'founder': 'Maxim Lazarev', 'role': 'Founder',
+           'areas': ['Moldova', 'Romania'], 'catalog': 'Services'},
+}
+
+
+def _text(fragment):
+    """HTML-кусок → чистый текст: без тегов, &nbsp; → неразрывный пробел, лишние пробелы убраны."""
+    import html as h
+    t = re.sub(r'<br\s*/?>', ' ', fragment)
+    t = h.unescape(re.sub(r'<[^>]+>', '', t))
+    return ' '.join(t.split())
+
+
+def _price(piece):
+    """Строка цены с сайта («от €1 500», «+ from €250/mo», «€300») → PriceSpecification."""
+    amount = re.sub(r'\D', '', re.search(r'€\s*([\d.,\u00a0 ]+)', piece).group(1))
+    spec = {'@type': 'PriceSpecification', 'name': piece.lstrip('+ ').strip(), 'priceCurrency': 'EUR'}
+    # «от / de la / from» — это нижняя граница цены (minPrice), иначе цена точная (price)
+    if re.search(r'(^|\s)(от|de la|from)\s', piece):
+        spec['minPrice'] = amount
+    else:
+        spec['price'] = amount
+    # «/мес / /lună / /mo» — ежемесячная оплата: UnitPriceSpecification с единицей «месяц» (код MON)
+    if re.search(r'/(мес|lună|mo)\b', piece):
+        spec['@type'] = 'UnitPriceSpecification'
+        spec['unitCode'] = 'MON'
+        spec['billingDuration'] = 'P1M'
+    return spec
+
+
+def jsonld(html, lang):
+    """Собирает JSON-LD для главной страницы на языке lang из её готового HTML."""
+    url = DOMAIN + ('/' if lang == 'ru' else f'/{lang}/')
+    o = ORG[lang]
+    desc = re.search(r'<meta name="description" content="([^"]+)"', html).group(1)
+
+    # Услуги: название, описание и цены — из строк таблицы «Услуги»
+    offers = []
+    for block in re.findall(r'<a class="svc" href="#contact">(.*?)</a></li>', html, flags=re.S):
+        name = _text(re.search(r'<span class="svc-name">(.*?)</span>', block).group(1))
+        sdesc = _text(re.search(r'<span class="svc-desc">(.*?)</span>', block, flags=re.S).group(1))
+        raw = re.search(r'<span class="svc-price"><small>.*?</small>(.*?)</span>', block, flags=re.S).group(1)
+        prices = [_price(_text(p)) for p in re.split(r'<br\s*/?>', raw)]
+        offers.append({
+            '@type': 'Offer',
+            'priceCurrency': 'EUR',
+            'priceSpecification': prices if len(prices) > 1 else prices[0],
+            'itemOffered': {'@type': 'Service', 'name': name, 'description': sdesc,
+                            'provider': {'@id': DOMAIN + '/#org'},
+                            'areaServed': [{'@type': 'Country', 'name': a} for a in o['areas']]},
+        })
+    assert len(offers) == 6, f'[{lang}] ожидалось 6 услуг, найдено {len(offers)}'
+
+    # Вопросы и ответы — из блока FAQ (<details class="qa">)
+    faq = []
+    for q, a in re.findall(r'<span class="qa-q">(.*?)</span>.*?</summary>\s*<p>(.*?)</p>', html, flags=re.S):
+        faq.append({'@type': 'Question', 'name': _text(q),
+                    'acceptedAnswer': {'@type': 'Answer', 'text': _text(a)}})
+
+    graph = [
+        {
+            '@type': 'ProfessionalService',
+            '@id': DOMAIN + '/#org',
+            'name': 'MX Systems',
+            'url': url,
+            'description': _text(desc),
+            'logo': DOMAIN + '/assets/apple-touch-icon.png',
+            'image': DOMAIN + '/assets/' + ('og-image.png' if lang == 'ru' else f'og-image-{lang}.png'),
+            'telephone': '+373 69 589 555',
+            'email': 'mvxrev@gmail.com',
+            'foundingDate': '2019',
+            'address': {'@type': 'PostalAddress', 'addressLocality': o['city'], 'addressCountry': 'MD'},
+            'areaServed': [{'@type': 'Country', 'name': a} for a in o['areas']],
+            'knowsLanguage': ['ru', 'ro', 'en'],
+            'sameAs': ['https://t.me/mvxev'],
+            'founder': {'@type': 'Person', 'name': o['founder'], 'jobTitle': o['role']},
+            'hasOfferCatalog': {'@type': 'OfferCatalog', 'name': o['catalog'], 'itemListElement': offers},
+        },
+        {
+            '@type': 'WebSite',
+            '@id': url + '#website',
+            'name': 'MX Systems',
+            'url': url,
+            'inLanguage': lang,
+            'publisher': {'@id': DOMAIN + '/#org'},
+        },
+    ]
+    if faq:
+        graph.append({'@type': 'FAQPage', '@id': url + '#faq', 'inLanguage': lang, 'mainEntity': faq})
+    data = json.dumps({'@context': 'https://schema.org', '@graph': graph}, ensure_ascii=False, indent=2)
+    data = data.replace('</', '<\\/')   # защита: «</script>» внутри текста не закроет блок раньше времени
+    return '  <script type="application/ld+json">\n' + data + '\n  </script>\n'
+
+
+def put_jsonld(html, lang):
+    """Вставляет свежий JSON-LD между метками <!-- JSON-LD:START --> и <!-- JSON-LD:END -->."""
+    a, b = '  <!-- JSON-LD:START -->\n', '  <!-- JSON-LD:END -->'
+    i, j = html.index(a) + len(a), html.index(b)
+    return html[:i] + jsonld(html, lang) + html[j:]
+
+
 def build(lang):
     col = {'ro': 1, 'en': 2}[lang]
     html = SRC
@@ -508,6 +620,9 @@ def build(lang):
     if missing:
         sys.exit(f'[{lang}] не нашлись фразы (index.html поменялся?):\n  ' + '\n  '.join(missing))
 
+    # 7) Структурированные данные — из уже переведённой страницы
+    html = put_jsonld(html, lang)
+
     # 7) Проверка: кириллицы вне комментариев быть не должно
     visible = re.sub(r'<!--.*?-->', '', html, flags=re.S)
     left = sorted(set(re.findall(r'[^\s<>"]*[А-Яа-яЁё][^<>"]*', visible)))
@@ -521,5 +636,11 @@ def build(lang):
 
 
 if __name__ == '__main__':
+    # Сначала обновляем JSON-LD в самом русском index.html (он — источник для переводов)
+    fresh = put_jsonld(SRC, 'ru')
+    if fresh != SRC:
+        (ROOT / 'index.html').write_text(fresh, encoding='utf-8')
+        SRC = fresh
+        print('ok: index.html (обновлён JSON-LD)')
     for lang in ('ro', 'en'):
         build(lang)

@@ -18,9 +18,11 @@
   <!-- viewport — говорит телефону: ширина страницы = ширина экрана (без «уменьшенной копии» десктопа) -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- title и description — то, что показывает Google в результатах поиска -->
-  <title>MX Systems — publicitate, site-uri și automatizare pentru afaceri · Chișinău</title>
-  <meta name="description" content="Studioul MX Systems: publicitate Google și Meta, site-uri și SEO, automatizare și integrare cu 1C și aplicațiile de mesagerie, audit de securitate. Tot drumul clientului, de la primul clic la plată. Chișinău, Moldova.">
+  <!-- title и description — то, что показывает Google в результатах поиска.
+       title до ~60 символов, description до ~155 — длиннее Google обрезает многоточием.
+       Сначала услуга и город (то, что ищут), бренд — в конце -->
+  <title>Site-uri, CRM și automatizare afaceri Chișinău — MX Systems</title>
+  <meta name="description" content="Dezvoltare site-uri și CRM în Chișinău, automatizare afaceri, integrare 1C, publicitate Google și Meta. Prima analiză — 30 de minute, fără obligații.">
 
   <!-- canonical — «главный» адрес этой страницы, чтобы поисковик не считал дублями адреса с параметрами -->
   <link rel="canonical" href="https://mxsystems.md/ro/">
@@ -44,8 +46,12 @@
   <meta property="og:locale" content="ro_RO">
   <meta property="og:locale:alternate" content="ru_RU">
   <meta property="og:locale:alternate" content="en_US">
-  <!-- summary_large_image — крупное превью с картинкой (используют X/Twitter и некоторые мессенджеры) -->
+  <!-- Twitter Card — то же превью для X/Twitter и части мессенджеров.
+       summary_large_image — крупная картинка над заголовком -->
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MX Systems — aducem clienți și construim sistemul în care nicio cerere nu se pierde">
+  <meta name="twitter:description" content="Publicitate, site-uri și automatizare — tot drumul clientului, de la primul clic la plată. Integrăm cu 1C, mesageria și e-mailul.">
+  <meta name="twitter:image" content="https://mxsystems.md/assets/og-image-ro.png">
 
   <!-- Favicon — иконка во вкладке браузера -->
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -68,6 +74,312 @@
   <link rel="stylesheet" href="../assets/css/style.css?v=10">
   <!-- defer — скрипт загрузится параллельно и выполнится после разбора HTML (не тормозит отрисовку) -->
   <script src="../assets/js/main.js?v=8" defer></script>
+
+  <!-- JSON-LD — «структурированные данные» по стандарту schema.org: та же информация, что на странице,
+       но в виде, понятном поисковику (кто мы, где, телефон, услуги и цены, вопросы и ответы).
+       Это не исполняемый скрипт: браузер его не запускает, поэтому CSP он не нарушает.
+       Блок между метками СОБИРАЕТ tools/build_i18n.py из текста этой страницы — руками не править:
+       поменяли услугу, цену или вопрос — запустите скрипт, и разметка обновится сама. -->
+  <!-- JSON-LD:START -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ProfessionalService",
+      "@id": "https://mxsystems.md/#org",
+      "name": "MX Systems",
+      "url": "https://mxsystems.md/ro/",
+      "description": "Dezvoltare site-uri și CRM în Chișinău, automatizare afaceri, integrare 1C, publicitate Google și Meta. Prima analiză — 30 de minute, fără obligații.",
+      "logo": "https://mxsystems.md/assets/apple-touch-icon.png",
+      "image": "https://mxsystems.md/assets/og-image-ro.png",
+      "telephone": "+373 69 589 555",
+      "email": "mvxrev@gmail.com",
+      "foundingDate": "2019",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Chișinău",
+        "addressCountry": "MD"
+      },
+      "areaServed": [
+        {
+          "@type": "Country",
+          "name": "Moldova"
+        },
+        {
+          "@type": "Country",
+          "name": "România"
+        }
+      ],
+      "knowsLanguage": [
+        "ru",
+        "ro",
+        "en"
+      ],
+      "sameAs": [
+        "https://t.me/mvxev"
+      ],
+      "founder": {
+        "@type": "Person",
+        "name": "Maxim Lazarev",
+        "jobTitle": "Fondator"
+      },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Servicii",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "priceCurrency": "EUR",
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "name": "€300",
+              "priceCurrency": "EUR",
+              "price": "300"
+            },
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Audit de procese",
+              "description": "Analizez unde afacerea pierde timp și bani pe muncă manuală și vă dau un plan: ce automatizăm, în ce ordine și ce aduce. Planul rămâne la dumneavoastră, iar costul auditului se scade din proiect dacă mergem mai departe.",
+              "provider": {
+                "@id": "https://mxsystems.md/#org"
+              },
+              "areaServed": [
+                {
+                  "@type": "Country",
+                  "name": "Moldova"
+                },
+                {
+                  "@type": "Country",
+                  "name": "România"
+                }
+              ]
+            }
+          },
+          {
+            "@type": "Offer",
+            "priceCurrency": "EUR",
+            "priceSpecification": [
+              {
+                "@type": "PriceSpecification",
+                "name": "site de la €600",
+                "priceCurrency": "EUR",
+                "minPrice": "600"
+              },
+              {
+                "@type": "PriceSpecification",
+                "name": "sistem de la €1.500",
+                "priceCurrency": "EUR",
+                "minPrice": "1500"
+              }
+            ],
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Dezvoltare",
+              "description": "Site-uri, conturi pentru clienți și sisteme interne — de la o pagină de prezentare la o platformă pentru toată echipa. Baza SEO e inclusă: viteză, structură, meta-taguri, hartă a site-ului.",
+              "provider": {
+                "@id": "https://mxsystems.md/#org"
+              },
+              "areaServed": [
+                {
+                  "@type": "Country",
+                  "name": "Moldova"
+                },
+                {
+                  "@type": "Country",
+                  "name": "România"
+                }
+              ]
+            }
+          },
+          {
+            "@type": "Offer",
+            "priceCurrency": "EUR",
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "name": "de la €800",
+              "priceCurrency": "EUR",
+              "minPrice": "800"
+            },
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Automatizare",
+              "description": "O problemă concretă, rezolvată cap-coadă: integrare, agent AI, notificări, back-office. Se integrează cu 1C, mesageria, e-mailul și serviciile pe care le folosiți deja.",
+              "provider": {
+                "@id": "https://mxsystems.md/#org"
+              },
+              "areaServed": [
+                {
+                  "@type": "Country",
+                  "name": "Moldova"
+                },
+                {
+                  "@type": "Country",
+                  "name": "România"
+                }
+              ]
+            }
+          },
+          {
+            "@type": "Offer",
+            "priceCurrency": "EUR",
+            "priceSpecification": [
+              {
+                "@type": "PriceSpecification",
+                "name": "lansare de la €250",
+                "priceCurrency": "EUR",
+                "minPrice": "250"
+              },
+              {
+                "@type": "UnitPriceSpecification",
+                "name": "de la €250/lună",
+                "priceCurrency": "EUR",
+                "minPrice": "250",
+                "unitCode": "MON",
+                "billingDuration": "P1M"
+              }
+            ],
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Publicitate",
+              "description": "Configurarea și administrarea reclamelor în Google și Meta (Facebook, Instagram), analitică și pixeli. Cererile din reclame ajung direct în sistemul dumneavoastră, nu se pierd prin conversații. Bugetul de publicitate îl plătiți direct platformei — onorariul meu e fix.",
+              "provider": {
+                "@id": "https://mxsystems.md/#org"
+              },
+              "areaServed": [
+                {
+                  "@type": "Country",
+                  "name": "Moldova"
+                },
+                {
+                  "@type": "Country",
+                  "name": "România"
+                }
+              ]
+            }
+          },
+          {
+            "@type": "Offer",
+            "priceCurrency": "EUR",
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "name": "de la €350",
+              "priceCurrency": "EUR",
+              "minPrice": "350"
+            },
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Audit de securitate",
+              "description": "Verificare de bază a site-ului sau a sistemului: vulnerabilități, setările serverului și HTTPS, scurgeri de date personale, funcționarea cookie-urilor și a consimțămintelor conform Legii 195/2024 (partea tehnică — împreună cu juristul dumneavoastră). Rezultatul: un raport cu priorități și un plan de remediere. Doar pe bază de contract și cu permisiunea dumneavoastră scrisă.",
+              "provider": {
+                "@id": "https://mxsystems.md/#org"
+              },
+              "areaServed": [
+                {
+                  "@type": "Country",
+                  "name": "Moldova"
+                },
+                {
+                  "@type": "Country",
+                  "name": "România"
+                }
+              ]
+            }
+          },
+          {
+            "@type": "Offer",
+            "priceCurrency": "EUR",
+            "priceSpecification": {
+              "@type": "UnitPriceSpecification",
+              "name": "de la €150/lună",
+              "priceCurrency": "EUR",
+              "minPrice": "150",
+              "unitCode": "MON",
+              "billingDuration": "P1M"
+            },
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Mentenanță",
+              "description": "Suport, îmbunătățiri, monitorizare, răspunsuri rapide. Sistemul rămâne al dumneavoastră.",
+              "provider": {
+                "@id": "https://mxsystems.md/#org"
+              },
+              "areaServed": [
+                {
+                  "@type": "Country",
+                  "name": "Moldova"
+                },
+                {
+                  "@type": "Country",
+                  "name": "România"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://mxsystems.md/ro/#website",
+      "name": "MX Systems",
+      "url": "https://mxsystems.md/ro/",
+      "inLanguage": "ro",
+      "publisher": {
+        "@id": "https://mxsystems.md/#org"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://mxsystems.md/ro/#faq",
+      "inLanguage": "ro",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Cât costă și de ce depinde prețul?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "De volum: câte procese, integrări și utilizatori, dacă e nevoie de publicitate și de site. După prima analiză vă dau un reper, după audit — prețul exact și limitele lucrării. Prețul se fixează înainte de start."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Cât durează?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Auditul durează 1–2 săptămâni. Termenul de construcție îl spun după audit: o problemă punctuală se poate lansa repede, un sistem mare îl facem pe etape — și vedeți primele rezultate pe parcurs."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Lucrați cu 1C și cu CRM-ul meu?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Da. Cu 1C — prin REST API, ca în sistemul pentru 4Power Club. Cu CRM-uri și alte servicii — dacă au API sau export de date; verificăm asta la analiză."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ce se întâmplă dacă dispăreți?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Codul, serverele și accesele sunt la dumneavoastră din prima zi, plus documentația. Sistemul poate fi întreținut și dezvoltat de orice programator."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Lucrați pe bază de contract?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Da, mereu pe bază de contract scris: ce facem, în ce termene, cât costă și cum se face plata."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+  <!-- JSON-LD:END -->
 </head>
 <body>
 
@@ -226,21 +538,21 @@
                 <div class="ui-sub"><span>Azi</span><span>7 posturi</span><span>depozit · sincr. 1C</span></div>
                 <div class="board">
                   <div class="col" data-col="wait">
-                    <h5>Așteaptă reparația <span class="cnt">2</span></h5>
+                    <p class="col-h">Așteaptă reparația <span class="cnt">2</span></p>
                     <div class="col-cards">
                       <div class="car"><b>Toyota RAV4</b><span class="car-status">post 3 · 1 zi</span></div>
                       <div class="car"><b>Kia Sportage</b><span class="car-status">post 5 · azi</span></div>
                     </div>
                   </div>
                   <div class="col" data-col="parts">
-                    <h5>Așteaptă piese <span class="cnt">2</span></h5>
+                    <p class="col-h">Așteaptă piese <span class="cnt">2</span></p>
                     <div class="col-cards">
                       <div class="car" data-moving data-labels='["comandat · 9 zile","piesa e în depozit","client anunțat"]'><b>Audi Q5</b><span class="car-status">comandat · 9 zile</span></div>
                       <div class="car is-urgent"><b>BMW M3</b><span class="car-status">așteaptă 16 zile · urgent</span></div>
                     </div>
                   </div>
                   <div class="col" data-col="ready">
-                    <h5>Gata <span class="cnt">1</span></h5>
+                    <p class="col-h">Gata <span class="cnt">1</span></p>
                     <div class="col-cards">
                       <div class="car is-done"><b>VW Passat</b><span class="car-status">client anunțat</span></div>
                     </div>
