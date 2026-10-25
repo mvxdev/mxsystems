@@ -27,8 +27,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  /* Цифры одной высоты (у Cormorant по умолчанию «старинные» цифры разной высоты — «1С» читалось бы как «ıС») */
-  font-variant-numeric: lining-nums;
   overflow-x: clip;                                 /* страховка от горизонтальной прокрутки */
 }
 
@@ -42,6 +40,11 @@ body::after {
   opacity: 0.045;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
+
+/* Ровные (lining) цифры у ВСЕХ элементов. Сокращённое свойство font: … в компонентах сбрасывает
+   и font-variant, и font-feature-settings, поэтому наследования от body мало — нужен !important.
+   Другие OpenType-функции (кернинг, лигатуры) работают по умолчанию и этим не отключаются. */
+body, body *, body *::before, body *::after { font-feature-settings: "lnum" 1 !important; }
 
 a { color: inherit; text-decoration: none; }
 img, svg { display: block; max-width: 100%; }

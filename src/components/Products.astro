@@ -28,6 +28,8 @@ const IMG = { carbids, fastload, crm } as const;
     {p.items.map((it) => (
       <article class:list={['prod', { 'prod--offer': !!it.offer }]}>
         <div class="shot">
+          <!-- «Рамка браузера»: три точки и адрес — скриншот читается как живой сайт, а не картинка -->
+          <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span>{it.link.label.replace(' ↗', '')}</span></div>
           <Picture src={IMG[it.img as keyof typeof IMG]} formats={['avif', 'webp']} widths={[480, 960]}
                    sizes="(min-width: 1000px) 416px, (min-width: 700px) 90vw, 100vw"
                    alt={it.alt} loading="lazy" decoding="async" />
@@ -72,8 +74,12 @@ const IMG = { carbids, fastload, crm } as const;
   }
 
   /* Рамка скриншота: overflow hidden — увеличенная картинка не вылезает за края */
-  .shot { overflow: hidden; margin-bottom: var(--s-2); border: 1px solid var(--line-2); border-radius: var(--radius); aspect-ratio: 16 / 10; background: var(--raised); }
-  .shot :global(img) { width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 0; transition: transform var(--dur-3) var(--ease); }
+  .shot { overflow: hidden; margin-bottom: var(--s-2); border: 1px solid var(--line-2); border-radius: var(--radius); background: var(--raised); }
+  .chrome { position: relative; z-index: 1; display: flex; align-items: center; gap: 5px; height: 26px; padding: 0 10px; border-bottom: 1px solid var(--line); background: var(--raised); }
+  .chrome i { width: 6px; height: 6px; border-radius: 50%; background: var(--line-3); }
+  .chrome span { margin-left: var(--s-2); font: 400 10.5px/1 var(--f-mono); letter-spacing: 0.04em; color: var(--text-3); }
+  .shot :global(picture) { display: block; aspect-ratio: 16 / 10; overflow: hidden; }
+  .shot :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: top; transform-origin: 50% 0; transition: transform var(--dur-3) var(--ease); }
   .prod:hover .shot :global(img) { transform: scale(1.04) translateY(-1.5%); }
 
   .prod-top { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); }
