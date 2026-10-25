@@ -6,7 +6,10 @@
 
 $chrome = 'C:\Program Files\Google\Chrome\Application\chrome.exe'
 $base   = 'http://localhost:8000/tools'
-$out    = (Resolve-Path "$PSScriptRoot\..\assets").Path
+# Astro-версия: превью (og) и иконка лежат в public\assets\; скриншоты карточек «Платформы»
+# в конце переносятся в src\assets\products\ (из них Astro сам делает AVIF/WebP при сборке)
+$out    = (Resolve-Path "$PSScriptRoot\..\public\assets").Path
+New-Item -ItemType Directory -Force "$out\products" | Out-Null
 
 function Shot($url, $file, $w, $h) {
   # --virtual-time-budget — дать странице 4 секунды (виртуального времени) догрузить шрифты
@@ -52,3 +55,9 @@ function LiveShot($url, $name) {
 }
 LiveShot 'https://carbids.info/' 'carbids'
 LiveShot 'https://fastload.app/' 'fastload'
+
+# Перенос скриншотов карточек в исходники Astro (на сайт они попадут уже оптимизированными)
+$dest = (Resolve-Path "$PSScriptRoot\..\src\assets\products").Path
+Move-Item -Force "$out\products\*.jpg" $dest
+Remove-Item "$out\products"
+Write-Output "products → src\assets\products"

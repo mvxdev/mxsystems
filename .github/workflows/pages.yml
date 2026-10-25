@@ -1,8 +1,10 @@
-# Автопубликация сайта на GitHub Pages (GitHub Actions).
-# Что делает: при каждой отправке изменений (git push) в ветку main собирает папку _site
-# ТОЛЬКО из файлов сайта и выкладывает её. Черновики (concepts/), служебные скрипты (tools/)
-# и архив ClinicAI (archive/) в публикацию не попадают — они остаются только в репозитории.
-# Если добавите на сайт новую папку или файл верхнего уровня — допишите её в список ниже.
+# Автопубликация сайта на GitHub Pages (GitHub Actions) — версия для Astro.
+# Что делает при каждой отправке (git push) в ветку main:
+#   1. build  — ставит зависимости, собирает сайт Astro в dist/ (официальное действие withastro/action,
+#               оно же загружает dist/ как «артефакт» для Pages);
+#   2. проверяет SEO собранного сайта (tools/seo_check.py). Есть хоть одна ошибка — публикации НЕ будет;
+#   3. deploy — выкладывает собранный сайт.
+# В публикацию попадает только dist/: исходники, concepts/, tools/, archive/ и docs/ остаются в репозитории.
 
 name: Публикация сайта
 
@@ -23,31 +25,27 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Забрать код репозитория
+        uses: actions/checkout@v4
+
+      - name: Собрать сайт Astro и подготовить к публикации
+        uses: withastro/action@v3
+        with:
+          node-version: 24
+
+      - name: SEO-проверка собранного сайта (ошибка = публикации не будет)
+        run: python3 tools/seo_check.py dist
+
   deploy:
+    needs: build                # выкладываем, только если сборка и SEO-проверка прошли
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Забрать код репозитория
-        uses: actions/checkout@v4
-
-      - name: Собрать только файлы сайта
-        run: |
-          mkdir _site
-          cp -r index.html 404.html robots.txt sitemap.xml CNAME assets ru ro en privacy _site/
-          # .nojekyll — не прогонять файлы через Jekyll (встроенный в Pages генератор сайтов), отдавать как есть
-          touch _site/.nojekyll
-          echo "Опубликуем:" && find _site -maxdepth 2 | sort
-
-      - name: Настроить Pages
-        uses: actions/configure-pages@v5
-
-      - name: Загрузить сайт
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
-
       - name: Опубликовать
         id: deployment
         uses: actions/deploy-pages@v4

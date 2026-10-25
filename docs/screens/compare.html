@@ -1,0 +1,30 @@
+<!doctype html>
+<!--
+  compare.html — старая (v1-seo) и новая (astro-redesign) версии рядом.
+  Откройте файл двойным щелчком в браузере (сервер не нужен). Переключатели: язык, устройство,
+  «вся страница / первый экран». Скриншоты делает: node tools/screens.mjs old  и  node tools/screens.mjs new
+  Это служебная страница для сравнения, на сайт она не публикуется.
+-->
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Сравнение: старая и новая версии</title>
+  <link rel="stylesheet" href="compare.css">
+</head>
+<body>
+  <header>
+    <h1>MX Systems — старая и новая версии</h1>
+    <div class="bar">
+      <div class="group" data-k="lang"><button data-v="ru" class="on">RU</button><button data-v="ro">RO</button><button data-v="en">EN</button></div>
+      <div class="group" data-k="dev"><button data-v="desktop" class="on">Десктоп 1440</button><button data-v="mobile">Телефон 390</button></div>
+      <div class="group" data-k="mode"><button data-v="" class="on">Вся страница</button><button data-v="-first">Первый экран</button></div>
+    </div>
+  </header>
+  <main>
+    <figure><figcaption>Старая · v1-seo</figcaption><img id="old" alt="Старая версия"></figure>
+    <figure><figcaption>Новая · astro-redesign</figcaption><img id="new" alt="Новая версия"></figure>
+  </main>
+  <script src="compare.js"></script>
+</body>
+</html>

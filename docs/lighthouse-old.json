@@ -1,0 +1,124 @@
+[
+  {
+    "lang": "ru",
+    "form": "mobile",
+    "performance": 87,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "lcp": "4.0 s",
+    "cls": "0.003",
+    "tbt": "0 ms",
+    "failed": [
+      "largest-contentful-paint",
+      "interactive",
+      "unminified-css",
+      "unminified-javascript",
+      "bf-cache",
+      "forced-reflow-insight",
+      "network-dependency-tree-insight",
+      "render-blocking-insight"
+    ]
+  },
+  {
+    "lang": "ro",
+    "form": "mobile",
+    "performance": 87,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "lcp": "4.0 s",
+    "cls": "0.017",
+    "tbt": "0 ms",
+    "failed": [
+      "largest-contentful-paint",
+      "interactive",
+      "unminified-css",
+      "unminified-javascript",
+      "bf-cache",
+      "forced-reflow-insight",
+      "network-dependency-tree-insight",
+      "render-blocking-insight"
+    ]
+  },
+  {
+    "lang": "en",
+    "form": "mobile",
+    "performance": 86,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "lcp": "3.7 s",
+    "cls": "0.098",
+    "tbt": "0 ms",
+    "failed": [
+      "largest-contentful-paint",
+      "unminified-css",
+      "unminified-javascript",
+      "bf-cache",
+      "forced-reflow-insight",
+      "network-dependency-tree-insight",
+      "render-blocking-insight"
+    ]
+  },
+  {
+    "lang": "ru",
+    "form": "desktop",
+    "performance": 98,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "lcp": "1.0 s",
+    "cls": "0.071",
+    "tbt": "0 ms",
+    "failed": [
+      "label-content-name-mismatch",
+      "unminified-css",
+      "unminified-javascript",
+      "bf-cache",
+      "forced-reflow-insight",
+      "network-dependency-tree-insight",
+      "render-blocking-insight"
+    ]
+  },
+  {
+    "lang": "ro",
+    "form": "desktop",
+    "performance": 99,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "lcp": "1.0 s",
+    "cls": "0.013",
+    "tbt": "0 ms",
+    "failed": [
+      "label-content-name-mismatch",
+      "unminified-css",
+      "unminified-javascript",
+      "bf-cache",
+      "forced-reflow-insight",
+      "network-dependency-tree-insight",
+      "render-blocking-insight"
+    ]
+  },
+  {
+    "lang": "en",
+    "form": "desktop",
+    "performance": 99,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "lcp": "1.0 s",
+    "cls": "0.012",
+    "tbt": "0 ms",
+    "failed": [
+      "label-content-name-mismatch",
+      "unminified-css",
+      "unminified-javascript",
+      "bf-cache",
+      "forced-reflow-insight",
+      "network-dependency-tree-insight",
+      "render-blocking-insight"
+    ]
+  }
+]

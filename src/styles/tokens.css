@@ -35,8 +35,8 @@
   /* ---------- Шрифты ----------
      Cormorant Garamond — заголовки (курсив — для акцентных слов), Golos Text — основной текст,
      JetBrains Mono — подписи, метки, цифры. Свои файлы шрифтов (без Google Fonts). */
-  --f-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
-  --f-sans: "Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-serif: "Cormorant Garamond", "Cormorant Fallback", Georgia, "Times New Roman", serif;
+  --f-sans: "Golos Text", "Golos Fallback", system-ui, -apple-system, "Segoe UI", sans-serif;
   --f-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
 
   /* ---------- Размеры текста ----------

@@ -37,3 +37,10 @@
 @import '@fontsource/jetbrains-mono/latin-500.css';
 @import '@fontsource/jetbrains-mono/latin-ext-500.css';
 @import '@fontsource/jetbrains-mono/cyrillic-500.css';
+
+/* Запасные шрифты «с подгонкой размера». Пока свой шрифт грузится, текст рисуется системным;
+   когда свой приходит, текст перерисовывается — и если ширина букв разная, строки «прыгают»
+   (Lighthouse считает это сдвигом макета, CLS). size-adjust растягивает системный шрифт до ширины
+   нашего: Times New Roman ≈ Cormorant × 0.96, Arial ≈ Golos × 1.078 (замерено в браузере). */
+@font-face { font-family: "Cormorant Fallback"; src: local("Times New Roman"), local("Times"), local("Liberation Serif"); size-adjust: 96%; }
+@font-face { font-family: "Golos Fallback"; src: local("Arial"), local("Helvetica"), local("Liberation Sans"); size-adjust: 107.8%; }

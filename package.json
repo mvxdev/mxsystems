@@ -7,12 +7,11 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
+    "preview": "node tools/serve.mjs dist 4321",
     "seo": "python tools/seo_check.py dist",
-    "check:dist": "node tools/check-dist.mjs",
-    "screens": "node tools/screens.mjs",
-    "compare": "node tools/compare-content.mjs",
-    "lighthouse": "node tools/lighthouse.mjs"
+    "compare": "python tools/compare_content.py .cache/v1 dist",
+    "screens": "node tools/screens.mjs new",
+    "lighthouse": "node tools/lighthouse.mjs dist"
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "^5.3.0",
