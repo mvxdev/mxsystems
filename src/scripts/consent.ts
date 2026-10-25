@@ -9,11 +9,9 @@
    ===================================================================== */
 import { $ } from './util';
 
-// [ЗАПОЛНИТЬ] ID Google Analytics 4 — вида G-XXXXXXXXXX (analytics.google.com → Администратор → Потоки данных).
-// [ЗАПОЛНИТЬ] ID Meta Pixel — число из 15–16 цифр (business.facebook.com → Events Manager).
-// Пока стоят заглушки — ни GA, ни пиксель не загружаются, даже если посетитель согласился.
-const GA_ID = 'G-XXXXXXXXXX';
-const PIXEL_ID = '000000000000000';
+// ID счётчиков — в src/lib/tracking.ts. Пока там заглушки, баннера на странице нет
+// (его не выводит сборка) — и этот скрипт сразу выходит, ничего не загружая.
+import { GA_ID, PIXEL_ID, HAS_GA, HAS_PIXEL } from '../lib/tracking';
 
 type Consent = { a: boolean; m: boolean; t?: string } | null;
 // Глобальные функции, которые создают скрипты Google и Meta
@@ -28,11 +26,10 @@ declare global { interface Window { dataLayer: unknown[]; gtag?: (...a: unknown[
 
   const read = (): Consent => { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch { return null; } };
   const write = (v: Consent) => { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch { /* приватный режим */ } };
-  const isReal = (id: string, fake: string) => id && id !== fake;   // заглушки не загружаем
 
   // --- Google Analytics 4: скрипт gtag.js загружается только после согласия ---
   function loadGA() {
-    if (!isReal(GA_ID, 'G-XXXXXXXXXX') || window.gtag) return;
+    if (!HAS_GA || window.gtag) return;
     const s = document.createElement('script');
     s.async = true;                                // async — не блокирует отрисовку
     s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
@@ -45,7 +42,7 @@ declare global { interface Window { dataLayer: unknown[]; gtag?: (...a: unknown[
 
   // --- Meta Pixel: официальный код Meta, переписанный читаемо ---
   function loadPixel() {
-    if (!isReal(PIXEL_ID, '000000000000000') || window.fbq) return;
+    if (!HAS_PIXEL || window.fbq) return;
     // fbq — функция-очередь: команды копятся, пока не загрузится fbevents.js
     const fbq: any = (window.fbq = function (...args: unknown[]) { fbq.callMethod ? fbq.callMethod(...args) : fbq.queue.push(args); });
     window._fbq = fbq; fbq.push = fbq; fbq.loaded = true; fbq.version = '2.0'; fbq.queue = [];
@@ -74,7 +71,20 @@ declare global { interface Window { dataLayer: unknown[]; gtag?: (...a: unknown[
   };
 
   const saved = read();
-  if (saved) apply(saved); else show();            // первый визит — показываем баннер
+  // Первый визит — показываем баннер, но не поверх вводного текста первого экрана:
+  // на главной ждём, пока текст hero уйдёт вверх за край экрана (скрипты до согласия
+  // всё равно не грузятся, так что спросить чуть позже — законно). На других страницах — сразу.
+  const showLater = () => {
+    const lead = $('.hero .lead');
+    if (!lead || !('IntersectionObserver' in window)) { show(); return; }
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting || e.boundingClientRect.top > 0) return;   // текст ещё виден или ниже экрана
+      io.disconnect();
+      if (!read()) show();
+    });
+    io.observe(lead);
+  };
+  if (saved) apply(saved); else showLater();
 
   $('#cookie-yes')!.addEventListener('click', () => save({ a: true, m: true }));
   $('#cookie-no')!.addEventListener('click', () => save({ a: false, m: false }));

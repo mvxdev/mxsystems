@@ -2,10 +2,12 @@
 /* =====================================================================
    Footer — подвал. Крупный знак «MX.» и строка направлений (колонки 1–6),
    контакты (7–9), разделы и документы (10–12). Внизу — город и годы работы.
-   Кнопка «Настройки cookie» снова открывает баннер согласия (src/scripts/consent.ts).
+   Кнопка «Настройки cookie» снова открывает баннер согласия (src/scripts/consent.ts);
+   её нет, пока в src/lib/tracking.ts не вписан ни один ID счётчика (тогда нет и баннера).
    variant="simple" — для политики конфиденциальности: только нижняя строка и кнопка cookie.
    ===================================================================== */
 import Logo from './Logo.astro';
+import { TRACKING } from '../lib/tracking';
 import { t, tgHref, waHref, telHref, mailHref, path, PHONE, EMAIL, type Lang } from '../i18n';
 
 interface Props { lang: Lang; variant?: 'home' | 'simple' }
@@ -30,14 +32,14 @@ const links = f.links.map((l) => ({ ...l, href: l.href.includes('privacy') ? pat
         </ul>
         <ul class="links pages-l">
           {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
-          <li><button type="button" id="cookie-open">{f.cookieBtn}</button></li>
+          {TRACKING && <li><button type="button" id="cookie-open">{f.cookieBtn}</button></li>}
         </ul>
       </div>
     )}
     <p class="bottom">
       <span class="pin" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M12 21s-6.5-5.8-6.5-11A6.5 6.5 0 0 1 18.5 10c0 5.2-6.5 11-6.5 11Z"/><circle cx="12" cy="10" r="2.4"/></svg></span>
       <span>{f.bottom}</span>
-      {variant === 'simple' && <Fragment> · <button type="button" id="cookie-open" class="cookie-inline">{f.cookieBtn}</button></Fragment>}
+      {variant === 'simple' && TRACKING && <Fragment> · <button type="button" id="cookie-open" class="cookie-inline">{f.cookieBtn}</button></Fragment>}
     </p>
   </div>
 </footer>

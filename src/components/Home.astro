@@ -18,6 +18,7 @@ import Faq from './Faq.astro';
 import Contact from './Contact.astro';
 import Footer from './Footer.astro';
 import CookieBanner from './CookieBanner.astro';
+import { TRACKING } from '../lib/tracking';
 import { homeJsonLd } from '../lib/jsonld';
 import { t, type Lang } from '../i18n';
 
@@ -39,5 +40,5 @@ const m = t(lang).meta;
     <Contact lang={lang} />
   </main>
   <Footer lang={lang} />
-  <CookieBanner lang={lang} />
+  {TRACKING && <CookieBanner lang={lang} />}
 </Base>

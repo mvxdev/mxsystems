@@ -82,14 +82,15 @@ const { ui } = Astro.props;
   }
   .ui .toast.is-on { opacity: 1; transform: none; }
 
-  @media (max-width: 480px) {
-    .ui .board { gap: 6px; padding: 10px 10px 64px; min-height: 300px; }
-    .ui .col { padding: var(--s-2) 6px; }
-    .ui .car { padding: var(--s-2) 6px var(--s-2) 8px; }
-    .ui .car b { font-size: 12.5px; line-height: 1.2; }
-    .ui .car-status { font-size: 10px; }
-    .ui .col-h { font-size: 9.5px; flex-direction: column; gap: 4px; min-height: 44px; }
-    .ui .cnt { align-self: flex-start; }
+  /* Телефон: три колонки рядом не помещаются — ставим их друг под другом,
+     карточки в колонке — по две в ряд. Машина «переезжает» в «Готова» вниз, той же FLIP-анимацией */
+  @media (max-width: 560px) {
+    .ui .board { grid-template-columns: 1fr; gap: var(--s-3); min-height: 0; padding: var(--s-3) var(--s-3) 68px; }
+    .ui .col { padding: var(--s-3); }
+    .ui .col-h { margin-bottom: var(--s-3); font-size: 11px; }
+    .ui .col-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .ui .car b { font-size: 13.5px; }
+    .ui .car-status { font-size: 11px; }
     .ui .ui-sub { font-size: 10.5px; }
   }
 </style>

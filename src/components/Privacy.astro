@@ -8,6 +8,7 @@ import Base from '../layouts/Base.astro';
 import Header from './Header.astro';
 import Footer from './Footer.astro';
 import CookieBanner from './CookieBanner.astro';
+import { TRACKING } from '../lib/tracking';
 import ru from '../content/privacy/ru.html?raw';
 import ro from '../content/privacy/ro.html?raw';
 import en from '../content/privacy/en.html?raw';
@@ -29,7 +30,7 @@ const body = { ru, ro, en }[lang];
     <div class="container"><div class="legal-in" set:html={body} /></div>
   </main>
   <Footer lang={lang} variant="simple" />
-  <CookieBanner lang={lang} />
+  {TRACKING && <CookieBanner lang={lang} />}
 </Base>
 
 <style>
