@@ -84,6 +84,14 @@ for rel in PAGES:
         continue
     so, sn = soup(o), soup(n)
     base = page_url(rel)
+    # Намеренные изменения (DECISIONS.md, п. 33–34) — эти куски старой версии не сравниваем:
+    #   • cookie-баннер и кнопка «Настройки cookie» не выводятся, пока не вписаны ID GA4/Pixel;
+    #   • сноски первого экрана переписаны: вместо двух одинаковых — три с цифрами из кейсов.
+    if not sn.select_one('#cookie'):
+        for el in so.select('#cookie, #cookie-open'):
+            el.decompose()
+    for el in so.select('.notes'):
+        el.decompose()
     # get_text('') — без добавочных пробелов между тегами: типограф оборачивает слова в <span>,
     # и текст «тест-драйва:» не должен превратиться в «тест-драйва :»
     full_new = norm((sn.body or sn).get_text(''))
@@ -104,7 +112,9 @@ for rel in PAGES:
     print(f'{rel:26} текстов {len(texts(so)):4}  ссылок {len(lo):3}  → не найдено: текстов {len(miss_t)}, ссылок {len(miss_l)}, alt {len(miss_alt)}, aria {len(miss_aria)}')
 
 report = ['# Сверка содержимого v1-seo → новая версия', '',
-          'Скрипт: `python tools/compare_content.py .cache/v1 dist`.', '']
+          'Скрипт: `python tools/compare_content.py .cache/v1 dist`.', '',
+          'Намеренно не сравниваются: cookie-баннер и кнопка «Настройки cookie» (не выводятся без ID GA4/Pixel)',
+          'и сноски первого экрана (переписаны) — см. DECISIONS.md, п. 33–34.', '']
 report += ['Расхождений нет.'] if not problems else ['## Расхождения', ''] + [f'- {p}' for p in problems]
 Path('docs/content-diff.md').write_text('\n'.join(report) + '\n', encoding='utf-8')
 print()

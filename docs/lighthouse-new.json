@@ -10,7 +10,6 @@
     "cls": "0",
     "tbt": "0 ms",
     "failed": [
-      "mainthread-work-breakdown",
       "bf-cache",
       "network-dependency-tree-insight",
       "render-blocking-insight"
@@ -27,7 +26,6 @@
     "cls": "0",
     "tbt": "0 ms",
     "failed": [
-      "mainthread-work-breakdown",
       "bf-cache",
       "network-dependency-tree-insight",
       "render-blocking-insight"
@@ -44,7 +42,6 @@
     "cls": "0",
     "tbt": "0 ms",
     "failed": [
-      "mainthread-work-breakdown",
       "bf-cache",
       "network-dependency-tree-insight",
       "render-blocking-insight"
@@ -74,7 +71,7 @@
     "bestPractices": 100,
     "seo": 100,
     "lcp": "0.4 s",
-    "cls": "0.025",
+    "cls": "0.017",
     "tbt": "0 ms",
     "failed": [
       "bf-cache",

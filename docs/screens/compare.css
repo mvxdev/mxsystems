@@ -2,6 +2,7 @@
 body { margin: 0; background: #0d0c0a; color: #ece5d8; font: 15px/1.4 system-ui, sans-serif; }
 header { position: sticky; top: 0; z-index: 2; padding: 12px 20px; background: #15130f; border-bottom: 1px solid #333; }
 h1 { margin: 0 0 10px; font-size: 18px; font-weight: 500; }
+.upd { margin: 0 0 10px; font-size: 13px; opacity: 0.7; }
 .bar { display: flex; flex-wrap: wrap; gap: 12px; }
 .group { display: flex; border: 1px solid #444; border-radius: 3px; overflow: hidden; }
 button { padding: 7px 12px; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
