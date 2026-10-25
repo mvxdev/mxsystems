@@ -48,7 +48,7 @@ const home = path(lang, '/');
 
     {variant === 'home' && (
       <Fragment>
-        <a class="btn btn--small btn--primary header-cta" href={tgHref(lang)} target="_blank" rel="noopener" aria-label={d.ui.ctaAria}>
+        <a class="btn btn--small btn--primary header-cta" href={tgHref(lang)} target="_blank" rel="noopener" aria-label={`${d.ui.ctaLabel} — Telegram`}>
           <!-- Иконка Telegram (бумажный самолётик) -->
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.4 3.6 2.9 10.8c-.9.4-.9 1.6.1 1.9l4.6 1.4 1.7 5.4c.2.7 1.1.9 1.6.4l2.5-2.3 4.7 3.4c.6.4 1.4.1 1.6-.6l3-15.2c.2-1-.6-1.9-1.3-1.6ZM9.6 14.5l-.4 3.6-1.3-4.2 10-6.4-8.3 7Z"/></svg>
           <span class="label">{d.ui.ctaLabel}</span>

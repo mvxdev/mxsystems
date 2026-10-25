@@ -1,0 +1,108 @@
+[
+  {
+    "lang": "ru",
+    "form": "mobile",
+    "performance": 88,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "lcp": "3.2 s",
+    "cls": "0",
+    "tbt": "0 ms",
+    "failed": [
+      "first-contentful-paint",
+      "largest-contentful-paint",
+      "mainthread-work-breakdown",
+      "bf-cache",
+      "network-dependency-tree-insight",
+      "render-blocking-insight"
+    ]
+  },
+  {
+    "lang": "ro",
+    "form": "mobile",
+    "performance": 99,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "lcp": "2.0 s",
+    "cls": "0.049",
+    "tbt": "0 ms",
+    "failed": [
+      "mainthread-work-breakdown",
+      "bf-cache",
+      "forced-reflow-insight",
+      "network-dependency-tree-insight",
+      "render-blocking-insight"
+    ]
+  },
+  {
+    "lang": "en",
+    "form": "mobile",
+    "performance": 99,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "lcp": "2.0 s",
+    "cls": "0.01",
+    "tbt": "0 ms",
+    "failed": [
+      "mainthread-work-breakdown",
+      "bf-cache",
+      "forced-reflow-insight",
+      "network-dependency-tree-insight",
+      "render-blocking-insight"
+    ]
+  },
+  {
+    "lang": "ru",
+    "form": "desktop",
+    "performance": 100,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "lcp": "0.4 s",
+    "cls": "0",
+    "tbt": "0 ms",
+    "failed": [
+      "label-content-name-mismatch",
+      "bf-cache",
+      "network-dependency-tree-insight",
+      "render-blocking-insight"
+    ]
+  },
+  {
+    "lang": "ro",
+    "form": "desktop",
+    "performance": 100,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "lcp": "0.4 s",
+    "cls": "0.008",
+    "tbt": "0 ms",
+    "failed": [
+      "label-content-name-mismatch",
+      "bf-cache",
+      "network-dependency-tree-insight",
+      "render-blocking-insight"
+    ]
+  },
+  {
+    "lang": "en",
+    "form": "desktop",
+    "performance": 100,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "lcp": "0.4 s",
+    "cls": "0.017",
+    "tbt": "0 ms",
+    "failed": [
+      "label-content-name-mismatch",
+      "bf-cache",
+      "network-dependency-tree-insight",
+      "render-blocking-insight"
+    ]
+  }
+]

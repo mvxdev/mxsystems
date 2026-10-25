@@ -12,14 +12,11 @@
 import '../styles/fonts.css';
 import '../styles/tokens.css';
 import '../styles/global.css';
-import { LANGS, DOMAIN, OG_LOCALE, ogImage, url, type Lang } from '../i18n';
+import { LANGS, OG_LOCALE, ogImage, url, type Lang } from '../i18n';
 
-// Самые важные начертания для первого экрана — предзагружаем (заголовок H1 — это LCP,
-// самый крупный элемент экрана; без предзагрузки он сначала рисуется запасным шрифтом)
-import serifCyr from '@fontsource/cormorant-garamond/files/cormorant-garamond-cyrillic-500-normal.woff2?url';
-import serifCyrIt from '@fontsource/cormorant-garamond/files/cormorant-garamond-cyrillic-500-italic.woff2?url';
-import serifLat from '@fontsource/cormorant-garamond/files/cormorant-garamond-latin-500-normal.woff2?url';
-import serifLatIt from '@fontsource/cormorant-garamond/files/cormorant-garamond-latin-500-italic.woff2?url';
+// Шрифты НЕ предзагружаем (<link rel="preload">): замер Lighthouse на телефоне показал, что
+// предзагрузка отнимает канал у CSS и отодвигает первую отрисовку (LCP 2.0–3.2 с → 1.7 с без неё).
+// Текст сразу рисуется запасным шрифтом и подменяется, когда свой шрифт загрузится (font-display: swap).
 
 interface Props {
   lang: Lang;
@@ -43,7 +40,6 @@ const { lang, title, description, page = '/', ogTitle = title, ogDescription = d
 const canonical = url(lang, page);
 const image = ogImage(lang);
 const others = LANGS.filter((l) => l !== lang);
-const preload = lang === 'ru' ? [serifCyr, serifCyrIt] : [serifLat, serifLatIt];
 
 // CSP (Content-Security-Policy) — политика безопасности: браузер выполняет только скрипты-файлы
 // с нашего сайта и от Google/Meta (аналитика, только после согласия). Любой внедрённый чужой
@@ -112,9 +108,6 @@ const CSP = [
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <!-- theme-color — цвет панели браузера на телефоне, в тон фону -->
   <meta name="theme-color" content="#0d0c0a">
-
-  <!-- Предзагрузка шрифта заголовка (crossorigin обязателен для шрифтов, даже своих) -->
-  {preload.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin>)}
 
   <!-- JSON-LD — структурированные данные schema.org. Это не исполняемый скрипт:
        браузер его не запускает, поэтому строгую CSP он не нарушает -->

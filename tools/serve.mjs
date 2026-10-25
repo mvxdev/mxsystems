@@ -7,6 +7,7 @@
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { extname, join, normalize, resolve } from 'node:path';
+import { gzipSync } from 'node:zlib';
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
@@ -34,8 +35,16 @@ export function serve(dir, port) {
         res.writeHead(404, { 'Content-Type': TYPES['.html'] }).end(body);
         return;
       }
-      res.writeHead(200, { 'Content-Type': TYPES[extname(file).toLowerCase()] || 'application/octet-stream', 'Cache-Control': 'no-store' });
-      res.end(await readFile(file));
+      const type = TYPES[extname(file).toLowerCase()] || 'application/octet-stream';
+      let body = await readFile(file);
+      const headers = { 'Content-Type': type, 'Cache-Control': 'no-store' };
+      // Текстовые файлы сжимаем gzip — как это делает GitHub Pages (иначе замеры скорости хуже реальных)
+      if (/text|javascript|json|xml|svg/.test(type) && /gzip/.test(req.headers['accept-encoding'] || '')) {
+        body = gzipSync(body);
+        headers['Content-Encoding'] = 'gzip';
+      }
+      res.writeHead(200, headers);
+      res.end(body);
     } catch (e) {
       res.writeHead(500).end(String(e));
     }
