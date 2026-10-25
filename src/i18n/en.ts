@@ -93,12 +93,17 @@ const dict: Dict = {
       {
         "href": "#case-fastload",
         "k": "Logistics · USA",
-        "text": "System in daily use"
+        "text": "17 dispatchers, 98 drivers"
       },
       {
         "href": "#case-4power",
         "k": "Car service · Chișinău",
-        "text": "System in daily use"
+        "text": "4Power Club, 7 bays"
+      },
+      {
+        "href": "#prod-carbids",
+        "k": "Car auctions · USA",
+        "text": "CarBids, 3.7M lots"
       }
     ]
   },

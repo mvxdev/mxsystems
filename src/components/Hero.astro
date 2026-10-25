@@ -16,7 +16,7 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const d = t(lang);
 const h = d.hero;
-const sup = ['¹', '²'];
+const sup = ['¹', '²', '³'];
 ---
 <div class="container">
   <p class="masthead">
@@ -41,7 +41,7 @@ const sup = ['¹', '²'];
       <!-- Строка доверия в виде журнальных сносок — каждая ведёт к своему кейсу -->
       <ul class="notes" aria-label={h.notesAria}>
         {h.notes.map((n, i) => (
-          <li><sup>{sup[i]}</sup><a href={n.href}><span class="k">{n.k}</span><br>{n.text}</a></li>
+          <li><sup>{sup[i]}</sup><a href={n.href}><span class="k">{n.k}</span><br><Fragment set:html={tt(n.text, lang)} /></a></li>
         ))}
       </ul>
     </div>
@@ -81,7 +81,7 @@ const sup = ['¹', '²'];
   .actions { display: flex; flex-direction: column; gap: var(--s-2); }
   .actions .btn { width: 100%; }
 
-  /* Сноски ¹ ² — как примечания в журнале */
+  /* Сноски ¹ ² ³ — как примечания в журнале */
   .notes { font-size: var(--fs-small); color: var(--text-2); }
   .notes li { display: flex; gap: var(--s-3); padding: var(--s-2) 0; border-bottom: 1px solid var(--line); }
   .notes li:first-child { padding-top: 0; }

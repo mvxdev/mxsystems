@@ -93,12 +93,17 @@ const dict: Dict = {
       {
         "href": "#case-4power",
         "k": "Service auto · Chișinău",
-        "text": "Sistem folosit zilnic"
+        "text": "4Power Club, 7 posturi"
       },
       {
         "href": "#case-fastload",
         "k": "Logistică · SUA",
-        "text": "Sistem folosit zilnic"
+        "text": "17 dispeceri, 98 de șoferi"
+      },
+      {
+        "href": "#prod-carbids",
+        "k": "Licitații auto · SUA",
+        "text": "CarBids, 3,7 mil. loturi"
       }
     ]
   },

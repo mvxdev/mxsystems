@@ -26,7 +26,7 @@ const IMG = { carbids, fastload, crm } as const;
   </div>
   <div class="prod-grid stagger">
     {p.items.map((it) => (
-      <article class:list={['prod', { 'prod--offer': !!it.offer }]}>
+      <article class:list={['prod', { 'prod--offer': !!it.offer }]} id={`prod-${it.img}`}>
         <div class="shot">
           <!-- «Рамка браузера»: три точки и адрес — скриншот читается как живой сайт, а не картинка -->
           <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span>{it.link.label.replace(' ↗', '')}</span></div>
