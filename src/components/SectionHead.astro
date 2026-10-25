@@ -1,0 +1,27 @@
+---
+/* =====================================================================
+   SectionHead — шапка секции: метка «01 / Проекты», заголовок H2 и пояснение.
+   Асимметрия, как в журнале: заголовок — колонки 1–7, пояснение — узкая колонка 9–12,
+   выровнено по нижнему краю заголовка. На телефоне — друг под другом.
+   ===================================================================== */
+import { typo, hang } from '../i18n/typo';
+import type { Lang } from '../i18n';
+
+interface Props { lang: Lang; n: string; eyebrow: string; title: string; intro?: string; id: string }
+const { lang, n, eyebrow, title, intro, id } = Astro.props;
+---
+<div class="section-head grid reveal">
+  <p class="eyebrow"><b>{n}</b> / {eyebrow}</p>
+  <h2 class="h2" id={id} set:html={hang(typo(title, lang))} />
+  {intro && <p class="intro" set:html={typo(intro, lang)} />}
+</div>
+
+<style>
+  .section-head { row-gap: var(--s-5); margin-bottom: clamp(48px, 6vw, 88px); }
+  .intro { max-width: 44ch; color: var(--text-2); }
+  @media (min-width: 1000px) {
+    .section-head { align-items: end; row-gap: var(--s-6); }
+    .h2 { grid-column: 1 / span 7; }
+    .intro { grid-column: 9 / span 4; }
+  }
+</style>

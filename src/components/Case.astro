@@ -1,0 +1,146 @@
+---
+/* =====================================================================
+   Case — один кейс в виде журнального «разворота».
+   Порядок блоков (как в старой версии):
+     1. шапка: «Кейс 01» + статус «В эксплуатации»; крупный заголовок (колонки 1–7)
+        и таблица «Клиент / Отрасль / Команда» с тонкими линиями (колонки 8–12);
+     2. тело: текст «Задача» + «Что сделали» (колонки 1–6) и живой макет интерфейса
+        (колонки 7–12; у второго кейса — наоборот, flip). Макет «прилипает» при прокрутке;
+     3. «Результат»: плитки с крупными моно-цифрами (по 3 колонки) + список выводов;
+     4. «Стек» — аккуратные метки.
+   На телефоне макет идёт сразу под заголовком кейса — это самое наглядное.
+   Макет передаётся внутрь через <slot /> (BoardMock или LoadsMock).
+   ===================================================================== */
+import { typo } from '../i18n/typo';
+import type { Dict, Lang } from '../i18n';
+
+type CaseData = Dict['case4power'] | Dict['caseFastload'];
+interface Props { lang: Lang; c: CaseData; id: string; titleId: string; flip?: boolean }
+const { lang, c, id, titleId, flip = false } = Astro.props;
+const T = (s: string) => typo(s, lang);
+---
+<article class="case" id={id} aria-labelledby={titleId}>
+  <header class="case-head grid">
+    <div class="case-tags reveal">
+      <span class="case-no">{c.no}</span>
+      <span class="case-rule" aria-hidden="true"></span>
+      <span class="badge"><i class="live-dot"></i>{c.badge}</span>
+    </div>
+    <h3 class="case-title reveal" id={titleId} set:html={T(c.title)} />
+    <!-- dl (список определений): пары «название — значение» -->
+    <dl class="case-meta reveal d1">
+      {c.meta.map((m) => <div><dt>{m.dt}</dt><dd set:html={T(m.dd)} /></div>)}
+    </dl>
+  </header>
+
+  <div class:list={['case-body grid', { 'is-flip': flip }]}>
+    <div class="case-text">
+      <section class="case-block reveal">
+        <h4 class="caps">{c.taskH}</h4>
+        <p class="task" set:html={T(c.task)} />
+      </section>
+      <section class="case-block">
+        <h4 class="caps reveal">{c.doneH}</h4>
+        <ul class="done stagger">
+          {c.done.map((li) => <li set:html={T(li)} />)}
+        </ul>
+      </section>
+    </div>
+
+    <div class="case-ui reveal d1">
+      <p class="sr-only">{c.uiSr}</p>
+      <slot />
+    </div>
+  </div>
+
+  <div class="case-result">
+    <h4 class="caps reveal">{c.resultH}</h4>
+    <!-- «Приборная панель»: цифры досчитываются от 0, когда плитка появляется (src/scripts/counters.ts) -->
+    <div class="kpis stagger">
+      {c.kpis.map((k) => (
+        <div class:list={['kpi', { 'kpi--acc': k.acc }]}>
+          <b set:html={k.value} />
+          <span>{T(k.label)}</span>
+        </div>
+      ))}
+    </div>
+    <ul class="results stagger">
+      {c.results.map((r) => <li set:html={T(r)} />)}
+    </ul>
+  </div>
+
+  <footer class="case-foot reveal">
+    <p class="caps stack-label">{c.stackLabel}</p>
+    <ul class="stack">
+      {c.stack.map((s) => <li>{s}</li>)}
+    </ul>
+  </footer>
+</article>
+
+<style>
+  .case { padding-block: clamp(56px, 7vw, 104px); border-top: 1px solid var(--line-3); }
+  .case:first-of-type { margin-top: var(--s-5); }
+
+  /* --- Шапка кейса --- */
+  .case-head { row-gap: var(--s-5); margin-bottom: clamp(40px, 5vw, 72px); }
+  .case-tags { display: flex; align-items: center; gap: var(--s-4); }
+  .case-no { font: 500 var(--fs-mono-lg) / 1 var(--f-mono); letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--accent); }
+  .case-rule { flex: 1; height: 1px; background: var(--line); }
+  .case-title { font: 500 clamp(34px, 4.4vw, 60px) / 1.02 var(--f-serif); letter-spacing: var(--track-tight); }
+  .case-title :global(em) { font-style: italic; color: var(--accent); }
+
+  /* Таблица «Клиент / Отрасль / Команда»: тонкие линии, подписи моно-капсом */
+  .case-meta { border-top: 1px solid var(--line-2); }
+  .case-meta div { display: grid; grid-template-columns: 112px 1fr; gap: var(--s-3); padding: 11px 0; border-bottom: 1px solid var(--line); font-size: var(--fs-small); }
+  .case-meta dt { font: 400 11.5px/1.9 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); }
+
+  @media (min-width: 1000px) {
+    .case-head { align-items: end; }
+    .case-tags { grid-column: 1 / -1; }
+    .case-title { grid-column: 1 / span 7; }
+    .case-meta { grid-column: 8 / span 5; }
+  }
+
+  /* --- Тело кейса --- */
+  .case-body { row-gap: var(--s-7); }
+  .case-block + .case-block { margin-top: var(--s-7); }
+  .case-block .caps { margin-bottom: var(--s-4); }
+  .task { max-width: 62ch; color: var(--text-2); }
+
+  /* «Что сделали»: ритм из тонких линеек, маркер — короткая оранжевая черта,
+     жирное начало пункта светлее остального текста и читается как подзаголовок */
+  .done { counter-reset: done; }
+  .done li { position: relative; padding: 14px 0 14px var(--s-6); border-top: 1px solid var(--line); color: var(--text-2); font-size: var(--fs-small); line-height: 1.55; }
+  .done li:last-child { border-bottom: 1px solid var(--line); }
+  .done li::before { content: ""; position: absolute; left: 0; top: 25px; width: 14px; height: 1px; background: var(--accent); }
+  .done li :global(b) { color: var(--text); font-weight: 500; }
+
+  @media (max-width: 999px) { .case-ui { order: -1; } }
+  @media (min-width: 1000px) {
+    .case-text { grid-column: 1 / span 6; }
+    .case-ui { grid-column: 7 / span 6; position: sticky; top: calc(var(--header-h) + var(--s-5)); align-self: start; }
+    /* Второй кейс зеркальный: макет слева, текст справа — кейсы не выглядят близнецами */
+    .is-flip .case-text { grid-column: 7 / span 6; grid-row: 1; }
+    .is-flip .case-ui { grid-column: 1 / span 6; grid-row: 1; }
+  }
+
+  /* --- Результат: «приборная панель» --- */
+  .case-result { margin-top: clamp(56px, 6vw, 96px); }
+  .case-result > .caps { margin-bottom: var(--s-4); }
+  .kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--line-2); border-left: 1px solid var(--line-2); }
+  @media (min-width: 900px) { .kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .kpi { display: flex; flex-direction: column; justify-content: space-between; gap: var(--s-5); min-height: 168px; padding: var(--s-5); border-right: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2); }
+  /* tabular-nums — все цифры одной ширины, при досчёте число не «дрожит» */
+  .kpi b { font: 500 clamp(34px, 4.4vw, 60px) / 1 var(--f-mono); letter-spacing: -0.045em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .kpi span { font: 400 11.5px/1.45 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); }
+  .kpi--acc b { color: var(--accent); }
+
+  .results { display: grid; column-gap: var(--col-gap); margin-top: var(--s-6); }
+  @media (min-width: 900px) { .results { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .results li { padding: 14px 0; border-bottom: 1px solid var(--line); color: var(--text-2); font-size: var(--fs-small); }
+
+  /* --- Стек: метки в тонкой рамке --- */
+  .case-foot { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--s-3) var(--s-5); margin-top: var(--s-6); }
+  .stack { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .stack li { padding: 6px 10px; border: 1px solid var(--line-2); border-radius: var(--radius); font: 400 12px/1.2 var(--f-mono); color: var(--text-2); }
+</style>

@@ -1,0 +1,88 @@
+---
+/* =====================================================================
+   Contact — «07 / Контакт», финальный призыв. Крупный заголовок и строки-ссылки во всю
+   ширину: иконка · способ связи · значение · стрелка. При наведении строка подсвечивается
+   (фон заливается слева направо), стрелка уходит вправо. Telegram — главный: значение
+   оранжевым, подпись «быстрее всего».
+   Иконки — тонкие линейные (один стиль, толщина 1.4), как в старой версии.
+   ===================================================================== */
+import { typo } from '../i18n/typo';
+import { t, tgHref, waHref, telHref, mailHref, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const c = t(lang).contact;
+const ICON: Record<string, string> = {
+  telegram: '<path d="M21.2 4.3 2.9 11.4c-.6.3-.6 1.1.1 1.3l4.6 1.5 1.8 5.5c.2.5.8.6 1.2.3l2.6-2.3 4.6 3.4c.5.4 1.2.1 1.3-.5l3-14.4c.2-.7-.4-1.2-.9-.9Z"/><path d="m7.6 14.2 9.9-6.6-7.4 8.2"/>',
+  whatsapp: '<path d="M4.2 19.8 5.4 16A8.4 8.4 0 1 1 8.3 18.8Z"/><path d="M9.2 8.4c.1 3.4 2.9 6.2 6.3 6.4l1.1-1.4-1.9-1-1 .8a4.6 4.6 0 0 1-2.4-2.4l.8-1-1-1.9Z"/>',
+  phone: '<path d="M5.2 3.5h3.2l1.6 4.4-2.1 1.4a11.6 11.6 0 0 0 6.8 6.8l1.4-2.1 4.4 1.6v3.2a1.9 1.9 0 0 1-2.1 1.9A16.7 16.7 0 0 1 3.3 5.6a1.9 1.9 0 0 1 1.9-2.1Z"/>',
+  email: '<rect x="3" y="5.5" width="18" height="13" rx="1.5"/><path d="m3.6 6.5 8.4 6.6 8.4-6.6"/>',
+};
+const HREF: Record<string, string> = { telegram: tgHref(lang), whatsapp: waHref(lang), phone: telHref, email: mailHref(lang) };
+const external = (k: string) => k === 'telegram' || k === 'whatsapp';
+---
+<section class="section contact" id="contact" aria-labelledby="contact-title">
+  <div class="container">
+    <div class="head reveal">
+      <p class="eyebrow"><b>07</b> / {c.eyebrow}</p>
+      <h2 class="title" id="contact-title" set:html={typo(c.title, lang)} />
+      <p class="sub" set:html={typo(c.sub, lang)} />
+    </div>
+    <ul class="contacts stagger">
+      {c.items.map((it) => (
+        <li>
+          <a class:list={['ct', { 'ct--main': it.kind === 'telegram' }]} href={HREF[it.kind]}
+             target={external(it.kind) ? '_blank' : undefined} rel={external(it.kind) ? 'noopener' : undefined}>
+            <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" set:html={ICON[it.kind]} /></span>
+            <span class="ct-label">{it.label}{it.hint && <i> · {it.hint}</i>}</span>
+            <span class="ct-value">{it.value}</span>
+            <span class="ct-arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .contact { border-top-color: var(--line-3); }
+  .head { margin-bottom: clamp(48px, 6vw, 88px); }
+  .head .eyebrow { margin-bottom: var(--s-6); }
+  .title { max-width: 18ch; font: 500 clamp(44px, 6.6vw, 100px) / 0.95 var(--f-serif); letter-spacing: -0.028em; }
+  .title :global(em) { font-style: italic; color: var(--accent); }
+  .sub { max-width: 52ch; margin-top: var(--s-5); color: var(--text-2); font-size: var(--fs-lead); }
+
+  .contacts { border-top: 1px solid var(--line-3); }
+  .contacts li { border-bottom: 1px solid var(--line-2); }
+  .ct {
+    position: relative; isolation: isolate;
+    display: grid; grid-template-columns: 48px minmax(0, 1fr) auto 32px; align-items: center; gap: var(--s-5);
+    padding: var(--s-5) 0;
+  }
+  /* Подсветка строки: фон заливается слева направо и выходит чуть за края текста */
+  .ct::before {
+    content: ""; position: absolute; inset: 0 calc(var(--s-4) * -1); z-index: -1;
+    background: var(--surface); border-radius: var(--radius);
+    transform: scaleX(0); transform-origin: left; transition: transform var(--dur-2) var(--ease);
+  }
+  .ct:hover::before, .ct:focus-visible::before { transform: scaleX(1); }
+  .ct-label { font: 400 var(--fs-mono) / 1.35 var(--f-mono); letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--text-3); }
+  .ct-label i { font-style: normal; color: var(--accent); }
+  .ct-value { font: 500 clamp(26px, 3.2vw, 46px) / 1.05 var(--f-serif); letter-spacing: -0.01em; }
+  .ct-arrow { justify-self: end; font: 400 18px/1 var(--f-mono); color: var(--text-3); transition: transform var(--dur-2) var(--ease), color var(--dur-1); }
+  .ct:hover .ct-arrow { transform: translateX(8px); color: var(--accent); }
+  .ct--main .ct-value { color: var(--accent); }
+
+  /* Иконка в тонком круге */
+  .ico { display: grid; place-items: center; width: 48px; height: 48px; border: 1px solid var(--line-2); border-radius: 50%; transition: border-color var(--dur-1), color var(--dur-1); }
+  .ico svg { width: 20px; height: 20px; }
+  .ct:hover .ico { border-color: var(--accent); color: var(--accent); }
+
+  @media (max-width: 640px) {
+    .ct { grid-template-columns: 44px minmax(0, 1fr) 20px; row-gap: var(--s-1); column-gap: var(--s-4); padding: var(--s-4) 0; }
+    .ico { grid-row: span 2; width: 44px; height: 44px; }
+    .ct-value { grid-column: 2; font-size: 24px; }
+    .ct-arrow { grid-row: 1 / span 2; grid-column: 3; }
+    .ct::before { display: none; }
+  }
+</style>

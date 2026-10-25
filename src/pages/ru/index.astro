@@ -1,0 +1,25 @@
+---
+/* =====================================================================
+   /ru/ — короткая страница-переадресация на главную «/» (русская версия живёт в корне).
+   Зачем: если кто-то откроет mxsystems.md/ru/, он попадёт на основную страницу,
+   а поисковики не увидят дубль: canonical указывает на «/», стоит noindex.
+   Скрипт (внешний файл) запоминает выбор русского языка и сразу переходит на «/»;
+   meta refresh — то же без JavaScript. Как в старой версии.
+   Свой минимальный <head> без общего Base: этой странице не нужны стили и шрифты.
+   ===================================================================== */
+---
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MX Systems</title>
+  <link rel="canonical" href="https://mxsystems.md/">
+  <meta name="robots" content="noindex">
+  <meta http-equiv="refresh" content="0; url=/">
+  <script is:inline src="/assets/js/ru-redirect.js"></script>
+</head>
+<body>
+  <p><a href="/">MX Systems — перейти на главную</a></p>
+</body>
+</html>

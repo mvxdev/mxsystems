@@ -1,0 +1,66 @@
+---
+/* =====================================================================
+   CookieBanner — согласие на cookie по закону РМ 195/2024 и GDPR.
+   Показывается при первом визите. ДО согласия не загружается ни один сторонний скрипт.
+   «Принять все» и «Только необходимые» одинаково заметны — отказаться так же легко,
+   как согласиться. Категории можно выбрать отдельно: «Аналитика» (GA4) и «Реклама» (Meta Pixel).
+   Компактный: на десктопе — карточка в левом нижнем углу, на телефоне — узкая полоса
+   у нижнего края, которая не закрывает главную кнопку первого экрана.
+   Логика — src/scripts/consent.ts (поведение 1-в-1 как в старой версии).
+   hidden — блок скрыт, пока скрипт не решит его показать.
+   ===================================================================== */
+import { typo } from '../i18n/typo';
+import { t, path, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const c = t(lang).cookie;
+// Ссылка «Подробнее» в тексте старой версии была относительной — ведём на политику языка
+const text = c.text.replace(/href="[^"]*"/, `href="${path(lang, '/privacy/')}"`);
+---
+<div class="cookie" id="cookie" role="dialog" aria-labelledby="cookie-title" aria-describedby="cookie-text" hidden>
+  <p class="cookie-title" id="cookie-title">{c.title}</p>
+  <p class="cookie-text" id="cookie-text" set:html={typo(text, lang)} />
+  <div class="cookie-opts" id="cookie-opts" hidden>
+    <label class="tgl"><input type="checkbox" checked disabled><span>{c.necessary.t}<small>{c.necessary.s}</small></span></label>
+    <label class="tgl"><input type="checkbox" id="c-analytics"><span>{c.analytics.t}<small>{c.analytics.s}</small></span></label>
+    <label class="tgl"><input type="checkbox" id="c-marketing"><span>{c.marketing.t}<small>{c.marketing.s}</small></span></label>
+  </div>
+  <div class="cookie-btns">
+    <button type="button" class="btn btn--small btn--primary" id="cookie-yes">{c.yes}</button>
+    <button type="button" class="btn btn--small" id="cookie-no">{c.no}</button>
+    <button type="button" class="cookie-link" id="cookie-cfg">{c.cfg}</button>
+    <button type="button" class="btn btn--small" id="cookie-save" hidden>{c.save}</button>
+  </div>
+</div>
+
+<style>
+  .cookie {
+    position: fixed; left: var(--s-4); bottom: var(--s-4); z-index: 80;
+    width: min(420px, calc(100% - 2 * var(--s-4)));
+    padding: var(--s-5); border: 1px solid var(--line-2); border-radius: var(--radius);
+    background: var(--surface); box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.9);
+    animation: cookie-in var(--dur-3) var(--ease) both;
+  }
+  .cookie[hidden], .cookie-opts[hidden], .cookie-btns [hidden] { display: none; }
+  @keyframes cookie-in { from { opacity: 0; transform: translateY(12px); } }
+  .cookie-title { margin-bottom: var(--s-2); font: italic 500 22px/1.2 var(--f-serif); }
+  .cookie-text { font-size: 14px; line-height: 1.5; color: var(--text-2); }
+  .cookie-text :global(a) { color: var(--text); border-bottom: 1px solid var(--line-3); }
+  .cookie-opts { display: grid; margin-top: var(--s-3); }
+  .tgl { display: grid; grid-template-columns: 20px 1fr; gap: 10px; align-items: start; padding: 10px 0; border-top: 1px solid var(--line); font-size: 14px; cursor: pointer; }
+  .tgl input { width: 16px; height: 16px; margin: 3px 0 0; accent-color: var(--accent); }
+  .tgl small { display: block; font: 400 11.5px/1.4 var(--f-mono); color: var(--text-3); }
+  .cookie-btns { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); margin-top: var(--s-4); }
+  .cookie-link { padding: var(--s-2) var(--s-1); font: 400 12px/1 var(--f-mono); color: var(--text-3); text-decoration: underline; text-underline-offset: 3px; }
+  .cookie-link:hover { color: var(--text); }
+
+  /* Телефон: узкая полоса у нижнего края — заголовок прячем, текст мельче, кнопки в ряд */
+  @media (max-width: 640px) {
+    .cookie { left: var(--s-2); right: var(--s-2); bottom: var(--s-2); width: auto; padding: var(--s-4); }
+    .cookie-title { display: none; }
+    .cookie-text { font-size: 13px; }
+    .cookie-btns { margin-top: var(--s-3); }
+    .cookie-btns .btn--small { min-height: 38px; padding: 0 var(--s-3); font-size: 13px; }
+  }
+</style>

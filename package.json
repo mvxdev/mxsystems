@@ -1,0 +1,28 @@
+{
+  "name": "mxsystems",
+  "type": "module",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Сайт студии MX Systems на Astro (статическая сборка). Тексты — src/i18n, секции — src/components.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "seo": "python tools/seo_check.py dist",
+    "check:dist": "node tools/check-dist.mjs",
+    "screens": "node tools/screens.mjs",
+    "compare": "node tools/compare-content.mjs",
+    "lighthouse": "node tools/lighthouse.mjs"
+  },
+  "dependencies": {
+    "@fontsource/cormorant-garamond": "^5.3.0",
+    "@fontsource/golos-text": "^5.3.0",
+    "@fontsource/jetbrains-mono": "^5.3.0",
+    "astro": "^7.4.2",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "lighthouse": "^13.5.0",
+    "playwright": "^1.64.1"
+  }
+}

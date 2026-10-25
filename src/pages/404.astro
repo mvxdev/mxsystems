@@ -1,0 +1,33 @@
+---
+/* =====================================================================
+   404 — «страница не найдена» (GitHub Pages сам показывает dist/404.html на любой
+   несуществующий адрес). Закрыта от индексации (noindex). Ссылки — на три главные.
+   Тексты — как в старой версии, сразу на трёх языках.
+   ===================================================================== */
+import Base from '../layouts/Base.astro';
+import Logo from '../components/Logo.astro';
+---
+<Base lang="ru" title="404 · MX Systems" description="Такой страницы нет. Pagina nu există. Page not found." noindex>
+  <main class="nf">
+    <div class="container">
+      <a class="logo" href="/" aria-label="MX Systems"><Logo /></a>
+      <p class="code" aria-hidden="true">404</p>
+      <h1>Такой страницы нет. <em lang="ro">Pagina nu există.</em> <em lang="en">Page not found.</em></h1>
+      <div class="links">
+        <a class="btn btn--primary" href="/">На главную <span class="arrow" aria-hidden="true">→</span></a>
+        <a class="btn" href="/ro/" lang="ro">Pagina principală <span class="arrow" aria-hidden="true">→</span></a>
+        <a class="btn" href="/en/" lang="en">Home <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .nf { min-height: 100vh; display: grid; align-items: center; padding: var(--s-7) 0; }
+  .logo { display: inline-block; margin-bottom: var(--s-8); }
+  .logo :global(.logo-mark) { height: 28px; }
+  .code { font: 500 clamp(112px, 22vw, 240px) / 0.9 var(--f-mono); letter-spacing: -0.06em; color: var(--accent); }
+  h1 { max-width: 20ch; margin: var(--s-5) 0 var(--s-6); font: 500 clamp(32px, 4vw, 52px) / 1.05 var(--f-serif); }
+  h1 em { font-style: italic; color: var(--text-3); }
+  .links { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+</style>

@@ -1,0 +1,70 @@
+---
+/* =====================================================================
+   About — «02 / Кто делает»: авторская колонка, как в журнале. Блок доверия:
+   для маленькой студии люди покупают у человека.
+   Раскладка: фото крупно слева (колонки 1–5), текст справа (7–12), выровнено по низу.
+   Фото — в цвете, с лёгкой обработкой под стиль сайта (контраст, тёплое тонирование
+   CSS-фильтром) и затемнением к низу; подпись — как подпись к фото в журнале.
+   В цитате — буквица (первая буква крупно, оранжевая).
+   ===================================================================== */
+import { Picture } from 'astro:assets';
+import founder from '../assets/founder.jpg';
+import { typo } from '../i18n/typo';
+import { t, tgHref, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const a = t(lang).about;
+---
+<section class="section author" id="about" aria-labelledby="about-title">
+  <div class="container grid author-grid">
+    <p class="eyebrow reveal"><b>02</b> / {a.eyebrow}</p>
+
+    <figure class="photo reveal">
+      <div class="frame">
+        <Picture src={founder} formats={['avif', 'webp']} widths={[400, 600, 800]}
+                 sizes="(min-width: 1000px) 520px, 90vw" alt={a.alt} loading="lazy" decoding="async" />
+      </div>
+      <figcaption>{a.caption}</figcaption>
+    </figure>
+
+    <div class="text reveal d1">
+      <h2 class="name" id="about-title">{a.name}</h2>
+      <p class="role">{a.role}</p>
+      <blockquote class="lead"><p set:html={typo(a.lead, lang)} /></blockquote>
+      <a class="btn btn--primary" href={tgHref(lang)} target="_blank" rel="noopener">
+        <span>{typo(a.cta, lang)}<small class="btn-sub">{a.ctaSub}</small></span><span class="arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .author-grid { row-gap: var(--s-6); }
+  @media (min-width: 900px) {
+    .author-grid { align-items: end; row-gap: var(--s-7); }
+    .photo { grid-column: 1 / span 5; }
+    .text { grid-column: 7 / span 6; padding-bottom: var(--s-8); }
+  }
+
+  .photo { max-width: 520px; }
+  .frame { position: relative; overflow: hidden; aspect-ratio: 4 / 5; border-radius: var(--radius); background: var(--surface); }
+  .frame :global(img) {
+    width: 100%; height: 100%; object-fit: cover;
+    /* Обработка под стиль: чуть контрастнее, чуть меньше насыщенности, тёплый оттенок */
+    filter: contrast(1.06) saturate(0.86) sepia(0.08);
+  }
+  /* Мягкое затемнение к низу — фото «садится» на тёмный фон страницы */
+  .frame::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to top, rgb(13 12 10 / 0.45), transparent 42%); }
+  .photo figcaption {
+    margin-top: var(--s-3); padding-top: var(--s-3); border-top: 1px solid var(--line-3);
+    font: 400 var(--fs-mono) / 1.4 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3);
+  }
+
+  .name { font: 500 clamp(44px, 6vw, 88px) / 0.95 var(--f-serif); letter-spacing: -0.025em; }
+  .role { margin: var(--s-4) 0 var(--s-6); font: 400 var(--fs-mono) / 1.4 var(--f-mono); letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--accent); }
+  /* Цитата: крупный курсив с засечками, буквица — первая буква на три строки */
+  .lead { max-width: 30ch; margin-bottom: var(--s-7); padding-left: var(--s-5); border-left: 1px solid var(--accent-soft); }
+  .lead p { font: italic 500 clamp(24px, 2.4vw, 32px) / 1.28 var(--f-serif); color: var(--text); }
+  .lead p::first-letter { float: left; margin: 0.06em 0.1em 0 0; font: normal 500 3.2em / 0.8 var(--f-serif); color: var(--accent); }
+</style>

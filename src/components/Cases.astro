@@ -1,0 +1,38 @@
+---
+/* =====================================================================
+   Cases — секция «01 / Проекты»: шапка секции, группа «Внедрения» (два кейса)
+   и группа «Платформы» (Products).
+   Порядок кейсов берётся из словаря: на RU и RO первым идёт 4Power (местному владельцу
+   ближе автосервис в Кишинёве), на EN первым — FastLoad. Номера «Кейс 01/02» и зеркальная
+   раскладка второго кейса следуют порядку.
+   ===================================================================== */
+import SectionHead from './SectionHead.astro';
+import Case from './Case.astro';
+import BoardMock from './BoardMock.astro';
+import LoadsMock from './LoadsMock.astro';
+import Products from './Products.astro';
+import { t, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+---
+<section class="section cases" id="cases" aria-labelledby="cases-title">
+  <div class="container">
+    <SectionHead lang={lang} n="01" eyebrow={d.cases.eyebrow} title={d.cases.title} intro={d.cases.intro} id="cases-title" />
+
+    <p class="group-label reveal">{d.cases.groupImpl}</p>
+
+    {d.cases.order.map((key, i) => key === '4power' ? (
+      <Case lang={lang} c={d.case4power} id="case-4power" titleId="fp-title" flip={i === 1}>
+        <BoardMock ui={d.case4power.ui} />
+      </Case>
+    ) : (
+      <Case lang={lang} c={d.caseFastload} id="case-fastload" titleId="fl-title" flip={i === 1}>
+        <LoadsMock ui={d.caseFastload.ui} />
+      </Case>
+    ))}
+
+    <Products lang={lang} />
+  </div>
+</section>

@@ -1,0 +1,117 @@
+---
+/* =====================================================================
+   Calculator — «04 / Калькулятор потерь». Посетитель сам считает, сколько денег теряет
+   на потерянных заявках: заявок в месяц × средний чек × доля потерянных.
+   Раскладка: пояснение слева (колонки 1–5), форма справа (7–12).
+   • поля и ползунок — в фирменном стиле; у ползунка оранжевая заливка до ручки;
+   • итоговая сумма — крупно, моно, плавно «перетекает» к новому значению;
+   • сумма сразу подставляется в готовое сообщение для Telegram.
+   Логика — src/scripts/calc.ts. Без JS видна сумма для значений по умолчанию.
+   ===================================================================== */
+import { typo } from '../i18n/typo';
+import { t, tgHref, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const c = t(lang).calc;
+---
+<section class="section calc" id="calc" aria-labelledby="calc-title">
+  <div class="container grid calc-grid">
+    <div class="intro reveal">
+      <p class="eyebrow"><b>04</b> / {c.eyebrow}</p>
+      <h2 class="h2" id="calc-title" set:html={typo(c.title, lang)} />
+      <p class="intro-text" set:html={typo(c.intro, lang)} />
+    </div>
+
+    <!-- form — поля связаны с подписями и работают с клавиатуры; отправку отменяет скрипт.
+         data-msg — текст сообщения в Telegram на языке страницы, {sum} заменится суммой -->
+    <form class="box reveal d1" id="calc-form" data-msg={c.msg}>
+      <div class="fields">
+        <label class="field">
+          <span class="label">{c.leads}</span>
+          <!-- inputmode="numeric" — на телефоне откроется цифровая клавиатура -->
+          <input type="number" id="calc-leads" value="100" min="1" max="100000" step="1" inputmode="numeric">
+        </label>
+        <label class="field">
+          <span class="label">{c.check}</span>
+          <input type="number" id="calc-check" value="300" min="1" max="1000000" step="1" inputmode="numeric">
+        </label>
+      </div>
+      <label class="field field--range">
+        <span class="label">{c.pct} <output id="calc-pct-out" for="calc-pct">15%</output></span>
+        <!-- Ползунок 5–40%, по умолчанию 15%. --p (доля заливки) ставит скрипт -->
+        <input type="range" id="calc-pct" min="5" max="40" step="1" value="15">
+        <span class="scale" aria-hidden="true"><i>{c.scale[0]}</i><i>{c.scale[1]}</i></span>
+      </label>
+
+      <div class="result">
+        <span class="result-label">{c.resultLabel}</span>
+        <!-- aria-live="polite" — скринридер зачитает новую сумму после изменения полей -->
+        <output class="sum" id="calc-out" aria-live="polite">{typo(c.defaultSum, lang)}</output>
+        <span class="result-label">{c.perMonth}</span>
+        <p class="note" set:html={typo(c.note, lang)} />
+      </div>
+
+      <a class="btn btn--primary cta" id="calc-cta" href={tgHref(lang)} target="_blank" rel="noopener"><span>{typo(c.cta, lang)}</span><span class="arrow" aria-hidden="true">→</span></a>
+    </form>
+  </div>
+</section>
+
+<style>
+  .calc-grid { row-gap: var(--s-7); }
+  @media (min-width: 1000px) {
+    .calc-grid { align-items: start; }
+    .intro { grid-column: 1 / span 5; position: sticky; top: calc(var(--header-h) + var(--s-6)); }
+    .box { grid-column: 7 / span 6; }
+  }
+  .intro .eyebrow { margin-bottom: var(--s-6); }
+  .intro .h2 { margin-bottom: var(--s-5); }
+  .intro-text { max-width: 40ch; color: var(--text-2); }
+
+  .box { display: grid; gap: var(--s-6); padding: clamp(24px, 3vw, 40px); border: 1px solid var(--line-2); border-radius: var(--radius); background: var(--surface); }
+  .fields { display: grid; gap: var(--s-6); }
+  @media (min-width: 600px) { .fields { grid-template-columns: 1fr 1fr; gap: var(--s-5); } }
+  .field { display: grid; gap: var(--s-3); }
+  .label { display: flex; justify-content: space-between; gap: var(--s-3); font: 400 var(--fs-mono) / 1.35 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); }
+  .label output { color: var(--accent); font-size: 14px; letter-spacing: 0; }
+
+  /* Числовые поля: без рамки, только линия снизу; при фокусе — оранжевая */
+  .field input[type="number"] {
+    width: 100%; padding: var(--s-3) 0; border: 0; border-bottom: 1px solid var(--line-3); border-radius: 0;
+    background: transparent; color: var(--text);
+    font: 500 clamp(30px, 3vw, 42px) / 1 var(--f-mono); letter-spacing: -0.03em; font-variant-numeric: tabular-nums;
+    -moz-appearance: textfield; appearance: textfield;
+    transition: border-color var(--dur-1);
+  }
+  .field input[type="number"]::-webkit-inner-spin-button,
+  .field input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  .field input[type="number"]:focus { outline: none; border-bottom-color: var(--accent); }
+  .field input[type="number"]:focus-visible { outline: none; }
+
+  /* Ползунок: убираем стандартный вид и рисуем свой. Дорожка — оранжевая до ручки (--p) */
+  .field input[type="range"] {
+    --p: 28.6%;
+    width: 100%; height: 32px; margin: 0; background: transparent; cursor: pointer;
+    -webkit-appearance: none; appearance: none;
+  }
+  .field input[type="range"]::-webkit-slider-runnable-track { height: 2px; border-radius: 2px; background: linear-gradient(to right, var(--accent) var(--p), var(--line-2) var(--p)); }
+  .field input[type="range"]::-moz-range-track { height: 2px; border-radius: 2px; background: var(--line-2); }
+  .field input[type="range"]::-moz-range-progress { height: 2px; border-radius: 2px; background: var(--accent); }
+  .field input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 20px; height: 20px; margin-top: -9px; border-radius: 50%;
+    background: var(--text); border: 4px solid var(--surface); box-shadow: 0 0 0 1px var(--accent);
+    transition: transform var(--dur-1) var(--ease);
+  }
+  .field input[type="range"]::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--text); border: 4px solid var(--surface); box-shadow: 0 0 0 1px var(--accent); }
+  .field input[type="range"]:hover::-webkit-slider-thumb { transform: scale(1.12); }
+  .field input[type="range"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+  .scale { display: flex; justify-content: space-between; font: 400 11.5px/1 var(--f-mono); color: var(--text-3); }
+  .scale i { font-style: normal; }
+
+  /* Итог: крупная оранжевая сумма моно-шрифтом */
+  .result { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--s-2) var(--s-4); padding-top: var(--s-5); border-top: 1px solid var(--line-3); }
+  .result-label { font: italic 500 24px/1.2 var(--f-serif); color: var(--text-2); }
+  .sum { font: 500 clamp(44px, 5.4vw, 76px) / 1 var(--f-mono); letter-spacing: -0.05em; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .note { flex-basis: 100%; margin-top: var(--s-2); font: 400 12.5px/1.55 var(--f-mono); color: var(--text-3); }
+  .cta { width: 100%; }
+</style>

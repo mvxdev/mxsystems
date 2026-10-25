@@ -1,0 +1,155 @@
+---
+/* =====================================================================
+   Header — шапка сайта.
+   • Тонкая, «прилипает» к верху экрана. Пока страница наверху — прозрачная; после прокрутки
+     получает полупрозрачный фон с размытием и тонкую линию снизу (класс .is-scrolled).
+   • Пункт меню подсвечивается, когда соответствующая секция на экране (scrollspy).
+   • Переключатель RU / RO / EN — текущий язык в рамке; выбор запоминается.
+   • «Разбор задачи» — главная кнопка, оранжевая.
+   • На телефоне — кнопка-бургер открывает полноэкранное меню с крупными пунктами.
+   Логика — src/scripts/header.ts.
+   variant="simple" — для политики конфиденциальности: логотип, «на главную» и языки.
+   ===================================================================== */
+import Logo from './Logo.astro';
+import { LANGS, path, t, tgHref, type Lang } from '../i18n';
+
+interface Props { lang: Lang; variant?: 'home' | 'simple'; page?: string; back?: string }
+const { lang, variant = 'home', page = '/', back } = Astro.props;
+const d = t(lang);
+const home = path(lang, '/');
+---
+<header class="header" id="header">
+  <div class="container header-in">
+    <a class="logo" href={home} aria-label={d.ui.logoAria}><Logo /><span class="logo-word">Systems</span></a>
+
+    {variant === 'home' ? (
+      <nav class="nav" id="nav" aria-label={d.ui.navAria}>
+        <ul class="nav-list">
+          {d.ui.nav.map((n) => <li><a href={n.href} data-spy={n.href.slice(1)}>{n.label}</a></li>)}
+        </ul>
+        <!-- В полноэкранном меню телефона — ещё раз языки и кнопка (в шапке им там тесно) -->
+        <div class="nav-extra">
+          <a class="btn btn--primary" href={tgHref(lang)} target="_blank" rel="noopener">
+            <span>{d.hero.cta}<small class="btn-sub">{d.hero.ctaSub}</small></span><span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </nav>
+    ) : (
+      <nav class="nav nav--simple" aria-label={d.ui.navAria}><a href={home}>{back}</a></nav>
+    )}
+
+    <!-- Переключатель языков. aria-current="page" — текущий язык (видно и скринридерам).
+         data-lang — по нему скрипт запоминает выбор посетителя -->
+    <div class="lang" role="group" aria-label={d.ui.langAria}>
+      {LANGS.map((l) => (
+        <a href={path(l, page)} hreflang={l} lang={l} data-lang={l} aria-current={l === lang ? 'page' : undefined}>{l.toUpperCase()}</a>
+      ))}
+    </div>
+
+    {variant === 'home' && (
+      <Fragment>
+        <a class="btn btn--small btn--primary header-cta" href={tgHref(lang)} target="_blank" rel="noopener" aria-label={d.ui.ctaAria}>
+          <!-- Иконка Telegram (бумажный самолётик) -->
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.4 3.6 2.9 10.8c-.9.4-.9 1.6.1 1.9l4.6 1.4 1.7 5.4c.2.7 1.1.9 1.6.4l2.5-2.3 4.7 3.4c.6.4 1.4.1 1.6-.6l3-15.2c.2-1-.6-1.9-1.3-1.6ZM9.6 14.5l-.4 3.6-1.3-4.2 10-6.4-8.3 7Z"/></svg>
+          <span class="label">{d.ui.ctaLabel}</span>
+        </a>
+        <!-- aria-expanded сообщает скринридеру, открыто ли меню -->
+        <button class="burger" id="burger" type="button" aria-label={d.ui.burgerAria} aria-expanded="false" aria-controls="nav"><span></span><span></span></button>
+      </Fragment>
+    )}
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky; top: 0; z-index: 60;
+    transition: background-color var(--dur-2) var(--ease);
+  }
+  /* Линия снизу появляется вместе с фоном (через прозрачность — без «прыжка» высоты) */
+  .header::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+    background: var(--line-2); opacity: 0; transition: opacity var(--dur-2) var(--ease);
+  }
+  .header:global(.is-scrolled) {
+    background: rgb(13 12 10 / 0.78);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    backdrop-filter: blur(16px) saturate(1.2);
+  }
+  .header:global(.is-scrolled)::after { opacity: 1; }
+
+  .header-in { display: flex; align-items: center; gap: var(--s-5); height: var(--header-h); }
+
+  /* Логотип: знак «MX.» + слово «Systems» тем же курсивом */
+  .logo { position: relative; z-index: 2; display: flex; align-items: center; gap: 7px; white-space: nowrap; font: italic 500 23px/1 var(--f-serif); letter-spacing: -0.01em; }
+  .logo :global(.logo-mark) { height: 21px; transform: translateY(1px); }
+  .logo :global(.logo-dot) { transition: transform var(--dur-2) var(--ease); }
+  .logo:hover :global(.logo-dot) { transform: translateX(1.5px); }
+
+  /* Меню на десктопе — в строку, курсивом с засечками */
+  .nav { margin-left: auto; }
+  .nav-list { display: flex; gap: var(--s-6); font: italic 500 19px/1 var(--f-serif); }
+  .nav-list a { position: relative; display: block; padding: var(--s-2) 0; color: var(--text-2); transition: color var(--dur-1) var(--ease); }
+  /* Подчёркивание вырастает слева направо — при наведении и у активной секции */
+  .nav-list a::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 1px;
+    background: var(--accent); transform: scaleX(0); transform-origin: left;
+    transition: transform var(--dur-2) var(--ease);
+  }
+  .nav-list a:hover, .nav-list a:global(.is-active) { color: var(--text); }
+  .nav-list a:hover::after, .nav-list a:global(.is-active)::after { transform: scaleX(1); }
+  .nav-extra { display: none; }
+  .nav--simple { font: italic 500 19px/1 var(--f-serif); color: var(--text-2); }
+  .nav--simple a:hover { color: var(--text); }
+
+  /* Переключатель языков: моно, текущий — в тонкой рамке */
+  .lang { position: relative; z-index: 2; display: flex; gap: 2px; font: 400 12px/1 var(--f-mono); letter-spacing: 0.04em; }
+  .lang a { padding: 7px 7px; border: 1px solid transparent; border-radius: var(--radius); color: var(--text-3); transition: color var(--dur-1), border-color var(--dur-1); }
+  .lang a:hover { color: var(--text); }
+  .lang a[aria-current="page"] { color: var(--text); border-color: var(--line-3); }
+
+  .header-cta { position: relative; z-index: 2; }
+
+  /* Бургер (две полоски) — только на телефоне; в открытом меню складывается в крестик */
+  .burger { display: none; position: relative; z-index: 2; width: 44px; height: 44px; flex: none; }
+  .burger span { position: absolute; left: 11px; right: 11px; height: 1.5px; background: var(--text); transition: transform var(--dur-2) var(--ease); }
+  .burger span:nth-child(1) { top: 18px; }
+  .burger span:nth-child(2) { top: 25px; }
+  :global(.nav-open) .burger span:nth-child(1) { transform: translateY(3.5px) rotate(45deg); }
+  :global(.nav-open) .burger span:nth-child(2) { transform: translateY(-3.5px) rotate(-45deg); }
+
+  @media (max-width: 999px) {
+    .header-in { gap: var(--s-2); }
+    .lang { margin-left: auto; }
+    .lang a { padding: 7px 5px; }
+    .burger { display: block; order: 3; }
+    /* В шапке на телефоне у кнопки остаётся только иконка Telegram */
+    .header-cta .label { display: none; }
+    .header-cta { width: 40px; padding: 0; justify-content: center; }
+    .nav--simple { display: none; }
+
+    /* Полноэкранное меню: накрывает страницу, пункты крупные и появляются по очереди */
+    .nav:not(.nav--simple) {
+      position: fixed; inset: 0; z-index: 1;
+      display: flex; flex-direction: column; justify-content: space-between;
+      padding: calc(var(--header-h) + var(--s-6)) var(--gutter) var(--s-7);
+      background: var(--bg);
+      opacity: 0; visibility: hidden;
+      transition: opacity var(--dur-2) var(--ease), visibility 0s linear var(--dur-2);
+    }
+    :global(.nav-open) .nav:not(.nav--simple) { opacity: 1; visibility: visible; transition: opacity var(--dur-2) var(--ease); }
+    .nav-list { flex-direction: column; gap: 0; font-size: clamp(36px, 11vw, 52px); }
+    .nav-list li { border-bottom: 1px solid var(--line); opacity: 0; transform: translateY(var(--s-4)); transition: opacity var(--dur-3) var(--ease), transform var(--dur-3) var(--ease); }
+    .nav-list a { padding: var(--s-4) 0; color: var(--text); }
+    .nav-list a::after { display: none; }
+    :global(.nav-open) .nav-list li { opacity: 1; transform: none; }
+    :global(.nav-open) .nav-list li:nth-child(2) { transition-delay: var(--stagger); }
+    :global(.nav-open) .nav-list li:nth-child(3) { transition-delay: calc(var(--stagger) * 2); }
+    :global(.nav-open) .nav-list li:nth-child(4) { transition-delay: calc(var(--stagger) * 3); }
+    .nav-extra { display: block; }
+    .nav-extra .btn { width: 100%; }
+    /* backdrop-filter у шапки сделал бы её «рамкой» для fixed-меню — в открытом меню его убираем */
+    :global(.nav-open) .header { background: var(--bg); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  }
+  /* Пока меню открыто, страница под ним не прокручивается */
+  :global(html.nav-open) { overflow: hidden; }
+</style>

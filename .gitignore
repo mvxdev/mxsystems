@@ -10,3 +10,9 @@ desktop.ini
 # Отчёты Lighthouse — для проверки, на сайт не нужны
 *.report.html
 *.report.json
+
+# Astro: зависимости, сборка и служебные файлы — генерируются заново
+node_modules/
+dist/
+.astro/
+.cache/

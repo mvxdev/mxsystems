@@ -1,0 +1,66 @@
+---
+/* =====================================================================
+   Footer — подвал. Крупный знак «MX.» и строка направлений (колонки 1–6),
+   контакты (7–9), разделы и документы (10–12). Внизу — город и годы работы.
+   Кнопка «Настройки cookie» снова открывает баннер согласия (src/scripts/consent.ts).
+   variant="simple" — для политики конфиденциальности: только нижняя строка и кнопка cookie.
+   ===================================================================== */
+import Logo from './Logo.astro';
+import { t, tgHref, waHref, telHref, mailHref, path, PHONE, EMAIL, type Lang } from '../i18n';
+
+interface Props { lang: Lang; variant?: 'home' | 'simple' }
+const { lang, variant = 'home' } = Astro.props;
+const f = t(lang).footer;
+// Ссылки на privacy в словаре — относительные из старой версии; строим адрес заново
+const links = f.links.map((l) => ({ ...l, href: l.href.includes('privacy') ? path(lang, '/privacy/') : l.href }));
+---
+<footer class="footer">
+  <div class="container">
+    {variant === 'home' && (
+      <div class="top grid">
+        <div class="brand">
+          <a class="big-logo" href={path(lang, '/')} aria-label="MX Systems"><Logo /></a>
+          <p class="tag">{f.tag}</p>
+        </div>
+        <ul class="links contacts-l">
+          <li><a href={tgHref(lang)} target="_blank" rel="noopener">Telegram</a></li>
+          <li><a href={waHref(lang)} target="_blank" rel="noopener">WhatsApp</a></li>
+          <li><a href={telHref}>{PHONE}</a></li>
+          <li><a href={mailHref(lang)}>{EMAIL}</a></li>
+        </ul>
+        <ul class="links pages-l">
+          {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+          <li><button type="button" id="cookie-open">{f.cookieBtn}</button></li>
+        </ul>
+      </div>
+    )}
+    <p class="bottom">
+      <span class="pin" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M12 21s-6.5-5.8-6.5-11A6.5 6.5 0 0 1 18.5 10c0 5.2-6.5 11-6.5 11Z"/><circle cx="12" cy="10" r="2.4"/></svg></span>
+      <span>{f.bottom}</span>
+      {variant === 'simple' && <Fragment> · <button type="button" id="cookie-open" class="cookie-inline">{f.cookieBtn}</button></Fragment>}
+    </p>
+  </div>
+</footer>
+
+<style>
+  .footer { padding: clamp(64px, 7vw, 104px) 0 var(--s-6); border-top: 1px solid var(--line-2); }
+  .top { row-gap: var(--s-7); padding-bottom: var(--s-8); }
+  @media (min-width: 800px) {
+    .brand { grid-column: 1 / span 6; }
+    .contacts-l { grid-column: 7 / span 3; }
+    .pages-l { grid-column: 10 / span 3; }
+  }
+  /* Крупный знак «MX.» — подпись студии, как на последней странице журнала */
+  .big-logo { display: inline-block; color: var(--text); }
+  .big-logo :global(.logo-mark) { height: clamp(64px, 8vw, 112px); }
+  .tag { margin-top: var(--s-5); font: 400 var(--fs-mono) / 1.4 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); }
+  .links { display: grid; gap: var(--s-3); align-content: start; font-size: var(--fs-small); color: var(--text-2); }
+  .links a, .links button { transition: color var(--dur-1); text-align: left; }
+  .links a:hover, .links button:hover { color: var(--accent); }
+
+  .bottom { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3); padding-top: var(--s-5); border-top: 1px solid var(--line); font: 400 var(--fs-mono) / 1.4 var(--f-mono); color: var(--text-3); }
+  .pin { display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid var(--line-2); border-radius: 50%; }
+  .pin svg { width: 15px; height: 15px; }
+  .cookie-inline { color: var(--text-3); text-decoration: underline; text-underline-offset: 3px; }
+  .cookie-inline:hover { color: var(--text); }
+</style>

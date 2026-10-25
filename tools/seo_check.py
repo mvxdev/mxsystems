@@ -76,6 +76,7 @@ class Page(HTMLParser):
         self.inline_scripts = 0
         self.inline_styles = 0
         self.style_attrs = 0
+        self.inline_handlers = 0
         self.text = []          # видимый текст (для сверки FAQ)
         self._in = None         # внутри какого тега собираем текст: title / h1..h6 / script
         self._buf = []
@@ -86,8 +87,10 @@ class Page(HTMLParser):
         a = {k: (v if v is not None else '') for k, v in attrs}
         if 'id' in a:
             self.ids.add(a['id'])
-        if 'style' in a and tag != 'svg':
+        if 'style' in a:
             self.style_attrs += 1
+        # Обработчики событий в разметке (onclick="…") — тоже встроенный код, CSP их блокирует
+        self.inline_handlers += sum(1 for k in a if k.startswith('on'))
         if tag == 'html':
             self.lang = a.get('lang')
         elif tag == 'title':
@@ -242,6 +245,8 @@ def main():
             err(name, f'встроенных <style>: {pg.inline_styles} (CSP их заблокирует)')
         if pg.style_attrs:
             err(name, f'атрибутов style="…": {pg.style_attrs} (CSP их заблокирует)')
+        if pg.inline_handlers:
+            err(name, f'обработчиков вида onclick="…": {pg.inline_handlers} (CSP их заблокирует)')
         for img in pg.imgs:
             src = img.get('src', '?')
             if 'alt' not in img:

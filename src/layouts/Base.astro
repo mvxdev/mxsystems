@@ -1,0 +1,128 @@
+---
+/* =====================================================================
+   Base — общий каркас КАЖДОЙ страницы: <html>, <head> со всем SEO, подключение стилей
+   и скриптов. Страница передаёт сюда свои данные (язык, title, description, адрес),
+   а все теги для поисковиков и соцсетей строятся из них по одним правилам — так ни на
+   одной странице не забудешь canonical или hreflang.
+
+   SEO здесь 1-в-1 как в старой версии (тег v1-seo), проверяется tools/seo_check.py:
+   title и description, canonical, hreflang ru/ro/en + x-default, Open Graph, Twitter Card,
+   favicon, theme-color, JSON-LD на главных.
+   ===================================================================== */
+import '../styles/fonts.css';
+import '../styles/tokens.css';
+import '../styles/global.css';
+import { LANGS, DOMAIN, OG_LOCALE, ogImage, url, type Lang } from '../i18n';
+
+// Самые важные начертания для первого экрана — предзагружаем (заголовок H1 — это LCP,
+// самый крупный элемент экрана; без предзагрузки он сначала рисуется запасным шрифтом)
+import serifCyr from '@fontsource/cormorant-garamond/files/cormorant-garamond-cyrillic-500-normal.woff2?url';
+import serifCyrIt from '@fontsource/cormorant-garamond/files/cormorant-garamond-cyrillic-500-italic.woff2?url';
+import serifLat from '@fontsource/cormorant-garamond/files/cormorant-garamond-latin-500-normal.woff2?url';
+import serifLatIt from '@fontsource/cormorant-garamond/files/cormorant-garamond-latin-500-italic.woff2?url';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  /** Путь страницы без языка: '/' или '/privacy/' — из него строятся canonical и hreflang */
+  page?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  /** true — страница не для поиска (404, переадресации) */
+  noindex?: boolean;
+  /** JSON-LD (строка JSON) — только на главных */
+  jsonld?: string;
+  /** data-home на <html>: по нему early.js включает автоопределение языка (только на русской главной) */
+  home?: boolean;
+  bodyClass?: string;
+}
+const { lang, title, description, page = '/', ogTitle = title, ogDescription = description,
+        noindex = false, jsonld, home = false, bodyClass } = Astro.props;
+
+const canonical = url(lang, page);
+const image = ogImage(lang);
+const others = LANGS.filter((l) => l !== lang);
+const preload = lang === 'ru' ? [serifCyr, serifCyrIt] : [serifLat, serifLatIt];
+
+// CSP (Content-Security-Policy) — политика безопасности: браузер выполняет только скрипты-файлы
+// с нашего сайта и от Google/Meta (аналитика, только после согласия). Любой внедрённый чужой
+// код, встроенные <script>, <style> и style="…" — блокируются (защита от XSS).
+// Шрифты теперь свои: fonts.googleapis.com / fonts.gstatic.com из политики убраны.
+// Добавляете внешний сервис (карта, виджет) — впишите его домен сюда.
+const CSP = [
+  "default-src 'self'",
+  "script-src 'self' https://www.googletagmanager.com https://connect.facebook.net",
+  "style-src 'self'",
+  "font-src 'self'",
+  "img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com https://www.facebook.com",
+  "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://www.facebook.com https://connect.facebook.net",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  'upgrade-insecure-requests',
+].join('; ');
+---
+<!doctype html>
+<html lang={lang} data-home={home ? '' : undefined}>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content={CSP}>
+  <!-- referrer — при переходе на другие сайты передаём только домен, без полного адреса страницы -->
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <!-- early.js — самый первый и без defer: ставит класс .js и (на русской главной) отправляет
+       румыно- и англоязычных посетителей на /ro/ или /en/ ещё до отрисовки. Роботов не трогает.
+       is:inline здесь значит «вывести тег как есть» — это ВНЕШНИЙ файл, не встроенный код -->
+  <script is:inline src="/assets/js/early.js?v=9"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- title до ~60 символов, description до ~155 — длиннее Google обрезает -->
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  {noindex && <meta name="robots" content="noindex">}
+
+  {!noindex && (
+    <Fragment>
+      <!-- canonical — «главный» адрес страницы (без параметров), абсолютный, со слэшем -->
+      <link rel="canonical" href={canonical}>
+      <!-- hreflang — та же страница на других языках; x-default — для всех остальных (русская) -->
+      {LANGS.map((l) => <link rel="alternate" hreflang={l} href={url(l, page)}>)}
+      <link rel="alternate" hreflang="x-default" href={url('ru', page)}>
+
+      <!-- Open Graph — превью ссылки в Telegram, WhatsApp, Facebook (только полные https-адреса) -->
+      <meta property="og:type" content="website">
+      <meta property="og:site_name" content="MX Systems">
+      <meta property="og:url" content={canonical}>
+      <meta property="og:title" content={ogTitle}>
+      <meta property="og:description" content={ogDescription}>
+      <meta property="og:image" content={image}>
+      <meta property="og:image:width" content="1200">
+      <meta property="og:image:height" content="630">
+      <meta property="og:locale" content={OG_LOCALE[lang]}>
+      {others.map((l) => <meta property="og:locale:alternate" content={OG_LOCALE[l]}>)}
+      <!-- Twitter Card — то же превью для X/Twitter; summary_large_image — крупная картинка -->
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:title" content={ogTitle}>
+      <meta name="twitter:description" content={ogDescription}>
+      <meta name="twitter:image" content={image}>
+    </Fragment>
+  )}
+
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <!-- theme-color — цвет панели браузера на телефоне, в тон фону -->
+  <meta name="theme-color" content="#0d0c0a">
+
+  <!-- Предзагрузка шрифта заголовка (crossorigin обязателен для шрифтов, даже своих) -->
+  {preload.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin>)}
+
+  <!-- JSON-LD — структурированные данные schema.org. Это не исполняемый скрипт:
+       браузер его не запускает, поэтому строгую CSP он не нарушает -->
+  {jsonld && <script is:inline type="application/ld+json" set:html={jsonld} />}
+</head>
+<body class={bodyClass}>
+  <slot />
+  <!-- Все интерактивные части сайта — один внешний JS-файл (собирается из src/scripts/) -->
+  <script src="../scripts/main.ts"></script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+/* =====================================================================
+   global.css — база сайта и общие элементы, которые встречаются в нескольких секциях:
+   сетка, кнопки, метки секций, бейджи, ссылки, появление при прокрутке.
+   Стили конкретной секции лежат в её компоненте (src/components/*.astro, блок <style>).
+   Все значения — из tokens.css.
+   ===================================================================== */
+
+/* ---------- 1. Сброс и база ---------- */
+/* box-sizing: border-box — ширина элемента включает рамку и внутренние отступы */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;                   /* iOS не увеличивает текст сам при повороте */
+  scroll-behavior: smooth;                          /* плавная прокрутка к якорям (#cases …) */
+  scroll-padding-top: calc(var(--header-h) + var(--s-4));   /* заголовок не прячется под шапку */
+  color-scheme: dark;                               /* тёмные системные элементы (скроллбар, поля) */
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font: 400 var(--fs-body) / var(--lh-body) var(--f-sans);
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;                                 /* страховка от горизонтальной прокрутки */
+}
+
+/* Зерно: едва заметный шум поверх страницы — убирает «пластиковость» сплошного фона.
+   Шум рисует SVG-фильтр feTurbulence (картинка data: в CSS, без запросов).
+   pointer-events: none — слой не мешает кликам. */
+body::after {
+  content: "";
+  position: fixed; inset: 0; z-index: 100;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+a { color: inherit; text-decoration: none; }
+img, svg { display: block; max-width: 100%; }
+img { height: auto; }
+button, input { font: inherit; color: inherit; }
+button { background: none; border: 0; padding: 0; cursor: pointer; }
+h1, h2, h3, h4, h5, p, ul, ol, dl, dd, figure, blockquote { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+b, strong { font-weight: 500; }
+
+/* Заголовки — ровные «блоки» строк (balance), абзацы — без одиноких слов в конце (pretty) */
+h1, h2, h3, h4 { text-wrap: balance; }
+p, li, dd { text-wrap: pretty; }
+
+/* Выделение текста — в фирменном цвете */
+::selection { background: var(--accent); color: var(--on-accent); }
+
+/* Видимый фокус для навигации с клавиатуры (Tab): оранжевая обводка 2px со смещением */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: var(--radius); }
+:focus:not(:focus-visible) { outline: none; }
+
+/* Текст только для скринридеров: визуально скрыт, но читается вслух */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* Ссылка «перейти к содержимому» — видна только при фокусе с клавиатуры */
+.skip {
+  position: fixed; left: var(--s-4); top: var(--s-3); z-index: 200;
+  padding: var(--s-2) var(--s-4); border-radius: var(--radius);
+  background: var(--accent); color: var(--on-accent); font-weight: 500;
+  transform: translateY(-200%);
+}
+.skip:focus { transform: none; }
+
+/* Висячая пунктуация: открывающая кавычка заголовка выносится за левый край текста */
+.hang { margin-left: -0.42em; }
+@supports (hanging-punctuation: first) { .hang { margin-left: 0; } h1, h2, h3 { hanging-punctuation: first; } }
+
+
+/* ---------- 2. Сетка ----------
+   .container — общая ширина контента и поля по краям.
+   .grid — 12 колонок. Компоненты ставят свои блоки на колонки через grid-column. */
+.container {
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--col-gap);
+}
+.grid > * { grid-column: 1 / -1; min-width: 0; }   /* по умолчанию — во всю ширину (телефон) */
+
+.section { padding-block: var(--section-y); border-top: 1px solid var(--line); }
+
+
+/* ---------- 3. Метка секции: «01 / Проекты» ---------- */
+.eyebrow {
+  display: flex; align-items: center; gap: var(--s-3);
+  font: 400 var(--fs-mono) / 1.3 var(--f-mono);
+  letter-spacing: var(--track-caps); text-transform: uppercase;
+  color: var(--text-3);
+}
+.eyebrow b { font-weight: 400; color: var(--accent); }
+.eyebrow::after { content: ""; flex: 1; height: 1px; background: var(--line); }   /* линия до края */
+
+/* Подпись группы внутри секции: «Внедрения», «Платформы» */
+.group-label {
+  display: flex; align-items: center; gap: var(--s-3);
+  font: 400 var(--fs-mono) / 1 var(--f-mono);
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);
+}
+.group-label::after { content: ""; flex: 1; height: 1px; background: var(--line-2); }
+
+
+/* ---------- 4. Заголовки ---------- */
+.h2 {
+  font: 500 var(--fs-h2) / 1 var(--f-serif);
+  letter-spacing: var(--track-tight);
+}
+/* Курсивное оранжевое слово — главный приём акцента во всех заголовках */
+.h1 em, .h2 em, .h3 em, .accent-em em { font-style: italic; color: var(--accent); }
+.h3 { font: 500 var(--fs-h3) / var(--lh-head) var(--f-serif); letter-spacing: -0.01em; }
+
+/* Мелкий моно-капс: подписи полей, заголовки колонок, служебное */
+.caps {
+  font: 400 var(--fs-mono) / 1.35 var(--f-mono);
+  letter-spacing: var(--track-caps); text-transform: uppercase;
+  color: var(--text-3);
+}
+
+
+/* ---------- 5. Кнопки ----------
+   При наведении фон заливается слева направо: псевдоэлемент ::before растягивается (scaleX).
+   Анимируется только transform — дёшево для браузера, не роняет скорость. */
+.btn {
+  position: relative; isolation: isolate; overflow: hidden;
+  display: inline-flex; align-items: center; justify-content: space-between; gap: var(--s-5);
+  min-height: 56px; padding: var(--s-3) var(--s-5);
+  border: 1px solid var(--line-3); border-radius: var(--radius);
+  font: 500 var(--fs-small) / 1.2 var(--f-sans);
+  text-align: left;
+  transition: color var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease);
+}
+.btn::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: var(--text);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform var(--dur-2) var(--ease);
+}
+.btn:hover, .btn:focus-visible { color: var(--bg); border-color: var(--text); }
+.btn:hover::before, .btn:focus-visible::before { transform: scaleX(1); }
+.btn .arrow { flex: none; font-family: var(--f-mono); transition: transform var(--dur-2) var(--ease); }
+.btn:hover .arrow { transform: translateX(4px); }
+.btn svg { width: 18px; height: 18px; flex: none; }
+
+/* Главная кнопка — оранжевая. Это главный акцент страницы */
+.btn--primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn--small { min-height: 40px; padding: 0 var(--s-4); gap: var(--s-2); font-size: 14px; }
+/* Вторая строка мелким текстом внутри кнопки: «в Telegram — без обязательств» */
+.btn-sub { display: block; margin-top: var(--s-1); font: 400 12px/1.25 var(--f-mono); letter-spacing: 0.02em; opacity: 0.72; }
+
+
+/* ---------- 6. Бейджи, ссылки, точка «в работе» ---------- */
+.badge {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  padding: 7px var(--s-3); border: 1px solid var(--ok-soft); border-radius: var(--radius);
+  font: 500 11.5px/1 var(--f-mono); letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ok);
+}
+.badge--accent { border-color: var(--accent-soft); color: var(--accent); }
+
+/* Зелёная точка «работает» с мягкой пульсацией кольца */
+.live-dot { position: relative; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--ok); flex: none; }
+.live-dot::after {
+  content: ""; position: absolute; inset: -4px; border-radius: 50%;
+  border: 1px solid var(--ok); opacity: 0;
+  animation: ping 2.6s ease-out infinite;
+}
+@keyframes ping { 0% { transform: scale(0.5); opacity: 0.8; } 100% { transform: scale(1.7); opacity: 0; } }
+
+/* Текстовая ссылка внутри абзаца: оранжевая с тонким подчёркиванием */
+.link { color: var(--accent); border-bottom: 1px solid var(--accent-soft); transition: border-color var(--dur-1); }
+.link:hover { border-color: var(--accent); }
+
+
+/* ---------- 7. Появление при прокрутке ----------
+   .reveal — элемент чуть ниже и прозрачный; когда он попадает в зону видимости, скрипт
+   (src/scripts/reveal.ts) ставит .is-in, и элемент плавно «встаёт» на место. ОДИН раз.
+   .stagger — то же для детей по очереди, с шагом --stagger (60–80 мс).
+   Класс .js ставит early.js: без JavaScript всё видно сразу. */
+.js .reveal, .js .stagger > * {
+  opacity: 0; transform: translateY(var(--rise));
+  transition: opacity var(--dur-3) var(--ease), transform var(--dur-3) var(--ease);
+}
+.js .reveal.is-in, .js .stagger.is-in > * { opacity: 1; transform: none; }
+.stagger.is-in > :nth-child(2) { transition-delay: calc(var(--stagger) * 1); }
+.stagger.is-in > :nth-child(3) { transition-delay: calc(var(--stagger) * 2); }
+.stagger.is-in > :nth-child(4) { transition-delay: calc(var(--stagger) * 3); }
+.stagger.is-in > :nth-child(5) { transition-delay: calc(var(--stagger) * 4); }
+.stagger.is-in > :nth-child(6) { transition-delay: calc(var(--stagger) * 5); }
+.stagger.is-in > :nth-child(7) { transition-delay: calc(var(--stagger) * 6); }
+.stagger.is-in > :nth-child(n + 8) { transition-delay: calc(var(--stagger) * 7); }
+.reveal.d1 { transition-delay: calc(var(--stagger) * 1.5); }
+.reveal.d2 { transition-delay: calc(var(--stagger) * 3); }
+
+/* «Уменьшить движение»: контент виден сразу, без сдвигов */
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal, .js .stagger > * { opacity: 1; transform: none; transition: none; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+}

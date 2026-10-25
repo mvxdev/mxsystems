@@ -1,0 +1,51 @@
+---
+/* =====================================================================
+   LoadsMock — живой макет FastLoad: список грузов, подобранных под водителя.
+   Все данные ДЕМОНСТРАЦИОННЫЕ (брокеры «Demo / Sample / Get Freight», водитель «Demo D.»).
+   Раз в несколько секунд сверху появляется новый груз с меткой «новый · 4 сек»,
+   остальные плавно сдвигаются вниз (src/scripts/mocks.ts). Только пока макет на экране.
+   Общий вид окна (.ui, .ui-bar, .ui-sub) — в BoardMock.astro.
+   ===================================================================== */
+import type { Dict } from '../i18n';
+interface Props { ui: Dict['caseFastload']['ui'] }
+const { ui } = Astro.props;
+---
+<div class="ui" aria-hidden="true">
+  <div class="ui-bar"><i class="live-dot"></i><span>{ui.bar}</span><span class="r">{ui.demo}</span></div>
+  <div class="ui-sub">{ui.sub.map((s) => <span>{s}</span>)}</div>
+  <!-- data-* — строки на языке страницы для карточек, которые создаёт скрипт -->
+  <div class="fl-list" id="fl-list" data-deadhead={ui.deadhead} data-new={ui.newTag}>
+    {ui.loads.map((l, i) => (
+      <div class:list={['load', { 'is-first': i === 0 }]}>
+        <div class="load-top"><span class="broker">{l.broker}</span><span class="tag">{l.tag}</span></div>
+        <div class="route"><b>{l.from}</b><span class="arr">→</span><b>{l.to}</b></div>
+        <div class="load-meta">{l.meta.map((m) => <span>{m}</span>)}</div>
+        <div class:list={['bid', { 'is-sent': l.sent }]}><span class="rate">{l.rate}</span><span class="send">{l.send}</span></div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style is:global>
+  .ui .fl-list { display: grid; gap: 10px; height: 468px; padding: var(--s-4); overflow: hidden; align-content: start; }
+  .ui .load {
+    padding: 14px var(--s-4); border: 1px solid var(--line-2); border-radius: var(--radius);
+    background: var(--bg); box-shadow: var(--shadow-1); font-size: 12.5px;
+  }
+  .ui .load-top { display: flex; justify-content: space-between; gap: 10px; color: var(--text-3); }
+  .ui .load .tag { font-size: 11px; }
+  /* Первый (и каждый новый) груз — с оранжевой рамкой и меткой */
+  .ui .load.is-first, .ui .load.is-new { border-color: var(--accent-soft); }
+  .ui .load.is-first .tag, .ui .load.is-new .tag { color: var(--accent); }
+  .ui .load.is-new { animation: load-in var(--dur-3) var(--ease) both; }
+  @keyframes load-in { from { opacity: 0; transform: translateY(-14px); } }
+  .ui .route { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin: 10px 0 8px; font: 500 16px/1.25 var(--f-sans); }
+  .ui .route b { font-weight: 500; }
+  .ui .route .arr { font: 400 13px var(--f-mono); color: var(--accent); }
+  .ui .load-meta { display: flex; flex-wrap: wrap; gap: 4px var(--s-4); font-size: 11.5px; color: var(--text-3); }
+  .ui .bid { display: flex; align-items: center; gap: 10px; margin-top: var(--s-3); }
+  .ui .rate { flex: 1; padding: 8px 10px; border: 1px solid var(--line-2); border-radius: var(--radius); font-variant-numeric: tabular-nums; color: var(--text); }
+  .ui .send { padding: 9px 14px; border-radius: var(--radius); background: var(--accent); color: var(--on-accent); font-weight: 500; }
+  .ui .bid.is-sent .send { background: transparent; color: var(--ok); box-shadow: inset 0 0 0 1px var(--ok-soft); }
+  @media (max-width: 480px) { .ui .fl-list { height: 430px; padding: var(--s-3); } .ui .route { font-size: 15px; } }
+</style>

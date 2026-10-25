@@ -1,0 +1,98 @@
+---
+/* =====================================================================
+   Scheme — схема на первом экране: откуда приходят данные (Реклама / Учёт / Почта),
+   что делает система (MX Systems) и кто получает результат (Команда / Клиенты / Владелец).
+   «Оживление» без JavaScript и без нагрузки:
+     • по проводам медленно бегут точки-данные — встроенная анимация SVG <animateMotion>;
+       у каждой точки своя задержка, поэтому они идут вразнобой, по кругу;
+     • центральный блок слегка «дышит» (CSS-анимация transform), оранжевый маркер мерцает.
+   При «уменьшить движение» скрипт ставит SVG-анимации на паузу (src/scripts/reveal.ts),
+   а CSS-анимации отключает global.css.
+   viewBox — «холст» 480×470 условных единиц; SVG сам масштабируется под ширину колонки.
+   ===================================================================== */
+import { t, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const h = t(lang).hero;
+// Провода: от входов к ядру и от ядра к выходам (координаты — как в старой версии)
+const wires = [
+  'M70 76 V140 Q70 172 130 176 L190 180 V206',
+  'M240 76 V206',
+  'M410 76 V140 Q410 172 350 176 L290 180 V206',
+  'M190 296 V312 L130 316 Q70 320 70 352 V394',
+  'M240 296 V394',
+  'M290 296 V312 L350 316 Q410 320 410 352 V394',
+];
+// Скорость и задержка каждой точки (секунды): медленно и вразнобой
+const pulses = [[5.2, 0], [4.4, 1.8], [5.2, 3.2], [5.2, 2.4], [4.4, 4], [5.2, 0.8]];
+const x = [0.5, 170.5, 340.5];
+---
+<figure class="fig" aria-label={h.figAria}>
+  <svg viewBox="0 0 480 470" aria-hidden="true">
+    {wires.map((d, i) => <path id={`w${i + 1}`} class="s-wire" d={d} />)}
+
+    <!-- Входы -->
+    {h.inputs.map((b, i) => (
+      <g>
+        <rect class="s-box" x={x[i]} y="16.5" width="139" height="60" rx="3" />
+        <text class="s-t" x={x[i] + 15.5} y="44">{b.t}</text>
+        <text class="s-s" x={x[i] + 15.5} y="63">{b.s}</text>
+        <circle class="s-port" cx={x[i] + 69.5} cy="76.5" r="2.5" />
+      </g>
+    ))}
+
+    <!-- Ядро — светлый блок, главный элемент рисунка; «дышит» -->
+    <g class="s-core-g">
+      <rect class="s-core" x="70" y="206" width="340" height="90" rx="3" />
+      <text class="s-big" x="92" y="250">MX Systems</text>
+      <text class="s-sub" x="92" y="276">{h.coreSub}</text>
+      <circle class="s-mark" cx="390" cy="226" r="4" />
+    </g>
+
+    <!-- Выходы -->
+    {h.outputs.map((b, i) => (
+      <g>
+        <rect class="s-box" x={x[i]} y="394.5" width="139" height="60" rx="3" />
+        <text class="s-t" x={x[i] + 15.5} y="422">{b.t}</text>
+        <text class="s-s" x={x[i] + 15.5} y="441">{b.s}</text>
+        <circle class="s-port" cx={x[i] + 69.5} cy="394.5" r="2.5" />
+      </g>
+    ))}
+
+    <!-- Точки-данные: едут по проводу с id w1…w6, повторяются бесконечно -->
+    {pulses.map(([dur, begin], i) => (
+      <circle class="s-pulse" r="3.2" opacity="0">
+        <!-- до старта движения точка спрятана (иначе висела бы в углу схемы) -->
+        <set attributeName="opacity" to="1" begin={`${begin}s`} />
+        <animateMotion dur={`${dur}s`} begin={`${begin}s`} repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="spline" keySplines="0.4 0 0.2 1">
+          <mpath href={`#w${i + 1}`} />
+        </animateMotion>
+      </circle>
+    ))}
+  </svg>
+  <figcaption>{h.figcaption}</figcaption>
+</figure>
+
+<style>
+  .fig svg { width: 100%; height: auto; overflow: visible; }
+  .fig figcaption {
+    margin-top: var(--s-3); padding-top: var(--s-3); border-top: 1px solid var(--line-3);
+    font: italic 500 18px/1.3 var(--f-serif); color: var(--text-2);
+  }
+  .s-box { fill: var(--bg); stroke: var(--line-3); }
+  .s-wire { fill: none; stroke: var(--text); stroke-width: 1; opacity: 0.32; }
+  .s-port { fill: var(--bg); stroke: var(--text); stroke-width: 1; opacity: 0.7; }
+  .s-t { fill: var(--text); font: 500 14px var(--f-mono); letter-spacing: 0.05em; }
+  .s-s { fill: var(--text-3); font: 400 12.5px var(--f-mono); }
+  .s-core { fill: var(--text); }
+  .s-big { fill: var(--bg); font: italic 600 34px var(--f-serif); }
+  .s-sub { fill: rgb(13 12 10 / 0.68); font: 400 12.5px var(--f-mono); }
+  .s-mark { fill: var(--accent); animation: s-blink 2.8s ease-in-out infinite; }
+  .s-pulse { fill: var(--accent); }
+
+  /* «Дыхание» ядра: едва заметное увеличение. transform-box: fill-box — масштаб от центра блока */
+  .s-core-g { transform-box: fill-box; transform-origin: center; animation: s-breathe 6s ease-in-out infinite; }
+  @keyframes s-breathe { 50% { transform: scale(1.012); } }
+  @keyframes s-blink { 50% { opacity: 0.35; } }
+</style>

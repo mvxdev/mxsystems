@@ -1,0 +1,39 @@
+/* =====================================================================
+   fonts.css — шрифты лежат на нашем сайте (пакеты @fontsource), без Google Fonts:
+   нет лишнего соединения с чужим сервером, быстрее первый экран, проще CSP.
+
+   Подключаем ТОЛЬКО нужные начертания и наборы символов:
+     latin     — английский и основа румынского (â, î);
+     latin-ext — румынские ă, ș, ț;
+     cyrillic  — русский.
+   Каждый файл описан с unicode-range: браузер скачивает набор, только если на странице
+   есть его символы (английская страница не тянет кириллицу).
+   font-display: swap уже прописан в пакетах — пока шрифт грузится, текст виден системным.
+   ===================================================================== */
+
+/* Cormorant Garamond — заголовки: 500 прямой, 500 курсив (акценты), 600 курсив (логотип на схеме) */
+@import '@fontsource/cormorant-garamond/latin-500.css';
+@import '@fontsource/cormorant-garamond/latin-ext-500.css';
+@import '@fontsource/cormorant-garamond/cyrillic-500.css';
+@import '@fontsource/cormorant-garamond/latin-500-italic.css';
+@import '@fontsource/cormorant-garamond/latin-ext-500-italic.css';
+@import '@fontsource/cormorant-garamond/cyrillic-500-italic.css';
+@import '@fontsource/cormorant-garamond/latin-600-italic.css';
+@import '@fontsource/cormorant-garamond/latin-ext-600-italic.css';
+@import '@fontsource/cormorant-garamond/cyrillic-600-italic.css';
+
+/* Golos Text — основной текст: 400 и 500 */
+@import '@fontsource/golos-text/latin-400.css';
+@import '@fontsource/golos-text/latin-ext-400.css';
+@import '@fontsource/golos-text/cyrillic-400.css';
+@import '@fontsource/golos-text/latin-500.css';
+@import '@fontsource/golos-text/latin-ext-500.css';
+@import '@fontsource/golos-text/cyrillic-500.css';
+
+/* JetBrains Mono — подписи и цифры: 400 и 500 */
+@import '@fontsource/jetbrains-mono/latin-400.css';
+@import '@fontsource/jetbrains-mono/latin-ext-400.css';
+@import '@fontsource/jetbrains-mono/cyrillic-400.css';
+@import '@fontsource/jetbrains-mono/latin-500.css';
+@import '@fontsource/jetbrains-mono/latin-ext-500.css';
+@import '@fontsource/jetbrains-mono/cyrillic-500.css';

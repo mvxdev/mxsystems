@@ -1,0 +1,60 @@
+---
+/* =====================================================================
+   Faq — «06 / Вопросы». Раскладка: заголовок слева (колонки 1–4), вопросы справа (6–12).
+   Аккордеон на <details>/<summary> — встроенный в браузер раскрывающийся блок, работает
+   и без JS. name="faq" — браузер сам держит открытым только один вопрос.
+   Скрипт (src/scripts/faq.ts) добавляет плавное раскрытие по высоте; плюс превращается в минус.
+   Тексты вопросов и ответов дословно уходят в разметку FAQPage (JSON-LD).
+   ===================================================================== */
+import { typo, hang } from '../i18n/typo';
+import { t, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const f = t(lang).faq;
+---
+<section class="section" id="faq" aria-labelledby="faq-title">
+  <div class="container grid faq-grid">
+    <div class="head reveal">
+      <p class="eyebrow"><b>06</b> / {f.eyebrow}</p>
+      <h2 class="h2" id="faq-title" set:html={hang(typo(f.title, lang))} />
+    </div>
+    <div class="faq stagger">
+      {f.items.map((q, i) => (
+        <details class="qa" name="faq">
+          <summary><span class="qa-n">{String(i + 1).padStart(2, '0')}</span><span class="qa-q">{typo(q.q, lang)}</span><span class="qa-icon" aria-hidden="true"></span></summary>
+          <div class="qa-a"><p set:html={typo(q.a, lang)} /></div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-grid { row-gap: var(--s-7); }
+  .head .eyebrow { margin-bottom: var(--s-6); }
+  @media (min-width: 1000px) {
+    .faq-grid { align-items: start; }
+    .head { grid-column: 1 / span 4; position: sticky; top: calc(var(--header-h) + var(--s-6)); }
+    .faq { grid-column: 6 / span 7; }
+  }
+  .faq { border-top: 1px solid var(--line-3); }
+  .qa { border-bottom: 1px solid var(--line-2); }
+  .qa summary {
+    display: grid; grid-template-columns: 44px 1fr 24px; align-items: baseline; gap: var(--s-3);
+    padding: var(--s-5) 0; cursor: pointer; list-style: none;
+  }
+  .qa summary::-webkit-details-marker { display: none; }   /* убираем стандартный треугольник */
+  .qa-n { font: 400 var(--fs-mono) / 1 var(--f-mono); color: var(--accent); }
+  .qa-q { font: 500 clamp(23px, 2.1vw, 30px) / 1.18 var(--f-serif); transition: color var(--dur-1); }
+  .qa summary:hover .qa-q { color: var(--accent); }
+  /* Плюс → минус: две линии, вертикальная поворачивается в горизонталь */
+  .qa-icon { position: relative; width: 14px; height: 14px; align-self: center; justify-self: end; }
+  .qa-icon::before, .qa-icon::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--text); transition: transform var(--dur-2) var(--ease); }
+  .qa-icon::after { transform: rotate(90deg); }
+  .qa[open] .qa-icon::after { transform: rotate(0deg); }
+  /* Ответ: overflow hidden — нужно для плавной анимации высоты */
+  .qa-a { overflow: hidden; }
+  .qa-a p { padding: 0 var(--s-6) var(--s-5) 56px; max-width: 64ch; color: var(--text-2); }
+  @media (max-width: 600px) { .qa-a p { padding-left: 0; padding-right: 0; } }
+</style>
