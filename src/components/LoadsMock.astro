@@ -27,7 +27,12 @@ const { ui } = Astro.props;
 </div>
 
 <style is:global>
-  .ui .fl-list { display: grid; gap: 10px; height: 468px; padding: var(--s-4); overflow: hidden; align-content: start; }
+  /* Список уходит вниз и мягко растворяется (маска): видно, что грузов больше, и ничего не «обрезано» */
+  .ui .fl-list {
+    display: grid; gap: 10px; height: 452px; padding: var(--s-4); overflow: hidden; align-content: start;
+    -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent 98%);
+    mask-image: linear-gradient(to bottom, #000 72%, transparent 98%);
+  }
   .ui .load {
     padding: 14px var(--s-4); border: 1px solid var(--line-2); border-radius: var(--radius);
     background: var(--bg); box-shadow: var(--shadow-1); font-size: 12.5px;

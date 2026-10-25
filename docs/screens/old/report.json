@@ -1,0 +1,38 @@
+[
+  {
+    "lang": "ru",
+    "dev": "desktop",
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "lang": "ro",
+    "dev": "desktop",
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "dev": "desktop",
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "lang": "ru",
+    "dev": "mobile",
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "lang": "ro",
+    "dev": "mobile",
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "dev": "mobile",
+    "overflow": 0,
+    "errors": []
+  }
+]

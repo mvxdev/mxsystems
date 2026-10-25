@@ -37,8 +37,8 @@ const text = c.text.replace(/href="[^"]*"/, `href="${path(lang, '/privacy/')}"`)
 <style>
   .cookie {
     position: fixed; left: var(--s-4); bottom: var(--s-4); z-index: 80;
-    width: min(420px, calc(100% - 2 * var(--s-4)));
-    padding: var(--s-5); border: 1px solid var(--line-2); border-radius: var(--radius);
+    width: min(380px, calc(100% - 2 * var(--s-4)));
+    padding: var(--s-4) var(--s-5); border: 1px solid var(--line-2); border-radius: var(--radius);
     background: var(--surface); box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.9);
     animation: cookie-in var(--dur-3) var(--ease) both;
   }
@@ -57,10 +57,11 @@ const text = c.text.replace(/href="[^"]*"/, `href="${path(lang, '/privacy/')}"`)
 
   /* Телефон: узкая полоса у нижнего края — заголовок прячем, текст мельче, кнопки в ряд */
   @media (max-width: 640px) {
-    .cookie { left: var(--s-2); right: var(--s-2); bottom: var(--s-2); width: auto; padding: var(--s-4); }
+    .cookie { left: var(--s-2); right: var(--s-2); bottom: var(--s-2); width: auto; padding: var(--s-3) var(--s-4); }
     .cookie-title { display: none; }
-    .cookie-text { font-size: 13px; }
-    .cookie-btns { margin-top: var(--s-3); }
-    .cookie-btns .btn--small { min-height: 38px; padding: 0 var(--s-3); font-size: 13px; }
+    .cookie-text { font-size: 12.5px; line-height: 1.45; }
+    .cookie-btns { flex-wrap: nowrap; gap: 6px; margin-top: var(--s-3); }
+    .cookie-btns .btn--small { min-height: 36px; padding: 0 10px; font-size: 12.5px; white-space: nowrap; }
+    .cookie-link { white-space: nowrap; }
   }
 </style>

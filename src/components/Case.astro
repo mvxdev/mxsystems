@@ -11,7 +11,7 @@
    На телефоне макет идёт сразу под заголовком кейса — это самое наглядное.
    Макет передаётся внутрь через <slot /> (BoardMock или LoadsMock).
    ===================================================================== */
-import { typo } from '../i18n/typo';
+import { typo, tt } from '../i18n/typo';
 import type { Dict, Lang } from '../i18n';
 
 type CaseData = Dict['case4power'] | Dict['caseFastload'];
@@ -60,7 +60,7 @@ const T = (s: string) => typo(s, lang);
       {c.kpis.map((k) => (
         <div class:list={['kpi', { 'kpi--acc': k.acc }]}>
           <b set:html={k.value} />
-          <span>{T(k.label)}</span>
+          <span set:html={tt(k.label, lang)} />
         </div>
       ))}
     </div>
@@ -78,8 +78,10 @@ const T = (s: string) => typo(s, lang);
 </article>
 
 <style>
-  .case { padding-block: clamp(56px, 7vw, 104px); border-top: 1px solid var(--line-3); }
-  .case:first-of-type { margin-top: var(--s-5); }
+  .case { padding-block: clamp(48px, 5.5vw, 88px); border-top: 1px solid var(--line-3); }
+  /* Первый кейс идёт сразу под подписью «Внедрения» — у подписи уже есть своя линия */
+  .case:first-of-type { border-top: 0; padding-top: var(--s-7); }
+  .case:last-of-type { padding-bottom: 0; }
 
   /* --- Шапка кейса --- */
   .case-head { row-gap: var(--s-5); margin-bottom: clamp(40px, 5vw, 72px); }

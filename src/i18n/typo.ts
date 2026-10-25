@@ -55,14 +55,27 @@ function fixText(s: string, lang: Lang): string {
   return s;
 }
 
-/** Типографика строки с возможным HTML внутри. */
+/** Слова с коротким дефисом («service-ul», «site-uri», «e-mail», «AI-агент», «SEO-основа») не рвём
+ *  по дефису: оборачиваем в <span class="nobr">. Неразрывного дефиса (U+2011) в наших шрифтах нет,
+ *  поэтому — через CSS white-space: nowrap. Рвать можно только длинные пары («заказ-наряд»). */
+function nobr(s: string): string {
+  return s.replace(/[\p{L}\d]+(?:-[\p{L}\d]+)+/gu, (w) =>
+    w.split('-').some((part) => part.length <= 4) ? `<span class="nobr">${w}</span>` : w);
+}
+
+/** Типографика строки с возможным HTML внутри. Результат — HTML (выводить через set:html). */
 export function typo(html: string, lang: Lang): string {
   if (!html) return html;
   // Делим строку на теги и текст: теги (<…>) пропускаем как есть, текст обрабатываем
   return html
     .split(/(<[^>]+>)/g)
-    .map((part) => (part.startsWith('<') ? part : fixText(part, lang)))
+    .map((part) => (part.startsWith('<') ? part : nobr(fixText(part, lang))))
     .join('');
+}
+
+/** То же для обычного текста без HTML: сначала экранируем <, >, & — потом типографика */
+export function tt(text: string, lang: Lang): string {
+  return typo(text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'), lang);
 }
 
 /** Висячая пунктуация: если заголовок начинается с кавычки, выносим её за левый край

@@ -9,7 +9,7 @@
    ===================================================================== */
 import { Picture } from 'astro:assets';
 import founder from '../assets/founder.jpg';
-import { typo } from '../i18n/typo';
+import { typo, tt } from '../i18n/typo';
 import { t, tgHref, type Lang } from '../i18n';
 
 interface Props { lang: Lang }
@@ -33,7 +33,7 @@ const a = t(lang).about;
       <p class="role">{a.role}</p>
       <blockquote class="lead"><p set:html={typo(a.lead, lang)} /></blockquote>
       <a class="btn btn--primary" href={tgHref(lang)} target="_blank" rel="noopener">
-        <span>{typo(a.cta, lang)}<small class="btn-sub">{a.ctaSub}</small></span><span class="arrow" aria-hidden="true">→</span>
+        <span><Fragment set:html={tt(a.cta, lang)} /><small class="btn-sub">{a.ctaSub}</small></span><span class="arrow" aria-hidden="true">→</span>
       </a>
     </div>
   </div>
@@ -44,7 +44,7 @@ const a = t(lang).about;
   @media (min-width: 900px) {
     .author-grid { align-items: end; row-gap: var(--s-7); }
     .photo { grid-column: 1 / span 5; }
-    .text { grid-column: 7 / span 6; padding-bottom: var(--s-8); }
+    .text { grid-column: 7 / span 6; padding-bottom: var(--s-7); }
   }
 
   .photo { max-width: 520px; }
@@ -64,7 +64,8 @@ const a = t(lang).about;
   .name { font: 500 clamp(44px, 6vw, 88px) / 0.95 var(--f-serif); letter-spacing: -0.025em; }
   .role { margin: var(--s-4) 0 var(--s-6); font: 400 var(--fs-mono) / 1.4 var(--f-mono); letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--accent); }
   /* Цитата: крупный курсив с засечками, буквица — первая буква на три строки */
-  .lead { max-width: 30ch; margin-bottom: var(--s-7); padding-left: var(--s-5); border-left: 1px solid var(--accent-soft); }
-  .lead p { font: italic 500 clamp(24px, 2.4vw, 32px) / 1.28 var(--f-serif); color: var(--text); }
+  .lead { margin-bottom: var(--s-7); padding-left: var(--s-5); border-left: 1px solid var(--accent-soft); }
+  /* max-width в ch считается от шрифта самого абзаца — ≈ 26 знаков крупного курсива в строке */
+  .lead p { max-width: 26ch; font: italic 500 clamp(24px, 2.4vw, 32px) / 1.28 var(--f-serif); color: var(--text); }
   .lead p::first-letter { float: left; margin: 0.06em 0.1em 0 0; font: normal 500 3.2em / 0.8 var(--f-serif); color: var(--accent); }
 </style>

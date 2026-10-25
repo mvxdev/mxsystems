@@ -6,7 +6,7 @@
    Скрипт (src/scripts/faq.ts) добавляет плавное раскрытие по высоте; плюс превращается в минус.
    Тексты вопросов и ответов дословно уходят в разметку FAQPage (JSON-LD).
    ===================================================================== */
-import { typo, hang } from '../i18n/typo';
+import { typo, tt, hang } from '../i18n/typo';
 import { t, type Lang } from '../i18n';
 
 interface Props { lang: Lang }
@@ -22,7 +22,7 @@ const f = t(lang).faq;
     <div class="faq stagger">
       {f.items.map((q, i) => (
         <details class="qa" name="faq">
-          <summary><span class="qa-n">{String(i + 1).padStart(2, '0')}</span><span class="qa-q">{typo(q.q, lang)}</span><span class="qa-icon" aria-hidden="true"></span></summary>
+          <summary><span class="qa-n">{String(i + 1).padStart(2, '0')}</span><span class="qa-q" set:html={tt(q.q, lang)} /><span class="qa-icon" aria-hidden="true"></span></summary>
           <div class="qa-a"><p set:html={typo(q.a, lang)} /></div>
         </details>
       ))}

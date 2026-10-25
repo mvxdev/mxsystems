@@ -8,7 +8,7 @@
    • сумма сразу подставляется в готовое сообщение для Telegram.
    Логика — src/scripts/calc.ts. Без JS видна сумма для значений по умолчанию.
    ===================================================================== */
-import { typo } from '../i18n/typo';
+import { typo, tt } from '../i18n/typo';
 import { t, tgHref, type Lang } from '../i18n';
 
 interface Props { lang: Lang }
@@ -46,13 +46,15 @@ const c = t(lang).calc;
 
       <div class="result">
         <span class="result-label">{c.resultLabel}</span>
-        <!-- aria-live="polite" — скринридер зачитает новую сумму после изменения полей -->
-        <output class="sum" id="calc-out" aria-live="polite">{typo(c.defaultSum, lang)}</output>
-        <span class="result-label">{c.perMonth}</span>
+        <p class="sum-line">
+          <!-- aria-live="polite" — скринридер зачитает новую сумму после изменения полей -->
+          <output class="sum" id="calc-out" aria-live="polite" set:html={tt(c.defaultSum, lang)} />
+          <span class="per">{c.perMonth}</span>
+        </p>
         <p class="note" set:html={typo(c.note, lang)} />
       </div>
 
-      <a class="btn btn--primary cta" id="calc-cta" href={tgHref(lang)} target="_blank" rel="noopener"><span>{typo(c.cta, lang)}</span><span class="arrow" aria-hidden="true">→</span></a>
+      <a class="btn btn--primary cta" id="calc-cta" href={tgHref(lang)} target="_blank" rel="noopener"><span set:html={tt(c.cta, lang)} /><span class="arrow" aria-hidden="true">→</span></a>
     </form>
   </div>
 </section>
@@ -109,9 +111,12 @@ const c = t(lang).calc;
   .scale i { font-style: normal; }
 
   /* Итог: крупная оранжевая сумма моно-шрифтом */
-  .result { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--s-2) var(--s-4); padding-top: var(--s-5); border-top: 1px solid var(--line-3); }
-  .result-label { font: italic 500 24px/1.2 var(--f-serif); color: var(--text-2); }
-  .sum { font: 500 clamp(44px, 5.4vw, 76px) / 1 var(--f-mono); letter-spacing: -0.05em; color: var(--accent); font-variant-numeric: tabular-nums; }
-  .note { flex-basis: 100%; margin-top: var(--s-2); font: 400 12.5px/1.55 var(--f-mono); color: var(--text-3); }
+  /* Итог: подпись сверху, ниже — крупная сумма и «в месяц» на одной базовой линии */
+  .result { display: grid; gap: var(--s-3); padding-top: var(--s-5); border-top: 1px solid var(--line-3); }
+  .result-label { font: italic 500 22px/1.2 var(--f-serif); color: var(--text-2); }
+  .sum-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--s-2) var(--s-4); }
+  .sum { font: 500 clamp(44px, 5.4vw, 76px) / 1 var(--f-mono); letter-spacing: -0.05em; color: var(--accent); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .per { font: italic 500 24px/1.2 var(--f-serif); color: var(--text-2); }
+  .note { max-width: 56ch; font: 400 12.5px/1.55 var(--f-mono); color: var(--text-3); }
   .cta { width: 100%; }
 </style>

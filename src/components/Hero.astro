@@ -10,7 +10,7 @@
    ===================================================================== */
 import Scheme from './Scheme.astro';
 import { t, tgHref, type Lang } from '../i18n';
-import { typo } from '../i18n/typo';
+import { typo, tt } from '../i18n/typo';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -34,7 +34,7 @@ const sup = ['¹', '²'];
       <p class="lead" set:html={typo(h.lead, lang)} />
       <div class="actions">
         <a class="btn btn--primary" href={tgHref(lang)} target="_blank" rel="noopener">
-          <span>{typo(h.cta, lang)}<small class="btn-sub">{typo(h.ctaSub, lang)}</small></span><span class="arrow" aria-hidden="true">→</span>
+          <span><Fragment set:html={tt(h.cta, lang)} /><small class="btn-sub" set:html={tt(h.ctaSub, lang)} /></span><span class="arrow" aria-hidden="true">→</span>
         </a>
         <a class="btn" href="#cases">{h.cta2} <span class="arrow" aria-hidden="true">↓</span></a>
       </div>
@@ -107,6 +107,17 @@ const sup = ['¹', '²'];
   /* Телефон и планшет: схема после текста и кнопок */
   @media (max-width: 1099px) {
     .cover :global(.fig) { order: 3; max-width: 520px; }
+  }
+
+  /* Телефон: плотнее, чтобы заголовок, текст и главная кнопка были в первом экране */
+  @media (max-width: 699px) {
+    .masthead { letter-spacing: 0.05em; font-size: 11px; grid-template-columns: 1fr; }
+    .masthead .end { display: none; }   /* «с 2019» на телефоне есть в подписи к фото автора */
+    .hero { padding-top: var(--s-5); }
+    .cover { row-gap: var(--s-6); }
+    .prefix { margin-bottom: var(--s-4); }
+    .row { gap: var(--s-5); padding-top: var(--s-4); }
+    .lead { font-size: 16px; line-height: 1.5; }
   }
 
   /* Появление первого экрана при загрузке — сразу, по очереди (только transform/opacity).

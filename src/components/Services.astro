@@ -9,7 +9,7 @@
    Шесть услуг; цены — ровно как на сайте (они же уходят в JSON-LD).
    ===================================================================== */
 import SectionHead from './SectionHead.astro';
-import { typo } from '../i18n/typo';
+import { typo, tt } from '../i18n/typo';
 import { t, type Lang } from '../i18n';
 
 interface Props { lang: Lang }
@@ -31,7 +31,7 @@ const s = t(lang).services;
             <span class="svc-n c0">{it.n}</span>
             <span class="svc-name c1">{it.name}</span>
             <span class="svc-desc c2" set:html={typo(it.desc, lang)} />
-            <span class="svc-term c3"><small>{it.termLabel}</small>{typo(it.term, lang)}</span>
+            <span class="svc-term c3"><small>{it.termLabel}</small><Fragment set:html={tt(it.term, lang)} /></span>
             <span class="svc-price c4"><small>{it.priceLabel}</small>{it.price.map((p) => <span class="p" set:html={typo(p, lang)} />)}</span>
             <span class="svc-arrow" aria-hidden="true">→</span>
           </a>

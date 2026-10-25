@@ -107,7 +107,13 @@ const home = path(lang, '/');
   .lang a:hover { color: var(--text); }
   .lang a[aria-current="page"] { color: var(--text); border-color: var(--line-3); }
 
-  .header-cta { position: relative; z-index: 2; }
+  /* Кнопка в шапке: пока страница наверху — контурная (на первом экране уже есть оранжевая кнопка
+     и оранжевый курсив заголовка — третье оранжевое пятно было бы лишним). После прокрутки,
+     когда первого экрана уже не видно, — оранжевая, главный акцент. */
+  .header-cta { position: relative; z-index: 2; background: transparent; border-color: var(--line-3); color: var(--text); }
+  .header-cta::before { background: var(--accent); }
+  .header-cta:hover { color: var(--on-accent); border-color: var(--accent); }
+  .header:global(.is-scrolled) .header-cta { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 
   /* Бургер (две полоски) — только на телефоне; в открытом меню складывается в крестик */
   .burger { display: none; position: relative; z-index: 2; width: 44px; height: 44px; flex: none; }
