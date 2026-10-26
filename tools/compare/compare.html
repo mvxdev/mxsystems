@@ -1,8 +1,9 @@
 <!doctype html>
 <!--
   compare.html — старая (v1-seo) и новая (astro-redesign) версии рядом.
-  Откройте файл двойным щелчком в браузере (сервер не нужен). Переключатели: язык, устройство,
-  «вся страница / первый экран». Скриншоты делает: node tools/screens.mjs old  и  node tools/screens.mjs new
+  Исходник лежит в tools/compare/; команда npm run screens делает скриншоты обеих версий и копирует
+  эту страницу в docs/screens/compare.html. Откройте её двойным щелчком (сервер не нужен).
+  Переключатели: язык, устройство, «вся страница / первый экран».
   Это служебная страница для сравнения, на сайт она не публикуется.
 -->
 <html lang="ru">
@@ -15,7 +16,6 @@
 <body>
   <header>
     <h1>MX Systems — старая и новая версии</h1>
-    <p class="upd">Новые скриншоты обновлены 26.10.2026: живая схема (снимок — кадр анимации), три сноски, доска 4Power на телефоне, без cookie-баннера (нет ID счётчиков).</p>
     <div class="bar">
       <div class="group" data-k="lang"><button data-v="ru" class="on">RU</button><button data-v="ro">RO</button><button data-v="en">EN</button></div>
       <div class="group" data-k="dev"><button data-v="desktop" class="on">Десктоп 1440</button><button data-v="mobile">Телефон 390</button></div>

@@ -10,7 +10,7 @@
     "preview": "node tools/serve.mjs dist 4321",
     "seo": "python tools/seo_check.py dist",
     "compare": "python tools/compare_content.py .cache/v1 dist",
-    "screens": "node tools/screens.mjs new",
+    "screens": "node tools/screens.mjs old && node tools/screens.mjs new",
     "lighthouse": "node tools/lighthouse.mjs dist"
   },
   "dependencies": {

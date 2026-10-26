@@ -66,7 +66,6 @@ export function homeJsonLd(lang: Lang) {
       image: ogImage(lang),
       telephone: PHONE,
       email: EMAIL,
-      foundingDate: '2019',
       address: { '@type': 'PostalAddress', addressLocality: o.city, addressCountry: 'MD' },
       areaServed: areas,
       knowsLanguage: ['ru', 'ro', 'en'],

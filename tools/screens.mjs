@@ -1,7 +1,11 @@
 // =====================================================================
 // screens.mjs — скриншоты сайта для сравнения и арт-ревью (Playwright, Chrome без окна).
 //   node tools/screens.mjs new        → docs/screens/new/  (папка dist/, новая версия)
-//   node tools/screens.mjs old        → docs/screens/old/  (.cache/v1 — распакованный тег v1-seo)
+//   node tools/screens.mjs old        → docs/screens/old/  (.cache/v1 — распакованный тег v1-seo;
+//                                        если папки нет, скрипт сам распакует тег через git archive)
+//   npm run screens                    → обе версии + страница сравнения docs/screens/compare.html
+// Папка docs/screens/ в git не хранится (.gitignore): скриншоты пересоздаются этой командой.
+// Исходники страницы сравнения — tools/compare/, они копируются в docs/screens/ при каждом запуске.
 // Для каждого языка (ru/ro/en) и устройства (десктоп 1440, телефон 390):
 //   {lang}-{device}.jpg        — вся страница целиком;
 //   {lang}-{device}-first.jpg  — только первый экран (1440×900 / 390×844) с cookie-баннером.
@@ -10,7 +14,9 @@
 // Попутно собирает ошибки консоли, нарушения CSP и горизонтальную прокрутку — в отчёт.
 // =====================================================================
 import { chromium } from 'playwright';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, writeFile, copyFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
+import { execSync } from 'node:child_process';
 import { serve } from './serve.mjs';
 
 const which = process.argv[2] || 'new';
@@ -24,6 +30,13 @@ const DEVICES = {
 const PAGES = { ru: '/', ro: '/ro/', en: '/en/' };
 
 await mkdir(OUT, { recursive: true });
+// Старая версия: распаковать тег v1-seo в .cache/v1, если ещё не распакован
+if (which === 'old' && !existsSync(`${DIR}/index.html`)) {
+  await mkdir(DIR, { recursive: true });
+  execSync(`git archive v1-seo | tar -x -C ${DIR}`, { stdio: 'inherit', shell: true });
+}
+// Страница сравнения (compare.html + стили и скрипт) — рядом с папками old/ и new/
+for (const f of ['compare.html', 'compare.css', 'compare.js']) await copyFile(`tools/compare/${f}`, `docs/screens/${f}`);
 const server = await serve(DIR, PORT);
 // Системный Chrome — чтобы не скачивать отдельный браузер
 const browser = await chromium.launch({ channel: 'chrome' });

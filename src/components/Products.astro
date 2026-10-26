@@ -45,7 +45,7 @@ const IMG = { carbids, fastload, crm } as const;
         {it.kpis.length > 0 && (
           <dl class="prod-kpis">{it.kpis.map((k) => <div><dt set:html={tt(k.dt, lang)} /><dd set:html={tt(k.dd, lang)} /></div>)}</dl>
         )}
-        {it.cta && <a class="btn btn--small btn--primary prod-cta" href={it.cta.href}><Fragment set:html={tt(it.cta.label, lang)} /> <span class="arrow" aria-hidden="true">→</span></a>}
+        {it.cta && <a class="btn btn--small btn--primary prod-cta" href={it.cta.href}><span set:html={tt(it.cta.label, lang)} /><span class="arrow" aria-hidden="true">→</span></a>}
       </article>
     ))}
   </div>

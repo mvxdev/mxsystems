@@ -21,7 +21,7 @@
   «Сайты, CRM и автоматизация бизнеса в Кишинёве — MX Systems» (ro/en — аналогично).
 - **description** 179–217 символов → 149–153, с запросами (сайты и CRM, автоматизация, 1С, Google/Meta).
 - **Не было структурированных данных** → JSON-LD на трёх главных: `ProfessionalService` (контакты,
-  Кишинёв/MD, Молдова и Румыния, основатель, «с 2019»), `WebSite` с языком, каталог 6 услуг с ценами
+  Кишинёв/MD, Молдова и Румыния, основатель, «с 2019»; в ветке astro-redesign foundingDate убран — DECISIONS п. 38), `WebSite` с языком, каталог 6 услуг с ценами
   «от» в EUR ровно как на сайте, `FAQPage` из 5 вопросов дословно. Собирается скриптом из текста страницы.
 - **Twitter Card** была неполной → добавлены title/description/image на всех страницах.
 - **Privacy**: не было Open Graph, Twitter и x-default → добавлены.
@@ -102,7 +102,7 @@ AVIF/WebP. Сырые данные: `docs/lighthouse-old.json`, `docs/lighthouse
   на месте** на трёх языках. 6 намеренных расхождений в подписях для скринридеров (см. DECISIONS п. 23,
   `docs/content-diff.md`); cookie-баннер и сноски hero не сравниваются — изменены намеренно (п. 33–34).
 - Горизонтальной прокрутки на 390px нет ни на одном языке, ошибок в консоли и нарушений CSP нет
-  (`docs/screens/new/report.json`); в dist/ нет встроенных script/style/style="".
+  (`docs/screens/new/report.json` после `npm run screens`); в dist/ нет встроенных script/style/style="".
 - Design review — 4 круга, `docs/design-review.md`. Что осталось неидеальным: метка «новый»
   на старых грузах FastLoad; фото автора лучше заменить студийным портретом.
 
@@ -127,7 +127,8 @@ npm run build
 node tools/serve.mjs dist 4321
 ```
 Открыть http://localhost:4321/ (и /ro/, /en/). Режим разработки с автообновлением — `npm run dev`
-(http://localhost:4321/). Сравнение глазами: открыть файл `docs/screens/compare.html` в браузере.
+(http://localhost:4321/). Сравнение глазами: `npm run screens` (скриншоты обеих версий, в git не хранятся), затем открыть
+`docs/screens/compare.html` в браузере. Кратко — в README.md.
 
 Старую версию локально: `git checkout main`, затем `python -m http.server 8000` → http://localhost:8000/.
 
