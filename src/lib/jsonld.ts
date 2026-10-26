@@ -66,6 +66,8 @@ export function homeJsonLd(lang: Lang) {
       image: ogImage(lang),
       telephone: PHONE,
       email: EMAIL,
+      // Диапазон цен из блока «Услуги»: от сопровождения €150/мес до разработки от €1 500
+      priceRange: '€150–€1500+',
       address: { '@type': 'PostalAddress', addressLocality: o.city, addressCountry: 'MD' },
       areaServed: areas,
       knowsLanguage: ['ru', 'ro', 'en'],
